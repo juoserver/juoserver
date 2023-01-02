@@ -1,15 +1,16 @@
 package net.sf.juoserver.networking.threaded;
 
-import lombok.extern.slf4j.Slf4j;
 import net.sf.juoserver.protocol.ProtocolIoPort;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@Slf4j
 public class ClientThreadsManager {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClientThreadsManager.class);
 	/**
 	 * Client threads, indexed by {@link ProtocolIoPort#getName()}.
 	 */
@@ -36,12 +37,12 @@ public class ClientThreadsManager {
 				try {
 					client.startUp();
 				} catch (IOException e) {
-					log.error("I/O error occurred", e);
+					LOGGER.error("I/O error occurred", e);
 				} finally {
 					try {
 						client.shutDown();
 					} catch (IOException e) {
-						log.error("I/O error on shutdown!", e);
+						LOGGER.error("I/O error on shutdown!", e);
 					}
 				}
 			}

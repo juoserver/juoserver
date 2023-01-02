@@ -54,4 +54,9 @@ class TestConfiguration implements Configuration {
 	public boolean isPacketLoggingEnabled() {
 		return false;
 	}
+
+	@Override
+	public String getCommandActivationCharacter() {
+		return null;
+	}
 }

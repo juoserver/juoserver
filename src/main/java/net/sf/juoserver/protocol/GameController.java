@@ -1,10 +1,11 @@
 package net.sf.juoserver.protocol;
 
-import lombok.extern.slf4j.Slf4j;
 import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.*;
 import net.sf.juoserver.protocol.GeneralInformation.SubcommandType;
 import net.sf.juoserver.protocol.SkillUpdate.SkillUpdateType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
@@ -13,8 +14,9 @@ import java.util.*;
  * Game controller. A different instance of this class will be associated
  * to each client's session.
  */
-@Slf4j
 public class GameController extends AbstractProtocolController implements ModelOutputPort {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(GameController.class);
 
 	private static final String CONTROLLER_ID_POSTFIX = "-controller";
 	
@@ -25,12 +27,14 @@ public class GameController extends AbstractProtocolController implements ModelO
 	private final ItemManager itemManager = new ItemManager();
 	private final LoginManager loginManager;
 	private final InterClientNetwork network;
-	
+	private final CommandHandler commandHandler;
+
 	private ClientVersion clientVersion;
 	private PlayerSession session;
 
 	public GameController(String clientName, ProtocolIoPort clientHandler, Core core,
-			ClientMovementTracker movementTracker, LoginManager loginManager, InterClientNetwork network) {
+			ClientMovementTracker movementTracker, LoginManager loginManager, InterClientNetwork network,
+		  CommandHandler commandHandler) {
 		super();
 		this.controllerId = clientName + CONTROLLER_ID_POSTFIX;
 		this.clientHandler = clientHandler;
@@ -38,6 +42,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 		this.movementTracker = movementTracker;
 		this.loginManager = loginManager;
 		this.network = network;
+		this.commandHandler = commandHandler;
 	}
 	
 	// This message is sent in the second connection right after the new seed
@@ -75,7 +80,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 			return null;
 		}
 		this.clientVersion = clientVersion;
-		log.info("Client version: " + clientVersion.getClientVersion());
+		LOGGER.info("Client version: " + clientVersion.getClientVersion());
 		GameStatus status = session.startGame();
 		return sendGameStatus(session.getMobile(), status);
 	}
@@ -128,7 +133,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 			
 			return asList( new MovementAck(request.getSequence(), session.getMobile().getNotoriety()) );
 		} else {
-			log.warn("Movement request rejected - expected sequence: "
+			LOGGER.warn("Movement request rejected - expected sequence: "
 					+ movementTracker.getExpectedSequence() + ", actual sequence: "
 					+ request.getSequence());
 			return asList( new MovementReject(request.getSequence(), session.getMobile().getX(), session.getMobile().getY(),
@@ -148,9 +153,8 @@ public class GameController extends AbstractProtocolController implements ModelO
 	}
 	
 	public void handle(UnicodeSpeechRequest request) {
-		String message = request.getText();
-		if (message.startsWith(".")) {
-			log.info("this is a command");
+		if (commandHandler.isCommand(request)) {
+			commandHandler.execute(session, request);
 		} else {
 			session.speak(request.getMessageType(), request.getHue(),
 					request.getFont(), request.getLanguage(), request.getText());
@@ -224,7 +228,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 	public void handle(GeneralInformation info) {
 		Subcommand<GeneralInformation, SubcommandType> sc = info.getSubCommand();
 		if (sc != null) {
-			log.debug(String.valueOf(sc));
+			LOGGER.debug(String.valueOf(sc));
 		}
 	}
 	
@@ -349,41 +353,6 @@ public class GameController extends AbstractProtocolController implements ModelO
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-		+ ((controllerId == null) ? 0 : controllerId.hashCode());
-		return result;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		GameController other = (GameController) obj;
-		if (controllerId == null) {
-			if (other.controllerId != null)
-				return false;
-		} else if (!controllerId.equals(other.controllerId))
-			return false;
-		return true;
-	}
-	
-	@Override
-	public String toString() {
-		return controllerId;
-	}
-
-	public void setSession(PlayerSession session) {
-		this.session = session;
-	}
-
-	@Override
 	public void mobileChanged(Mobile mobile) {
 		try {
 			clientHandler.sendToClient(new UpdatePlayer(mobile));
@@ -409,5 +378,40 @@ public class GameController extends AbstractProtocolController implements ModelO
 		} catch (IOException e) {
 			throw new ProtocolException(e);
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((controllerId == null) ? 0 : controllerId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		GameController other = (GameController) obj;
+		if (controllerId == null) {
+			if (other.controllerId != null)
+				return false;
+		} else if (!controllerId.equals(other.controllerId))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return controllerId;
+	}
+
+	public void setSession(PlayerSession session) {
+		this.session = session;
 	}
 }

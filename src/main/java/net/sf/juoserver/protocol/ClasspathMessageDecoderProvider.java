@@ -5,14 +5,22 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import net.sf.juoserver.api.Decodable;
 import net.sf.juoserver.api.Message;
 import net.sf.juoserver.api.MessageDecoder;
 import net.sf.juoserver.api.MessageDecoderProvider;
 
+import org.burningwave.core.assembler.ComponentContainer;
+import org.burningwave.core.assembler.ComponentSupplier;
+import org.burningwave.core.classes.ClassCriteria;
+import org.burningwave.core.classes.ClassHunter;
+import org.burningwave.core.classes.SearchConfig;
 import org.scannotation.AnnotationDB;
 import org.scannotation.ClasspathUrlFinder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@link MessageDecoderProvider} implementation that scans the classpath
@@ -21,6 +29,7 @@ import org.scannotation.ClasspathUrlFinder;
  * For performance reasons, the scanning is done only once.
  */
 public class ClasspathMessageDecoderProvider implements MessageDecoderProvider {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClasspathMessageDecoderProvider.class);
 	private static Map<Byte, MessageDecoder> decoders = null;
 	
 	public ClasspathMessageDecoderProvider() {
@@ -35,6 +44,20 @@ public class ClasspathMessageDecoderProvider implements MessageDecoderProvider {
 	}
 
 	protected void configureFrom(Class<?> baseClass) {
+		ComponentSupplier componentSupplier = ComponentContainer.getInstance();
+		ClassHunter classHunter = componentSupplier.getClassHunter();
+
+		SearchConfig config = SearchConfig.forResources(baseClass.getPackage().getName().replace(".", "/"))
+				.by(ClassCriteria.create().allThoseThatMatch(cls-> cls.isAnnotationPresent(Decodable.class)));
+
+		try (ClassHunter.SearchResult searchResult = classHunter.findBy(config)) {
+			decoders = searchResult.getClasses().stream()
+					.peek(clazz->LOGGER.debug("Decodable Message Found [ {} ]", clazz.getName()))
+					.collect(Collectors.toMap(e-> (byte) (e.getAnnotation(Decodable.class).code() & 0xFF), this::getMessageDecoder));
+		}
+	}
+
+	/*protected void configureFrom(Class<?> baseClass) {
 		decoders = new HashMap<Byte, MessageDecoder>();
 		AnnotationDB adb = new AnnotationDB();
 		adb.setScanFieldAnnotations(false);
@@ -62,7 +85,7 @@ public class ClasspathMessageDecoderProvider implements MessageDecoderProvider {
 				}
 			}
 		}
-	}
+	}*/
 	
 	@Override
 	public MessageDecoder getDecoder(byte firstByte) {

@@ -1,6 +1,5 @@
 package net.sf.juoserver.networking.mina;
 
-import lombok.extern.slf4j.Slf4j;
 import net.sf.juoserver.api.Configuration;
 import net.sf.juoserver.api.Server;
 import net.sf.juoserver.protocol.ControllerFactory;
@@ -8,12 +7,14 @@ import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-@Slf4j
 public class MinaMultiplexingServerAdapter implements Server {
+	private static final Logger LOGGER = LoggerFactory.getLogger(MinaMultiplexingServerAdapter.class);
 	private static final int BUF_SIZE = 1024;
 
 	private final Configuration configuration;
@@ -27,7 +28,7 @@ public class MinaMultiplexingServerAdapter implements Server {
 	
 	@Override
 	public void acceptClientConnections() throws IOException {
-		log.info("Starting multiplexing server...");
+		LOGGER.info("Starting multiplexing server...");
 		NioSocketAcceptor acceptor = new NioSocketAcceptor();
 		if (configuration.isPacketLoggingEnabled()) {
 			acceptor.getFilterChain().addLast("transport logger", new LoggingFilter());
@@ -42,6 +43,6 @@ public class MinaMultiplexingServerAdapter implements Server {
 		acceptor.getSessionConfig().setReuseAddress(true);
 		acceptor.setHandler(new UOIoHandler(acceptor, controllerFactory));
 		acceptor.bind(new InetSocketAddress(configuration.getServerPort()));
-		log.info("Listening on port " + configuration.getServerPort());
+		LOGGER.info("Listening on port " + configuration.getServerPort());
 	}
 }

@@ -1,8 +1,9 @@
 package net.sf.juoserver.protocol;
 
-import lombok.extern.slf4j.Slf4j;
 import net.sf.juoserver.api.Message;
 import net.sf.juoserver.api.ProtocolController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -31,9 +32,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @see <a href="http://surguy.net/articles/visitor-with-reflection.xml">Visitor with Reflection</a>
  * @see <a href="http://www.javaworld.com/javaworld/javatips/jw-javatip98.html">Java Tip</a>
  */
-@Slf4j
 public abstract class AbstractProtocolController implements ProtocolController {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractProtocolController.class);
 	private static final String HANDLE_METHOD_NAME = "handle";
 	private static final String POST_PROCESSOR_METHOD_NAME = "postProcess";
 	
@@ -58,7 +59,7 @@ public abstract class AbstractProtocolController implements ProtocolController {
 						getClass().getMethod(HANDLE_METHOD_NAME, request.getClass()));
 			}
 		} catch (NoSuchMethodException e) {
-			log.warn("Unprocessable client message: " + request);
+			LOGGER.warn("Unprocessable client message: " + request);
 			return null;
 		}
 		Method handler = handlers.get( request.getClass() );

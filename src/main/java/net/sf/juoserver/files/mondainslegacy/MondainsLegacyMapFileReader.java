@@ -1,12 +1,13 @@
 package net.sf.juoserver.files.mondainslegacy;
 
-import lombok.extern.slf4j.Slf4j;
 import net.sf.juoserver.api.GenericFileEntryEncoder;
 import net.sf.juoserver.api.MapFileReader;
 import net.sf.juoserver.api.MapLocation;
 import net.sf.juoserver.api.MapTile;
 import net.sf.juoserver.files.FileReaderException;
 import org.apache.commons.codec.binary.Hex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -86,8 +87,8 @@ import java.nio.ByteOrder;
  *      Formats</a>
  * @see #getBlockNumber(int, int)
  */
-@Slf4j
 class MondainsLegacyMapFileReader implements MapFileReader {
+	private static final Logger LOGGER = LoggerFactory.getLogger(MondainsLegacyMapFileReader.class);
 	private RandomAccessFile raf;
 	private GenericFileEntryEncoder<MapTile> encoder;
 	/**
@@ -150,7 +151,7 @@ class MondainsLegacyMapFileReader implements MapFileReader {
 		} catch (IOException e) {
 			throw new FileReaderException(e);
 		}
-		log.trace("Tile = " + Hex.encodeHexString(buffer).toUpperCase());
+		LOGGER.trace("Tile = " + Hex.encodeHexString(buffer).toUpperCase());
 		return encoder.encode(buffer);
 	}
 

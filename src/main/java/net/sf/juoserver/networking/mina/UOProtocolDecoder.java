@@ -1,6 +1,5 @@
 package net.sf.juoserver.networking.mina;
 
-import lombok.extern.slf4j.Slf4j;
 import net.sf.juoserver.api.Message;
 import net.sf.juoserver.api.MessageReader;
 import net.sf.juoserver.protocol.UOProtocolMessageReader;
@@ -8,13 +7,15 @@ import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolDecoderAdapter;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
 public class UOProtocolDecoder extends ProtocolDecoderAdapter {
+	private static final Logger LOGGER = LoggerFactory.getLogger(UOProtocolDecoder.class);
 	private final Map<Long, MessageReader> messageReaders = new HashMap<Long, MessageReader>();
 	
 	@Override
@@ -33,7 +34,7 @@ public class UOProtocolDecoder extends ProtocolDecoderAdapter {
 	@Override
 	public void finishDecode(IoSession session, ProtocolDecoderOutput out)
 			throws Exception {
-		log.debug("Recreating reader due to closed connection, expecting seed next.");
+		LOGGER.debug("Recreating reader due to closed connection, expecting seed next.");
 		messageReaders.remove(session.getId());
 	}
 
