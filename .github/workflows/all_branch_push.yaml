@@ -1,0 +1,13 @@
+name: CICD for push any branch
+on:
+  push:
+    branches:  ["**"]
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Compiling the Code
+        run: ./gradlew clean build
