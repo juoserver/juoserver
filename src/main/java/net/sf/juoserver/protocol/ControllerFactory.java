@@ -1,30 +1,30 @@
 package net.sf.juoserver.protocol;
 
-import net.sf.juoserver.api.Configuration;
-import net.sf.juoserver.api.Core;
-import net.sf.juoserver.api.InterClientNetwork;
-import net.sf.juoserver.api.LoginManager;
-import net.sf.juoserver.api.ProtocolController;
+import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.Intercom;
 import net.sf.juoserver.model.UOLoginManager;
+
+import java.util.Set;
 
 public final class ControllerFactory {
 	private final Core core;
 	private final Configuration configuration;
 	private final LoginManager loginManager;
 	private final InterClientNetwork network;
+	private final CommandHandler commandManager;
 	
-	public ControllerFactory(Core core, Configuration configuration) {
+	public ControllerFactory(Core core, Configuration configuration, Set<Command> commands) {
 		super();
 		this.core = core;
 		this.configuration = configuration;
-		loginManager = new UOLoginManager(core);
-		network = new Intercom();
+		this.loginManager = new UOLoginManager(core);
+		this.network = new Intercom();
+		this.commandManager = new CommandHandlerImpl(this.core, this.network, commands, configuration);
 	}
 
 	public ProtocolController createGameController(ProtocolIoPort clientHandler) {
 		return new GameController(clientHandler.getName(), clientHandler, core, new CircularClientMovementTracker(),
-				loginManager, network);
+				loginManager, network, commandManager);
 	}
 	
 	public ProtocolController createAuthenticationController(ProtocolIoPort clientHandler) {

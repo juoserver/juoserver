@@ -1,11 +1,12 @@
 package net.sf.juoserver.protocol;
 
-import lombok.extern.slf4j.Slf4j;
 import net.sf.juoserver.api.Decodable;
 import net.sf.juoserver.api.Message;
 import net.sf.juoserver.api.MessageDecoderProvider;
 import net.sf.juoserver.api.MessageReader;
 import org.apache.commons.lang.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -14,8 +15,8 @@ import java.util.List;
 /**
  * Default {@link MessageReader} implementation.
  */
-@Slf4j
 public class UOProtocolMessageReader implements MessageReader {
+	private static final Logger LOGGER = LoggerFactory.getLogger(UOProtocolMessageReader.class);
 	private MessageDecoderProvider messageDecoderProvider;
 	
 	/**
@@ -72,7 +73,7 @@ public class UOProtocolMessageReader implements MessageReader {
 			}
 		}
 		if (messageDecoderProvider.getDecoder(contents[0]) == null) {
-			log.error("Unknown client message, code: "
+			LOGGER.error("Unknown client message, code: "
 					+ MessagesUtils.getCodeHexString(contents) + ", contents: ["
 					+ MessagesUtils.getHexString(contents) + "]");
 			return null;

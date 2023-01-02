@@ -6,10 +6,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import net.sf.juoserver.TestingFactory;
-import net.sf.juoserver.api.ClientMovementTracker;
-import net.sf.juoserver.api.Core;
-import net.sf.juoserver.api.InterClientNetwork;
-import net.sf.juoserver.api.LoginManager;
+import net.sf.juoserver.api.*;
 
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
@@ -21,11 +18,12 @@ public class PriorityBasedProtocolRouterTest {
 	private final LoginManager loginManager = context.mock(LoginManager.class);
 	private final ProtocolIoPort clientHandler = context.mock(ProtocolIoPort.class);
 	private final InterClientNetwork network = context.mock(InterClientNetwork.class);
+	private final CommandHandler commandManager = context.mock(CommandHandler.class);
 	
 	private final AuthenticationController auth = new AuthenticationController(clientHandler,
 			TestingFactory.createTestConfiguration(), loginManager);
 	private final GameController game = new GameController("client", clientHandler, context.mock(Core.class),
-			context.mock(ClientMovementTracker.class), loginManager, network);
+			context.mock(ClientMovementTracker.class), loginManager, network, commandManager);
 	
 	@Test
 	public void authenticationIsTheOnlyControllerInterestedInFirstConnectionMessages() throws UnknownHostException {

@@ -11,8 +11,8 @@ public class LoginRequest extends AbstractMessage {
 	private static final long serialVersionUID = 1L;
 	protected static final int CODE = 0x80;
 	
-	private String user;
-	private String password;
+	private final String user;
+	private final String password;
 	
 	public LoginRequest(byte[] contents) {
 		super(CODE, 62); // Last byte is not used

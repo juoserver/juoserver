@@ -1,7 +1,8 @@
 package net.sf.juoserver.configuration;
 
-import lombok.extern.slf4j.Slf4j;
 import net.sf.juoserver.api.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.io.File;
@@ -10,9 +11,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
-@Slf4j
 public class PropertyFileBasedConfiguration implements Configuration {
 
+	private static final Logger log = LoggerFactory.getLogger(PropertyFileBasedConfiguration.class);
 	public static final String PROP_FILE_NAME = "juoserver.properties";
 	private static final String PROP_FILE_DEFAULT_PATH =
 		System.getProperty("user.home") + File.separator + ".juoserver" + 
@@ -23,6 +24,7 @@ public class PropertyFileBasedConfiguration implements Configuration {
 	private static final String DEFAULT_SERVER_PORT = "7775";
 	private static final String DEFAULT_SERVER_HOST = "localhost";
 	private static final String DEFAULT_PACKET_LOGGING_ENABLED = "false";
+	private static final String DEFAULT_COMMAND_ACTIVATION_CHARACTER = ".";
 
 	private String propFilePath;
 	private Properties props;
@@ -86,6 +88,11 @@ public class PropertyFileBasedConfiguration implements Configuration {
 	@Override
 	public String getServerHost() {
 		return getProperty("server.host", DEFAULT_SERVER_HOST);
+	}
+
+	@Override
+	public String getCommandActivationCharacter() {
+		return getProperty("command.activation.character", DEFAULT_COMMAND_ACTIVATION_CHARACTER);
 	}
 
 	private String getProperty(String name, String defaultValue) {

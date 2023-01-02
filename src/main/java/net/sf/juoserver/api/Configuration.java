@@ -12,4 +12,5 @@ public interface Configuration {
 	String getServerName();
 	String getServerHost();
 	boolean isPacketLoggingEnabled();
+	String getCommandActivationCharacter();
 }

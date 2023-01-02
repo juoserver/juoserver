@@ -1,11 +1,12 @@
 package net.sf.juoserver.networking.threaded;
 
-import lombok.extern.slf4j.Slf4j;
 import net.sf.juoserver.api.Configuration;
 import net.sf.juoserver.api.Encoder;
 import net.sf.juoserver.api.Message;
 import net.sf.juoserver.api.MessageReader;
 import org.apache.commons.codec.binary.Hex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,8 +16,8 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.List;
 
-@Slf4j
 public class UOProtocolWire implements MessageWire {
+	private static final Logger LOGGER = LoggerFactory.getLogger(UOProtocolWire.class);
 	private static final int BUF_SIZE = 1024;
 
 	private final String clientName;
@@ -44,12 +45,12 @@ public class UOProtocolWire implements MessageWire {
 		clientAddress = socket.getInetAddress();
 		is = socket.getInputStream();
 		os = socket.getOutputStream();
-		log.info(clientName + " connected from " + clientAddress);
+		LOGGER.info(clientName + " connected from " + clientAddress);
 	}
 
 	@Override
 	public void shutDown() throws IOException {
-		log.info(clientName + " disconnected from "  + clientAddress);
+		LOGGER.info(clientName + " disconnected from "  + clientAddress);
 		if (is != null) {
 			is.close();
 		}
@@ -65,7 +66,7 @@ public class UOProtocolWire implements MessageWire {
 	public void sendMessages(List<Message> messages) throws IOException {
 		for (Message reply : messages) {
 			if (configuration.isPacketLoggingEnabled()) {
-				log.info("Sending message: " + reply);
+				LOGGER.info("Sending message: " + reply);
 			}
 			if (reply.isCompressed()) {
 				os.write(compressor.encode(reply.encode().array()));
@@ -81,12 +82,12 @@ public class UOProtocolWire implements MessageWire {
 		if (nread != -1) {
 			byte[] inputBytes = Arrays.copyOf(buffer, nread);
 			if (configuration.isPacketLoggingEnabled()) {
-				log.info("Received bytes: " + Hex.encodeHexString(inputBytes).toUpperCase());
+				LOGGER.info("Received bytes: " + Hex.encodeHexString(inputBytes).toUpperCase());
 			}
 			List<Message> readMessages = messageReader.readMessages(inputBytes);
 			if (configuration.isPacketLoggingEnabled()) {
 				for (Message message : readMessages) {
-					log.info("Received message: " + message);
+					LOGGER.info("Received message: " + message);
 				}
 			}
 			return readMessages;

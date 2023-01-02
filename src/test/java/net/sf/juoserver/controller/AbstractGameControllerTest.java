@@ -3,12 +3,7 @@ package net.sf.juoserver.controller;
 import java.io.IOException;
 
 import net.sf.juoserver.TestingFactory;
-import net.sf.juoserver.api.Core;
-import net.sf.juoserver.api.InterClientNetwork;
-import net.sf.juoserver.api.LoginManager;
-import net.sf.juoserver.api.Account;
-import net.sf.juoserver.api.Mobile;
-import net.sf.juoserver.api.PlayerSession;
+import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.UOAccount;
 import net.sf.juoserver.protocol.ProtocolIoPort;
 import net.sf.juoserver.protocol.CircularClientMovementTracker;
@@ -30,8 +25,9 @@ public class AbstractGameControllerTest {
 	protected final LoginManager loginManager = context.mock(LoginManager.class);
 	protected final InterClientNetwork intercom = context.mock(InterClientNetwork.class);
 	protected final ProtocolIoPort clientHandler = context.mock(ProtocolIoPort.class);
+	protected final CommandHandler commandManager = context.mock(CommandHandler.class);
 	protected final GameController gameController = 
-			new GameController("client", clientHandler, core, new CircularClientMovementTracker(), loginManager, intercom);
+			new GameController("client", clientHandler, core, new CircularClientMovementTracker(), loginManager, intercom, commandManager);
 	
 	@Before
 	public final void createComponents() throws IOException {

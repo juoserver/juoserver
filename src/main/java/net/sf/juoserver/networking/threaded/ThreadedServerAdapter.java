@@ -1,12 +1,13 @@
 package net.sf.juoserver.networking.threaded;
 
-import lombok.extern.slf4j.Slf4j;
 import net.sf.juoserver.api.Configuration;
 import net.sf.juoserver.api.Server;
 import net.sf.juoserver.protocol.ControllerFactory;
 import net.sf.juoserver.protocol.Huffman;
 import net.sf.juoserver.protocol.ProtocolIoPort;
 import net.sf.juoserver.protocol.UOProtocolMessageReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -15,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-@Slf4j
 public final class ThreadedServerAdapter implements Server {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ThreadedServerAdapter.class);
 	private static final int FIRST_CLIENT_ID = 1;
 	
 	private final ClientThreadsManager clientThreadsManager = new ClientThreadsManager();
@@ -36,10 +37,10 @@ public final class ThreadedServerAdapter implements Server {
 	
 	@Override
 	public void acceptClientConnections() throws IOException {
-		log.info("Starting threaded server...");
+		LOGGER.info("Starting threaded server...");
 		serverSocket = new ServerSocket(configuration.getServerPort());
 		active = true;
-		log.info("Listening on port " + configuration.getServerPort());
+		LOGGER.info("Listening on port " + configuration.getServerPort());
 		try {
 			while (active) {
 				Socket connection = waitForConnection();
@@ -59,7 +60,7 @@ public final class ThreadedServerAdapter implements Server {
 	}
 
 	private void tearDown() throws IOException {
-		log.info("Shutting server down...");
+		LOGGER.info("Shutting server down...");
 		active = false;
 		if (serverSocket != null) {
 			serverSocket.close();
@@ -71,13 +72,13 @@ public final class ThreadedServerAdapter implements Server {
 	
 	public void detachClient(ProtocolIoPort client) {
 		if (clients.remove( client )) {
-			log.info(getClientsString());
+			LOGGER.info(getClientsString());
 		}
 	}
 	
 	private void attachClient(final ThreadedProtocolIoPort client) throws IOException {
 		if (clients.add( client )) {
-			log.info(getClientsString());
+			LOGGER.info(getClientsString());
 		}
 		client.init();
 		clientThreadsManager.startClientThread(client);
