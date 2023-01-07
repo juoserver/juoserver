@@ -15,7 +15,7 @@ public class CommandHandlerImpl implements CommandHandler {
     private final Map<String, Command> commands;
     private final String activationCharacter;
 
-    public CommandHandlerImpl(Core core, InterClientNetwork network, Set<Command> commands, Configuration configuration) {
+    public CommandHandlerImpl(Core core, InterClientNetwork network, Collection<Command> commands, Configuration configuration) {
         this.core = core;
         this.network = network;
         this.commands = commands.stream()

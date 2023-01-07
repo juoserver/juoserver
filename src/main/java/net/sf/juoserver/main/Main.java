@@ -4,6 +4,7 @@ import net.sf.juoserver.api.Command;
 import net.sf.juoserver.api.Configuration;
 import net.sf.juoserver.api.Core;
 import net.sf.juoserver.api.Server;
+import net.sf.juoserver.builder.ServerType;
 import net.sf.juoserver.configuration.PropertyFileBasedConfiguration;
 import net.sf.juoserver.files.mondainslegacy.MondainsLegacyFileReadersFactory;
 import net.sf.juoserver.model.InMemoryDataManager;
@@ -11,18 +12,16 @@ import net.sf.juoserver.model.UOCore;
 import net.sf.juoserver.networking.mina.MinaMultiplexingServerAdapter;
 import net.sf.juoserver.networking.threaded.ThreadedServerAdapter;
 import net.sf.juoserver.protocol.ControllerFactory;
-import net.sf.juoserver.protocol.UOProtocolMessageReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Main {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
-	private static enum ServerType { THREADED, MULTIPLEXING };
+	;
 	private final Configuration configuration;
 	private final Core core;
 	private final Set<Command> commands;
