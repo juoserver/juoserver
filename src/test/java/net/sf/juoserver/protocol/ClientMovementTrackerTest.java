@@ -1,17 +1,18 @@
 package net.sf.juoserver.protocol;
 
-import static org.junit.Assert.*;
-
 import net.sf.juoserver.protocol.CircularClientMovementTracker;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class ClientMovementTrackerTest {
 
 	private CircularClientMovementTracker tracker;
 	
-	@Before
+	@BeforeEach
 	public void createTracker() {
 		tracker = new CircularClientMovementTracker();
 	}

@@ -1,8 +1,5 @@
 package net.sf.juoserver.protocol;
 
-
-import net.sf.juoserver.protocol.DropItem;
-
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.junit.jupiter.api.Assertions;
@@ -16,7 +13,7 @@ public class DropItemTest {
 	public void dropOnTheGround() throws DecoderException {
 		byte[] bytes = Hex.decodeHex( "08000004B302E8087800FFFFFFFF".toCharArray() );
 		DropItem di = new DropItem(bytes);
-		assertEquals(0x4B3, di.getItemSerial());
+		Assertions.assertEquals(0x4B3, di.getItemSerial());
 		assertEquals(0x02E8, di.getTargetX());
 		assertEquals(0x0878, di.getTargetY());
 		assertEquals(0, di.getTargetZ());

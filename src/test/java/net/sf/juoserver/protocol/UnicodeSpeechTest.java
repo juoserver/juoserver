@@ -1,19 +1,15 @@
 package net.sf.juoserver.protocol;
 
-import static org.junit.Assert.*;
+import net.sf.juoserver.TestingFactory;
+import net.sf.juoserver.api.MessageType;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.nio.ByteBuffer;
 
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
-import org.junit.Before;
-import org.junit.Test;
-
-import net.sf.juoserver.TestingFactory;
-import net.sf.juoserver.api.MessageType;
-import net.sf.juoserver.protocol.MessagesUtils;
-import net.sf.juoserver.protocol.UnicodeSpeech;
-import net.sf.juoserver.protocol.UnicodeSpeechRequest;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UnicodeSpeechTest {
 
@@ -24,7 +20,7 @@ public class UnicodeSpeechTest {
 	private static final String TXT = "Hi there!";
 	private UnicodeSpeech speech;
 
-	@Before
+	@BeforeEach
 	public void createMessage() throws DecoderException {
 		UnicodeSpeechRequest req = new UnicodeSpeechRequest(
 				MessageType.Regular, HUE, FONT, LANGUAGE, TXT);

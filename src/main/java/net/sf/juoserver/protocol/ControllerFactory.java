@@ -4,6 +4,7 @@ import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.Intercom;
 import net.sf.juoserver.model.UOLoginManager;
 
+import java.util.Collection;
 import java.util.Set;
 
 public final class ControllerFactory {
@@ -13,7 +14,7 @@ public final class ControllerFactory {
 	private final InterClientNetwork network;
 	private final CommandHandler commandManager;
 	
-	public ControllerFactory(Core core, Configuration configuration, Set<Command> commands) {
+	public ControllerFactory(Core core, Configuration configuration, Collection<Command> commands) {
 		super();
 		this.core = core;
 		this.configuration = configuration;

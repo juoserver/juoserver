@@ -1,12 +1,11 @@
 package net.sf.juoserver.protocol;
 
-import static org.junit.Assert.*;
 import net.sf.juoserver.api.MessageType;
-import net.sf.juoserver.protocol.UnicodeSpeechRequest;
-
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UnicodeSpeechRequestTest {
 

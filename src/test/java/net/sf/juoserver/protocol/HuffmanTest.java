@@ -1,20 +1,18 @@
 package net.sf.juoserver.protocol;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import net.sf.juoserver.protocol.Huffman;
-
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HuffmanTest {
 	
 	private Huffman encoder;
 	private short endByte, endNByte;
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		encoder = new Huffman();
 		endByte = Huffman.encodeTree[256][1];

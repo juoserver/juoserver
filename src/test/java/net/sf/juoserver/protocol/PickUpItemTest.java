@@ -1,12 +1,10 @@
 package net.sf.juoserver.protocol;
 
-import static org.junit.Assert.assertEquals;
-
-import net.sf.juoserver.protocol.PickUpItem;
-
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PickUpItemTest {
 	

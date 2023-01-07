@@ -1,16 +1,12 @@
 package net.sf.juoserver.protocol;
 
-import static org.junit.Assert.*;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
+import org.junit.jupiter.api.Test;
 
 import java.nio.ByteBuffer;
 
-
-import net.sf.juoserver.protocol.AbstractMessage;
-import net.sf.juoserver.protocol.MessagesUtils;
-
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MessageTest {
 

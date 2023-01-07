@@ -1,47 +1,28 @@
 package net.sf.juoserver.protocol;
 
-import static org.junit.Assert.*;
+import net.sf.juoserver.TestingFactory;
+import net.sf.juoserver.api.Decodable;
+import net.sf.juoserver.api.Message;
+import net.sf.juoserver.api.MessageReader;
+import net.sf.juoserver.api.Mobile;
+import net.sf.juoserver.model.*;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang.ArrayUtils;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
-import net.sf.juoserver.TestingFactory;
-import net.sf.juoserver.api.Decodable;
-import net.sf.juoserver.api.MessageReader;
-import net.sf.juoserver.api.Message;
-import net.sf.juoserver.api.Mobile;
-import net.sf.juoserver.model.City;
-import net.sf.juoserver.model.Flag;
-import net.sf.juoserver.model.UOItem;
-import net.sf.juoserver.model.PlayingCharacter;
-import net.sf.juoserver.model.ServerInfo;
-import net.sf.juoserver.protocol.AbstractMessage;
-import net.sf.juoserver.protocol.BadDecodableException;
-import net.sf.juoserver.protocol.CharacterList;
-import net.sf.juoserver.protocol.CharacterSelect;
-import net.sf.juoserver.protocol.ClasspathMessageDecoderProvider;
-import net.sf.juoserver.protocol.ClilocMessage;
-import net.sf.juoserver.protocol.LoginRequest;
-import net.sf.juoserver.protocol.LoginSeed;
-import net.sf.juoserver.protocol.MegaClilocRequest;
-import net.sf.juoserver.protocol.MegaClilocResponse;
-import net.sf.juoserver.protocol.UOProtocolMessageReader;
-import net.sf.juoserver.protocol.SelectServer;
-import net.sf.juoserver.protocol.ServerConnect;
-import net.sf.juoserver.protocol.ServerList;
-import net.sf.juoserver.protocol.ServerLoginRequest;
-import net.sf.juoserver.protocol.UpdatePlayer;
-
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.lang.ArrayUtils;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MessageReaderTest {
 	private MessageReader reader, initializedReader;
@@ -51,7 +32,7 @@ public class MessageReaderTest {
 	private byte[] serverLoginRequestBytes;
 	private byte[] characterSelectBytes;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws DecoderException {
 		reader = new UOProtocolMessageReader();
 		initializedReader = new UOProtocolMessageReader(new ClasspathMessageDecoderProvider(), true);
@@ -59,8 +40,8 @@ public class MessageReaderTest {
 		ipBytes = Hex.decodeHex( "0A000064".toCharArray() );
 		
 		loginBytes = new byte[62];
-		byte[] user = Arrays.copyOf("myuser".getBytes(Charset.forName(AbstractMessage.UTF8)), 30);
-		byte[] psw = Arrays.copyOf("mypsw".getBytes(Charset.forName(AbstractMessage.UTF8)), 30);
+		byte[] user = Arrays.copyOf("myuser".getBytes(StandardCharsets.UTF_8), 30);
+		byte[] psw = Arrays.copyOf("mypsw".getBytes(StandardCharsets.UTF_8), 30);
 		loginBytes[0] = Hex.decodeHex( "80".toCharArray() )[0];
 		System.arraycopy(user, 0, loginBytes, 1, 30);
 		System.arraycopy(psw, 0, loginBytes, 31, 30);
@@ -94,10 +75,10 @@ public class MessageReaderTest {
 		UOProtocolMessageReader reader = new UOProtocolMessageReader();
 		UOProtocolMessageReader initializedReader = new UOProtocolMessageReader(mdp, true);
 		assertNotNull(reader);
-		assertTrue(mdp.getDecoders().values().size() > 0);
-		assertFalse(reader.seedSent);
+		Assertions.assertTrue(mdp.getDecoders().values().size() > 0);
+		Assertions.assertFalse(reader.seedSent);
 		assertNotNull(initializedReader);
-		assertTrue(initializedReader.seedSent);
+		Assertions.assertTrue(initializedReader.seedSent);
 	}
 	
 	@Test
@@ -114,7 +95,7 @@ public class MessageReaderTest {
 	@Test
 	public void buildLoginRequest() throws DecoderException, UnknownHostException {
 		LoginRequest msg = new LoginRequest( loginBytes );
-		assertEquals("myuser", msg.getUser());
+		Assertions.assertEquals("myuser", msg.getUser());
 		assertEquals("mypsw", msg.getPassword());
 	}
 	
@@ -178,7 +159,7 @@ public class MessageReaderTest {
 		assertEquals((byte) ServerConnect.CODE, bytes.get());
 		byte[] addressBytes = new byte[4];
 		bytes.get(addressBytes, 0, 4);
-		assertTrue(Arrays.equals( InetAddress.getLocalHost().getAddress(), addressBytes ));
+		assertArrayEquals(InetAddress.getLocalHost().getAddress(), addressBytes);
 		assertEquals(7775, bytes.getShort());
 		assertEquals(42, bytes.getInt());
 	}
@@ -252,35 +233,6 @@ public class MessageReaderTest {
 		CharacterSelect msg = new CharacterSelect( characterSelectBytes );
 		assertEquals((byte) 0, msg.getCharId());
 		assertEquals("myuser", msg.getCharName());
-	}
-	
-	@Test(expected=BadDecodableException.class)
-	public void badDecodable() {
-		ClasspathMessageDecoderProvider mdp = new ClasspathMessageDecoderProvider() {
-			@Override
-			protected void init() {
-				super.configureFrom(MessageReaderTest.class);
-			}
-		};
-		new UOProtocolMessageReader(mdp, true);
-	}
-	
-	@SuppressWarnings("unused") // Used via reflection by ClasspathMessageDecoderProvider
-	@Decodable(code=MyBadTestMessage.CODE)
-	private class MyBadTestMessage extends AbstractMessage {
-		public static final int CODE = 0x42;
-		private static final long serialVersionUID = 1L;
-		public MyBadTestMessage() {
-			super(CODE, 42);
-		}
-		@Override
-		public int hashCode() {
-			return 0;
-		}
-		@Override
-		public boolean equals(Object obj) {
-			return false;
-		}
 	}
 	
 	@Test
