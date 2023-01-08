@@ -4,6 +4,8 @@ import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.*;
 import net.sf.juoserver.protocol.GeneralInformation.SubcommandType;
 import net.sf.juoserver.protocol.SkillUpdate.SkillUpdateType;
+import net.sf.juoserver.protocol.combat.CombatSystem;
+import net.sf.juoserver.protocol.combat.CombatSystemImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +30,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 	private final LoginManager loginManager;
 	private final InterClientNetwork network;
 	private final CommandHandler commandHandler;
+	private final CombatSystem combatSystem = new CombatSystemImpl();
 
 	private ClientVersion clientVersion;
 	private PlayerSession session;
@@ -179,7 +182,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 	 * @return tooltip information
 	 */
 	public List<Message> handle(MegaClilocRequest mcr) {
-		List<Message> msgs = new ArrayList<Message>();
+		List<Message> msgs = new ArrayList<>();
 		for (int querySerial : mcr.getQuerySerials()) {
 			// TODO: distinguish between items and mobiles as in handle(LookRequest)
 			Mobile mobile = core.findMobileByID( querySerial );
@@ -313,19 +316,40 @@ public class GameController extends AbstractProtocolController implements ModelO
 	}
 	
 	public List<Message> handle(AttackRequest attackRequest) {
-		Mobile attacked = core.findMobileByID(attackRequest.getMobileID());		
-		session.attack(attacked);				
+		var attacked = core.findMobileByID(attackRequest.getMobileID());
+		var attacker = session.getMobile();
+
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("{} is attacking {} ", attacked, attacked);
+		}
+
+		session.attack(attacked);
+
+		if (combatSystem.isOnRangeOfCombat(attacker, attacked)) {
+			session.applyDamage(combatSystem.calculateAttackedDamage(session.getMobile(), attacked));
+		}
+
 		return asList(new AttackOK(attacked), 
-				new FightOccurring(session.getMobile(), attacked),
+				new FightOccurring(attacker, attacked),
 				new AttackSucceed(attacked));
 	}
 	
 	@Override
 	public void mobileAttacked(Mobile attacker) {
+		var attacked = session.getMobile();
+
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("{} attacked by {}", attacked, attacker);
+		}
+
+		if (combatSystem.isOnRangeOfCombat(attacker, attacked)) {
+			session.applyDamage(combatSystem.calculateAttackedDamage(attacker, attacked));
+		}
+
 		try {
 			clientHandler.sendToClient(new AttackOK(attacker.getSerialId()), 
 					new AttackSucceed(attacker),
-					new FightOccurring(session.getMobile(), attacker));
+					new FightOccurring(attacked, attacker));
 		} catch (IOException e) {
 			throw new IntercomException(e);
 		}		
@@ -333,13 +357,25 @@ public class GameController extends AbstractProtocolController implements ModelO
 	
 	@Override
 	public void mobileAttackFinished(Mobile attacker) {		
-		try {								
+		try {
+			LOGGER.info("{} Attack finished {}", session.getMobile(), attacker);
 			clientHandler.sendToClient(new AttackSucceed(0));
 		} catch (IOException e) {
 			throw new IntercomException(e);
 		}
 	}
-	
+
+	@Override
+	public void mobileDamaged(Mobile mobile, int damage) {
+		if (mobile.equals(session.getMobile())) {
+			try {
+				clientHandler.sendToClient(new StatusBarInfo(mobile));
+			} catch (IOException e) {
+				throw new IntercomException(e);
+			}
+		}
+	}
+
 	// ====================== END COMBAT ======================
 	
 	public void handle(GenericAOSCommands commands) {

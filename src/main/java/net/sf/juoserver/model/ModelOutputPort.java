@@ -22,4 +22,5 @@ public interface ModelOutputPort {
 	void mobileAttacked(Mobile attacker);
 	void mobileAttackFinished(Mobile enemy);
 	void mobileDroppedCloth(Mobile mobile, Item droppedCloth);
+	void mobileDamaged(Mobile mobile, int damage);
 }

@@ -8,7 +8,7 @@ import net.sf.juoserver.api.Mobile;
 public class StatusBarInfo extends AbstractMessage {
 	private static final long serialVersionUID = 1L;
 	private static final int CODE = 0x11;
-	private Mobile mobile;
+	private final Mobile mobile;
 	public StatusBarInfo(Mobile mobile) {
 		super(CODE, getLength(mobile));
 		this.mobile = mobile;

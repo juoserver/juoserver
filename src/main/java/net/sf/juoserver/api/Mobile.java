@@ -18,6 +18,8 @@ public interface Mobile extends JUoEntity, Point3D {
 
 	int getCurrentHitPoints();
 
+	void setCurrentHitPoints(int currentHitPoints);
+
 	int getMaxHitPoints();
 
 	boolean isNameChangeFlag();

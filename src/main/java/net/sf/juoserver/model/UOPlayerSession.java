@@ -33,7 +33,7 @@ public class UOPlayerSession implements PlayerSession {
 	private Mobile mobile;
 	
 	protected Mobile attacking;
-	protected final Set<Mobile> attackingMe = new HashSet<Mobile>(); 
+	protected final Set<Mobile> attackingMe = new HashSet<>();
 	
 	public UOPlayerSession(Core core, Account account, ModelOutputPort serverResponseListener,
 			InterClientNetwork network) {
@@ -229,8 +229,7 @@ public class UOPlayerSession implements PlayerSession {
 	}
 
 	@Override
-	public void attack(Mobile attacked) {		
-		// TODO identify player that started the fight
+	public void attack(Mobile attacked) {
 		network.notifyAttacked(mobile, attacked);
 	}
 	
@@ -262,7 +261,13 @@ public class UOPlayerSession implements PlayerSession {
 			}
 		}
 	}
-	
+
+	@Override
+	public void applyDamage(int damage) {
+		mobile.setCurrentHitPoints( mobile.getCurrentHitPoints() - damage );
+		serverResponseListener.mobileDamaged(mobile, damage);
+	}
+
 	private boolean imNotUnderAttack(Mobile attacked) {
 		return !attackingMe.contains(attacked);
 	}
@@ -278,5 +283,5 @@ public class UOPlayerSession implements PlayerSession {
 	private boolean isAttacker(Mobile attacker) {
 		return mobile.equals(attacker);
 	}
-	
+
 }
