@@ -1,13 +1,12 @@
 package net.sf.juoserver;
 
-import net.sf.juoserver.api.Configuration;
-import net.sf.juoserver.api.Mobile;
+import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.UOMobile;
 
 public class TestingFactory {
 	public static Mobile createTestMobile(int serialId, String name) {
-		return new UOMobile(serialId, name, 0, 0, false, null, null, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, null);
+		return new UOMobile(serialId, name, 0, 0, false, StatusFlag.AOS, SexRace.FemaleElf, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, RaceFlag.Elf);
 	}
 
 	public static Configuration createTestConfiguration() {

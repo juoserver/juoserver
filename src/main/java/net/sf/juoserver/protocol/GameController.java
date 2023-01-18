@@ -30,14 +30,14 @@ public class GameController extends AbstractProtocolController implements ModelO
 	private final LoginManager loginManager;
 	private final InterClientNetwork network;
 	private final CommandHandler commandHandler;
-	private final CombatSystem combatSystem = new CombatSystemImpl();
+	private final CombatSystem combatSystem;
 
 	private ClientVersion clientVersion;
 	private PlayerSession session;
 
 	public GameController(String clientName, ProtocolIoPort clientHandler, Core core,
 			ClientMovementTracker movementTracker, LoginManager loginManager, InterClientNetwork network,
-		  CommandHandler commandHandler) {
+		  CommandHandler commandHandler, CombatSystem combatSystem) {
 		super();
 		this.controllerId = clientName + CONTROLLER_ID_POSTFIX;
 		this.clientHandler = clientHandler;
@@ -46,6 +46,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 		this.loginManager = loginManager;
 		this.network = network;
 		this.commandHandler = commandHandler;
+		this.combatSystem = combatSystem;
 	}
 	
 	// This message is sent in the second connection right after the new seed
@@ -325,7 +326,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 
 		session.attack(attacked);
 
-		if (combatSystem.isOnRangeOfCombat(attacker, attacked)) {
+		if (combatSystem.isOnRangeOfDamage(attacker, attacked)) {
 			session.applyDamage(combatSystem.calculateAttackedDamage(attacker, attacked));
 		}
 
@@ -342,7 +343,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 			LOGGER.debug("{} attacked by {}", attacked, attacker);
 		}
 
-		if (combatSystem.isOnRangeOfCombat(attacker, attacked)) {
+		if (combatSystem.isOnRangeOfDamage(attacker, attacked)) {
 			session.applyDamage(combatSystem.calculateAttackedDamage(attacker, attacked));
 		}
 

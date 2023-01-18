@@ -30,6 +30,8 @@ class CommandHandlerImplTest {
     private Configuration configuration;
     @Mock
     private PlayerSession session;
+    @Mock
+    private ProtocolIoPort protocolIoPort;
 
     @DisplayName("No args command was found")
     @Test
@@ -37,7 +39,7 @@ class CommandHandlerImplTest {
         var speech = givenSpeechRequest(".noArgCommand");
         var command = givenCommand("noArgCommand");
 
-        givenHandler(command).execute(session, speech);
+        givenHandler(command).execute(protocolIoPort, session, speech);
 
         var captor = ArgumentCaptor.forClass(CommandContext.class);
         verify(command).execute(captor.capture());
@@ -50,7 +52,7 @@ class CommandHandlerImplTest {
         var speech = givenSpeechRequest(".context");
         var command = givenCommand("context");
 
-        givenHandler(command).execute(session, speech);
+        givenHandler(command).execute(protocolIoPort, session, speech);
 
         var captor = ArgumentCaptor.forClass(CommandContext.class);
         verify(command).execute(captor.capture());
@@ -64,7 +66,7 @@ class CommandHandlerImplTest {
         var speech = givenSpeechRequest(".multipleArgsCommand arg1 arg2");
         var command = givenCommand("multipleArgsCommand");
 
-        givenHandler(command).execute(session, speech);
+        givenHandler(command).execute(protocolIoPort, session, speech);
 
         var captor = ArgumentCaptor.forClass(CommandContext.class);
         verify(command).execute(captor.capture());
@@ -77,7 +79,7 @@ class CommandHandlerImplTest {
         var speech = givenSpeechRequest(".COMMAND");
         var command = givenCommand("command");
 
-        givenHandler(command).execute(session, speech);
+        givenHandler(command).execute(protocolIoPort, session, speech);
 
         verify(command).execute(ArgumentMatchers.any(CommandContext.class));
     }

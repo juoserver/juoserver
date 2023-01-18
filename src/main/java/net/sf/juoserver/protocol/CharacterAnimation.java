@@ -6,6 +6,7 @@ import net.sf.juoserver.api.AnimationType;
 import net.sf.juoserver.api.Mobile;
 
 import java.nio.ByteBuffer;
+import java.util.Objects;
 
 public class CharacterAnimation extends AbstractMessage {
 
@@ -62,11 +63,14 @@ public class CharacterAnimation extends AbstractMessage {
 
     @Override
     public int hashCode() {
-        return 0;
+        return Objects.hash(mobile, repeat, type, frameCount, direction);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CharacterAnimation that = (CharacterAnimation) o;
+        return frameCount == that.frameCount && mobile.equals(that.mobile) && repeat == that.repeat && type == that.type && direction == that.direction;
     }
 }

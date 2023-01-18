@@ -6,5 +6,11 @@ public interface CombatSystem {
 
     int calculateAttackedDamage(Mobile attacker, Mobile attacked);
 
-    boolean isOnRangeOfCombat(Mobile attacker, Mobile attacked);
+    boolean isOnRangeOfDamage(Mobile attacker, Mobile attacked);
+
+    void beginCombat(Mobile attacker, Mobile attacked);
+
+    void endCombat(Mobile attacker, Mobile attacked);
+
+
 }
