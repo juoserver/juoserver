@@ -168,5 +168,11 @@ public final class Intercom implements InterClientNetwork {
 			l.onAttackFinished(attacker, attacked);
 		}
 	}
-		
+
+	@Override
+	public void notifyOtherDamaged(Mobile mobile, int damage) {
+		for (IntercomListener intercomListener : listeners) {
+			intercomListener.onOtherDamaged(mobile, damage);
+		}
+	}
 }

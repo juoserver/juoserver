@@ -31,7 +31,6 @@ public class PropertyFileBasedConfiguration implements Configuration {
 
 	public PropertyFileBasedConfiguration() {
 		this.propFilePath = "juoserver.properties";//System.getProperty(PROP_FILE_PATH);
-		System.out.println(System.getProperties());
 		// Classic filename fall-back
 		if (propFilePath == null) {
 			log.info("System property '" +

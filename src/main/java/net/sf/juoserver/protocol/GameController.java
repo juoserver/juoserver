@@ -157,7 +157,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 	
 	public void handle(UnicodeSpeechRequest request) {
 		if (commandHandler.isCommand(request)) {
-			commandHandler.execute(session, request);
+			commandHandler.execute(clientHandler, session, request);
 		} else {
 			session.speak(request.getMessageType(), request.getHue(),
 					request.getFont(), request.getLanguage(), request.getText());
@@ -320,13 +320,13 @@ public class GameController extends AbstractProtocolController implements ModelO
 		var attacker = session.getMobile();
 
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("{} is attacking {} ", attacked, attacked);
+			LOGGER.debug("{} is attacking {} ", attacker, attacked);
 		}
 
 		session.attack(attacked);
 
 		if (combatSystem.isOnRangeOfCombat(attacker, attacked)) {
-			session.applyDamage(combatSystem.calculateAttackedDamage(session.getMobile(), attacked));
+			session.applyDamage(combatSystem.calculateAttackedDamage(attacker, attacked));
 		}
 
 		return asList(new AttackOK(attacked), 
@@ -358,7 +358,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 	@Override
 	public void mobileAttackFinished(Mobile attacker) {		
 		try {
-			LOGGER.info("{} Attack finished {}", session.getMobile(), attacker);
+			LOGGER.debug("{} Attack finished {}", session.getMobile(), attacker);
 			clientHandler.sendToClient(new AttackSucceed(0));
 		} catch (IOException e) {
 			throw new IntercomException(e);
@@ -367,12 +367,10 @@ public class GameController extends AbstractProtocolController implements ModelO
 
 	@Override
 	public void mobileDamaged(Mobile mobile, int damage) {
-		if (mobile.equals(session.getMobile())) {
-			try {
-				clientHandler.sendToClient(new StatusBarInfo(mobile));
-			} catch (IOException e) {
-				throw new IntercomException(e);
-			}
+		try {
+			clientHandler.sendToClient(new StatusBarInfo(mobile), new CharacterAnimation(mobile, AnimationRepeat.ONCE, AnimationType.GET_HIT, 10, AnimationDirection.BACKWARD));
+		} catch (IOException e) {
+			throw new IntercomException(e);
 		}
 	}
 

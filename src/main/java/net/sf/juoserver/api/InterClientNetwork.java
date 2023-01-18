@@ -10,6 +10,7 @@ public interface InterClientNetwork {
 	void notifyDroppedCloth(Mobile mobile, Item droppedCloth);
 	void notifyAttacked(Mobile attacker, Mobile attacked);
 	void notifyAttackFinished(Mobile attacker, Mobile attacked);
+	void notifyOtherDamaged(Mobile mobile, int damage);
 	void removeIntercomListener(IntercomListener listener);
 	void addIntercomListener(IntercomListener listener);
 }

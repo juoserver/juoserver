@@ -266,6 +266,13 @@ public class UOPlayerSession implements PlayerSession {
 	public void applyDamage(int damage) {
 		mobile.setCurrentHitPoints( mobile.getCurrentHitPoints() - damage );
 		serverResponseListener.mobileDamaged(mobile, damage);
+
+		network.notifyOtherDamaged(mobile, damage);
+	}
+
+	@Override
+	public void onOtherDamaged(Mobile mobile, int damage) {
+		serverResponseListener.mobileDamaged(mobile, damage);
 	}
 
 	private boolean imNotUnderAttack(Mobile attacked) {

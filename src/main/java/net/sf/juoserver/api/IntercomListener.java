@@ -15,5 +15,7 @@ public interface IntercomListener {
 	void onChangedWarMode(Mobile mobile);
 	void onAttacked(Mobile attacker, Mobile attacked);
 	void onAttackFinished(Mobile attacker, Mobile attacked);
-	void onDroppedCloth(Mobile mobile, Item droppedCloth);	
+	void onOtherDamaged(Mobile mobile, int damage);
+	void onDroppedCloth(Mobile mobile, Item droppedCloth);
+
 }
