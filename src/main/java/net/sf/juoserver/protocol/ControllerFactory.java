@@ -17,14 +17,14 @@ public final class ControllerFactory {
 	private final CommandHandler commandManager;
 	private final CombatSystem combatSystem;
 	
-	public ControllerFactory(Core core, Configuration configuration, Collection<Command> commands) {
+	public ControllerFactory(Core core, Configuration configuration, Collection<Command> commands, CombatSystem combatSystem) {
 		super();
 		this.core = core;
 		this.configuration = configuration;
 		this.loginManager = new UOLoginManager(core);
 		this.network = new Intercom();
 		this.commandManager = new CommandHandlerImpl(this.core, this.network, commands, configuration);
-		this.combatSystem = new CombatSystemImpl();
+		this.combatSystem = combatSystem;
 	}
 
 	public ProtocolController createGameController(ProtocolIoPort clientHandler) {

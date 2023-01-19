@@ -324,11 +324,8 @@ public class GameController extends AbstractProtocolController implements ModelO
 			LOGGER.debug("{} is attacking {} ", attacker, attacked);
 		}
 
+		combatSystem.startedAttack(session, attacked);
 		session.attack(attacked);
-
-		if (combatSystem.isOnRangeOfDamage(attacker, attacked)) {
-			session.applyDamage(combatSystem.calculateAttackedDamage(attacker, attacked));
-		}
 
 		return asList(new AttackOK(attacked), 
 				new FightOccurring(attacker, attacked),
@@ -343,9 +340,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 			LOGGER.debug("{} attacked by {}", attacked, attacker);
 		}
 
-		if (combatSystem.isOnRangeOfDamage(attacker, attacked)) {
-			session.applyDamage(combatSystem.calculateAttackedDamage(attacker, attacked));
-		}
+		combatSystem.startedDefense(session, attacker);
 
 		try {
 			clientHandler.sendToClient(new AttackOK(attacker.getSerialId()), 
@@ -360,6 +355,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 	public void mobileAttackFinished(Mobile attacker) {		
 		try {
 			LOGGER.debug("{} Attack finished {}", session.getMobile(), attacker);
+			combatSystem.combatFinished(attacker, session.getMobile());
 			clientHandler.sendToClient(new AttackSucceed(0));
 		} catch (IOException e) {
 			throw new IntercomException(e);
