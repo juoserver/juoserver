@@ -15,7 +15,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class MobileAttackedTest extends AbstractNewGameControllerTest {
 
@@ -37,13 +36,8 @@ public class MobileAttackedTest extends AbstractNewGameControllerTest {
     @DisplayName("Mobile attacked with damage")
     @Test
     public void mobileAttackedWithDamage() {
-        when(combatSystem.isOnRangeOfDamage(attacker, mobile))
-                .thenReturn(Boolean.TRUE);
-        when(combatSystem.calculateAttackedDamage(attacker, mobile))
-                .thenReturn(1);
-
         gameController.mobileAttacked(attacker);
 
-        verify(session).applyDamage(1);
+        verify(combatSystem).defenseStarted(session, attacker);
     }
 }

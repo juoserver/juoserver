@@ -24,7 +24,7 @@ public class UOMobile implements Mobile {
 	/**
 	 * The body type.
 	 */
-	private int modelId = 0x25d;
+	private int modelId = 0x190;
 	private String name;
 	private int currentHitPoints;
 	private int maxHitPoints;

@@ -14,4 +14,5 @@ public interface PlayerSession extends IntercomListener {
 	void toggleWarMode(boolean war);
 	void attack(Mobile enemy);
 	void applyDamage(int damage);
+	void fightOccurring(Mobile opponent);
 }

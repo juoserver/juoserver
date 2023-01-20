@@ -6,14 +6,9 @@ import net.sf.juoserver.api.SubSystem;
 
 public interface CombatSystem extends SubSystem {
 
-    int calculateAttackedDamage(Mobile attacker, Mobile attacked);
+    void attackStarted(PlayerSession attackerSession, Mobile attacked);
 
-    boolean isOnRangeOfDamage(Mobile attacker, Mobile attacked);
-
-
-    void startedAttack(PlayerSession attackerSession, Mobile attacked);
-
-    void startedDefense(PlayerSession attackedSession, Mobile attacker);
+    void defenseStarted(PlayerSession attackedSession, Mobile attacker);
 
     void combatFinished(Mobile attacker, Mobile attacked);
 }

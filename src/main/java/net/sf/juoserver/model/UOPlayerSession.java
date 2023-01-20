@@ -235,11 +235,11 @@ public class UOPlayerSession implements PlayerSession {
 	
 	@Override
 	public void onAttacked(Mobile attacker, Mobile attacked) {			
-		if (isAttacked(attacked)) {
+		if (mobile.equals(attacked)) {
 			attackingMe.add(attacker);			
 			serverResponseListener.mobileAttacked(attacker);
 		} else {
-			if (isAttacker(attacker)) {
+			if (mobile.equals(attacker)) {
 				attacking = attacked;
 			}
 		}		
@@ -247,15 +247,15 @@ public class UOPlayerSession implements PlayerSession {
 	
 	@Override
 	public void onAttackFinished(Mobile attacker, Mobile attacked) {		
-		if (isAttacker(attacker)) {
+		if (mobile.equals(attacker)) {
 			attacking = null;
-			if (imNotUnderAttack(attacked)) {
+			if (!attackingMe.contains(attacked)) {
 				serverResponseListener.mobileAttackFinished(attacked);
 			}			
 		} else {
-			if (isAttacked(attacked)) {		
+			if (mobile.equals(attacked)) {
 				attackingMe.remove(attacker);
-				if (imNotAttacking()) {
+				if (attacking == null) {
 					serverResponseListener.mobileAttackFinished(attacker);
 				}				
 			}
@@ -275,20 +275,14 @@ public class UOPlayerSession implements PlayerSession {
 		serverResponseListener.mobileDamaged(mobile, damage);
 	}
 
-	private boolean imNotUnderAttack(Mobile attacked) {
-		return !attackingMe.contains(attacked);
-	}
-	
-	private boolean imNotAttacking() {
-		return attacking == null;
-	}
-	
-	private boolean isAttacked(Mobile attacked) {
-		return mobile.equals(attacked);
-	}
-	
-	private boolean isAttacker(Mobile attacker) {
-		return mobile.equals(attacker);
+	@Override
+	public void fightOccurring(Mobile opponent) {
+		// TODO calculate stamina consumption
+		network.notifyFightOccurring(mobile, opponent);
 	}
 
+	@Override
+	public void onFightOccurring(Mobile opponent1, Mobile opponent2) {
+		serverResponseListener.fightOccurring(opponent1, opponent2);
+	}
 }

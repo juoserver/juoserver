@@ -44,16 +44,4 @@ public class HandleAttackRequestTest extends AbstractNewGameControllerTest {
                 new AttackSucceed(attacked)), messages);
     }
 
-    @DisplayName("Should begin combat and apply damage")
-    @Test
-    public void shouldBeginCombatAndApplyDamage() {
-        when(combatSystem.isOnRangeOfDamage(mobile, attacked))
-                .thenReturn(Boolean.TRUE);
-        when(combatSystem.calculateAttackedDamage(mobile, attacked))
-                .thenReturn(1);
-
-        gameController.handle(attackRequest);
-
-        verify(session).applyDamage(1);
-    }
 }

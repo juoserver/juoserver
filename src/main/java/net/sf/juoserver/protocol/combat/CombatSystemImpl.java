@@ -10,51 +10,69 @@ import java.util.Objects;
 
 public class CombatSystemImpl implements CombatSystem {
 
-    private final Map<KeyPair, ValuePair> combatSessionsMap = Collections.synchronizedMap(new HashMap<>());
+    private final Map<KeyPair, ValuePair> combatSessions = Collections.synchronizedMap(new HashMap<>());
 
     @Override
-    public int calculateAttackedDamage(Mobile attacker, Mobile attacked) {
-        // TODO calculate the damage based on attributes
-        return 1;
+    public void attackStarted(PlayerSession attackerSession, Mobile attacked) {
+        combatSessions.put(KeyPair.of(attackerSession.getMobile(), attacked), new ValuePair(attackerSession, null));
     }
 
     @Override
-    public boolean isOnRangeOfDamage(Mobile attacker, Mobile attacked) {
-        int distance = (int) Math.hypot(attacker.getX()-attacked.getX(), attacker.getY()-attacked.getY());
-        // TODO verify equipped weapon
-        return distance < 2;
-    }
-
-    @Override
-    public void startedAttack(PlayerSession attackerSession, Mobile attacked) {
-        combatSessionsMap.put(new KeyPair(attackerSession.getMobile(), attacked), new ValuePair(attackerSession));
-    }
-
-    @Override
-    public void startedDefense(PlayerSession attackedSession, Mobile attacker) {
-        System.out.println(attackedSession.getMobile()+"  "+attacker+ "   "+combatSessionsMap);
-        combatSessionsMap.get(new KeyPair(attacker, attackedSession.getMobile())).setAttackedSession(attackedSession);
+    public void defenseStarted(PlayerSession attackedSession, Mobile attacker) {
+        var keyPair = KeyPair.of(attacker, attackedSession.getMobile());
+        if (combatSessions.containsKey(keyPair)) {
+            var attackerSession = combatSessions.get(keyPair).getAttackerSession();
+            combatSessions.replace(keyPair, ValuePair.of(attackerSession, attackedSession));
+        }
     }
 
     @Override
     public void combatFinished(Mobile attacker, Mobile attacked) {
-        combatSessionsMap.remove(new KeyPair(attacker, attacked));
+        combatSessions.remove(new KeyPair(attacker, attacked));
     }
 
     @Override
     public void execute() {
-        combatSessionsMap.values().forEach(e->{
-            System.out.println(e.getAttackedSession()+" "+e.getAttackerSession());
+        combatSessions.values().forEach(e->{
+            var attacker = e.getAttackerSession();
+            var attacked = e.getAttackedSession();
+
+            if (getMobileDistance(attacker.getMobile(), attacked.getMobile()) <= 1) {
+                attacker.fightOccurring(attacked.getMobile());
+                attacked.fightOccurring(attacker.getMobile());
+
+                // TODO calculate damage
+                attacked.applyDamage(1);
+            }
         });
     }
 
-    private static class KeyPair {
-        private final Mobile attacker;
-        private final Mobile attacked;;
+    public int getMobileDistance(Mobile attacker, Mobile attacked) {
+        return (int) Math.hypot(attacker.getX() - attacked.getX(), attacker.getY() - attacked.getY());
+    }
 
-        public KeyPair(Mobile attacker, Mobile attacked) {
+    protected Map<KeyPair, ValuePair> getCombatSessions() {
+        return combatSessions;
+    }
+
+    protected static class KeyPair {
+        private final Mobile attacker;
+        private final Mobile attacked;
+
+        public static KeyPair of(Mobile attacker, Mobile attacked) {
+            return new KeyPair(attacker, attacked);
+        }
+        private KeyPair(Mobile attacker, Mobile attacked) {
             this.attacker = attacker;
             this.attacked = attacked;
+        }
+
+        public Mobile getAttacker() {
+            return attacker;
+        }
+
+        public Mobile getAttacked() {
+            return attacked;
         }
 
         @Override
@@ -71,12 +89,17 @@ public class CombatSystemImpl implements CombatSystem {
         }
     }
 
-    private static class ValuePair {
+    protected static class ValuePair {
         private final PlayerSession attackerSession;
-        private PlayerSession attackedSession;
+        private final PlayerSession attackedSession;
 
-        public ValuePair(PlayerSession attackerSession) {
+        public static ValuePair of(PlayerSession attackerSession, PlayerSession attackedSession) {
+            return new ValuePair(attackerSession, attackedSession);
+        }
+
+        public ValuePair(PlayerSession attackerSession, PlayerSession attackedSession) {
             this.attackerSession = attackerSession;
+            this.attackedSession = attackedSession;
         }
 
         public PlayerSession getAttackerSession() {
@@ -87,8 +110,17 @@ public class CombatSystemImpl implements CombatSystem {
             return attackedSession;
         }
 
-        public void setAttackedSession(PlayerSession attackedSession) {
-            this.attackedSession = attackedSession;
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ValuePair valuePair = (ValuePair) o;
+            return attackerSession.equals(valuePair.attackerSession) && Objects.equals(attackedSession, valuePair.attackedSession);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(attackerSession, attackedSession);
         }
     }
 }

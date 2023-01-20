@@ -1,10 +1,6 @@
 package net.sf.juoserver.model;
 
-import net.sf.juoserver.api.Container;
-import net.sf.juoserver.api.Item;
-import net.sf.juoserver.api.MessageType;
-import net.sf.juoserver.api.Mobile;
-import net.sf.juoserver.api.Point3D;
+import net.sf.juoserver.api.*;
 
 /**
  * Model output boundary port. This interface is used by the model
@@ -23,4 +19,5 @@ public interface ModelOutputPort {
 	void mobileAttackFinished(Mobile enemy);
 	void mobileDroppedCloth(Mobile mobile, Item droppedCloth);
 	void mobileDamaged(Mobile mobile, int damage);
+	void fightOccurring(Mobile opponent1, Mobile opponent2);
 }

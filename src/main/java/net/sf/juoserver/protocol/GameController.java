@@ -5,7 +5,6 @@ import net.sf.juoserver.model.*;
 import net.sf.juoserver.protocol.GeneralInformation.SubcommandType;
 import net.sf.juoserver.protocol.SkillUpdate.SkillUpdateType;
 import net.sf.juoserver.protocol.combat.CombatSystem;
-import net.sf.juoserver.protocol.combat.CombatSystemImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -324,7 +323,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 			LOGGER.debug("{} is attacking {} ", attacker, attacked);
 		}
 
-		combatSystem.startedAttack(session, attacked);
+		combatSystem.attackStarted(session, attacked);
 		session.attack(attacked);
 
 		return asList(new AttackOK(attacked), 
@@ -340,7 +339,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 			LOGGER.debug("{} attacked by {}", attacked, attacker);
 		}
 
-		combatSystem.startedDefense(session, attacker);
+		combatSystem.defenseStarted(session, attacker);
 
 		try {
 			clientHandler.sendToClient(new AttackOK(attacker.getSerialId()), 
@@ -366,6 +365,16 @@ public class GameController extends AbstractProtocolController implements ModelO
 	public void mobileDamaged(Mobile mobile, int damage) {
 		try {
 			clientHandler.sendToClient(new StatusBarInfo(mobile), new CharacterAnimation(mobile, AnimationRepeat.ONCE, AnimationType.GET_HIT, 10, AnimationDirection.BACKWARD));
+		} catch (IOException e) {
+			throw new IntercomException(e);
+		}
+	}
+
+	@Override
+	public void fightOccurring(Mobile opponent1, Mobile opponent2) {
+		try {
+			clientHandler.sendToClient(new CharacterAnimation(opponent1, AnimationRepeat.ONCE, AnimationType.ATTACK_WITH_SWORD_OVER_AND_SIDE, 10, AnimationDirection.FORWARD),
+					new CharacterAnimation(opponent2, AnimationRepeat.ONCE, AnimationType.ATTACK_WITH_SWORD_OVER_AND_SIDE, 10, AnimationDirection.FORWARD));
 		} catch (IOException e) {
 			throw new IntercomException(e);
 		}
