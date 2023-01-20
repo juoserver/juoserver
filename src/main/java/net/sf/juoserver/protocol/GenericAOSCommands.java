@@ -1,12 +1,10 @@
 package net.sf.juoserver.protocol;
 
+import net.sf.juoserver.api.Coded;
+
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
-import net.sf.juoserver.api.Coded;
-import net.sf.juoserver.api.Decodable;
-
-@Decodable(code=GenericAOSCommands.CODE)
 public class GenericAOSCommands extends AbstractMessage {
 	
 	private static final long serialVersionUID = 1L;

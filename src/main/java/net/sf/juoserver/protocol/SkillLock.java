@@ -1,11 +1,9 @@
 package net.sf.juoserver.protocol;
 
-import java.nio.ByteBuffer;
-
-import net.sf.juoserver.api.Decodable;
 import net.sf.juoserver.api.SkillLockFlag;
 
-@Decodable(code = SkillLock.CODE)
+import java.nio.ByteBuffer;
+
 public class SkillLock extends AbstractMessage {
 	private static final long serialVersionUID = 1L;
 	protected static final int CODE = 0x3A;

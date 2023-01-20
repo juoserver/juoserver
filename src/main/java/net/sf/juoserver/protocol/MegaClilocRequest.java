@@ -1,13 +1,11 @@
 package net.sf.juoserver.protocol;
 
+import net.sf.juoserver.api.Mobile;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.juoserver.api.Decodable;
-import net.sf.juoserver.api.Mobile;
-
-@Decodable(code=MegaClilocRequest.CODE)
 public class MegaClilocRequest extends AbstractMessage {
 	private static final long serialVersionUID = 1L;
 	protected static final int CODE = 0xD6;

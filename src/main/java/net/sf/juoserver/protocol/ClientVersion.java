@@ -2,13 +2,10 @@ package net.sf.juoserver.protocol;
 
 import java.nio.ByteBuffer;
 
-import net.sf.juoserver.api.Decodable;
-
 /**
  * Client version request/response. This message
  * can be sent by both client and server.
  */
-@Decodable(code = ClientVersion.CODE)
 public class ClientVersion extends AbstractMessage {
 	private static final long serialVersionUID = 1L;
 	protected static final int CODE = 0xBD;

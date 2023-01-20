@@ -1,12 +1,9 @@
 package net.sf.juoserver.protocol;
 
-import net.sf.juoserver.api.Decodable;
-
 /**
  * Login request message, sent by the client.
  * @see <a href="http://kec.cz/tartaros/steamengine/uploads/SE%20packet%20guide/www.twilightmanor.net/se/packetsdf12.html?id=29&style=gold">packet guide</a>
  */
-@Decodable(code = LoginRequest.CODE)
 public class LoginRequest extends AbstractMessage {
 	private static final long serialVersionUID = 1L;
 	protected static final int CODE = 0x80;

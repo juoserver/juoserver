@@ -1,11 +1,9 @@
 package net.sf.juoserver.protocol;
 
+import net.sf.juoserver.api.CharacterStatus;
+
 import java.nio.ByteBuffer;
 
-import net.sf.juoserver.api.CharacterStatus;
-import net.sf.juoserver.api.Decodable;
-
-@Decodable(code=WarMode.CODE)
 public class WarMode extends AbstractMessage {
 	 
 	private static final long serialVersionUID = 1L;

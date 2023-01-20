@@ -1,9 +1,7 @@
 package net.sf.juoserver.protocol;
 
-import net.sf.juoserver.api.Decodable;
-
 /**
- * Exception indicating that a {@link Decodable} message
+ * Exception indicating that a message
  * was not properly coded (e.g., it misses a public constructor
  * taking a byte[] as its only argument).
  */
