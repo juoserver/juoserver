@@ -1,8 +1,5 @@
 package net.sf.juoserver.protocol;
 
-import net.sf.juoserver.api.Decodable;
-
-@Decodable(code=RequestHelp.CODE)
 public class RequestHelp extends AbstractMessage {
 
     protected static final int CODE = 0x9B;

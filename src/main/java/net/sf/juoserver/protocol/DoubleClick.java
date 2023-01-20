@@ -1,8 +1,5 @@
 package net.sf.juoserver.protocol;
 
-import net.sf.juoserver.api.Decodable;
-
-@Decodable(code=DoubleClick.CODE)
 public class DoubleClick extends AbstractMessage {
 	private static final long serialVersionUID = 1L;
 	protected static final int CODE = 0x06;

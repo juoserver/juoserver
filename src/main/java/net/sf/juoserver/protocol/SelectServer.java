@@ -2,9 +2,6 @@ package net.sf.juoserver.protocol;
 
 import java.nio.ByteBuffer;
 
-import net.sf.juoserver.api.Decodable;
-
-@Decodable(code = SelectServer.CODE)
 public class SelectServer extends AbstractMessage {
 	private static final long serialVersionUID = 1L;
 	protected static final int CODE = 0xA0;

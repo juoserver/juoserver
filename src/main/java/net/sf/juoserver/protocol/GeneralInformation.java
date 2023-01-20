@@ -1,18 +1,16 @@
 package net.sf.juoserver.protocol;
 
+import net.sf.juoserver.api.Coded;
+import net.sf.juoserver.model.ClientFlag;
+
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Set;
-
-import net.sf.juoserver.api.Coded;
-import net.sf.juoserver.api.Decodable;
-import net.sf.juoserver.model.ClientFlag;
 
 /**
  * General information packet.
  * @see <a href="http://docs.polserver.com/packets/index.php?Packet=0xBF">docs</a>
  */
-@Decodable(code = GeneralInformation.CODE)
 public class GeneralInformation extends AbstractMessage {
 	// NOTE: we cannot create a subclass for each sub-command
 	// type, because there must be a 1-1 relationship between

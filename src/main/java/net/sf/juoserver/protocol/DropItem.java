@@ -1,12 +1,10 @@
 package net.sf.juoserver.protocol;
 
-import java.nio.ByteBuffer;
-
-import net.sf.juoserver.api.Decodable;
 import net.sf.juoserver.api.Point3D;
 import net.sf.juoserver.model.PointInSpace;
 
-@Decodable(code = DropItem.CODE)
+import java.nio.ByteBuffer;
+
 public class DropItem extends AbstractMessage {
 	private static final long serialVersionUID = 1L;
 

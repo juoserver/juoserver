@@ -1,6 +1,5 @@
 package net.sf.juoserver.protocol;
 
-import net.sf.juoserver.api.Decodable;
 import net.sf.juoserver.api.Message;
 import net.sf.juoserver.api.MessageDecoderProvider;
 import net.sf.juoserver.api.MessageReader;
@@ -28,12 +27,12 @@ public class UOProtocolMessageReader implements MessageReader {
 	/**
 	 * Default constructor.
 	 * <p/>
-	 * Builds a new {@link UOProtocolMessageReader} that uses a {@link ClasspathMessageDecoderProvider}.
-	 * @throws BadDecodableException in case a {@link Decodable} {@link Message}
+	 * Builds a new {@link UOProtocolMessageReader} that uses a {@link DefaultMessageDecodeProvider}.
+	 * @throws BadDecodableException in case a {@link Message}
 	 * was misconfigured
 	 */
 	public UOProtocolMessageReader() {
-		this(new ClasspathMessageDecoderProvider(), false);
+		this(new DefaultMessageDecodeProvider(), false);
 	}
 	
 	/**

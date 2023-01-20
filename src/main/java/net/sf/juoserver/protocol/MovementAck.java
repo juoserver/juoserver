@@ -1,11 +1,9 @@
 package net.sf.juoserver.protocol;
 
-import java.nio.ByteBuffer;
-
-import net.sf.juoserver.api.Decodable;
 import net.sf.juoserver.api.Notoriety;
 
-@Decodable(code = MovementAck.CODE)
+import java.nio.ByteBuffer;
+
 public class MovementAck extends AbstractMessage {
 	private static final long serialVersionUID = 1L;
 	protected static final int CODE = 0x22;

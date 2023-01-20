@@ -1,11 +1,9 @@
 package net.sf.juoserver.protocol;
 
-import java.nio.ByteBuffer;
-
-import net.sf.juoserver.api.Decodable;
 import net.sf.juoserver.api.Direction;
 
-@Decodable(code=MoveRequest.CODE)
+import java.nio.ByteBuffer;
+
 public class MoveRequest extends AbstractMessage {
 	private static final long serialVersionUID = 1L;
 	protected static final int CODE = 0x02;
