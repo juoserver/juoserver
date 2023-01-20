@@ -1,12 +1,11 @@
 package net.sf.juoserver.networking.mina;
 
-import java.io.IOException;
-
 import net.sf.juoserver.api.Message;
 import net.sf.juoserver.networking.AbstractProtocolIoPort;
 import net.sf.juoserver.protocol.ControllerFactory;
-
 import org.apache.mina.core.session.IoSession;
+
+import java.io.IOException;
 
 public class MinaProtocolIoPortAdapter extends AbstractProtocolIoPort {
 	private final IoSession session;

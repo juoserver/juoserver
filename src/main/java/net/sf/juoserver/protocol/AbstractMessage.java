@@ -1,10 +1,9 @@
 package net.sf.juoserver.protocol;
 
+import net.sf.juoserver.api.Message;
+
 import java.io.Serializable;
 import java.nio.ByteBuffer;
-
-import net.sf.juoserver.api.Decodable;
-import net.sf.juoserver.api.Message;
 
 /**
  * Base class for messages.
@@ -13,7 +12,6 @@ import net.sf.juoserver.api.Message;
  * <p/>
  * Messages sent by clients (e.g. {@link CharacterSelect}) should:
  * <ul>
- * <li>Be annotated with {@link Decodable},</li>
  * <li>Provide a <b>public</b> constructor taking a single
  * <tt>byte</tt> array.</li>
  * </ul>

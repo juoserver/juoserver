@@ -1,13 +1,11 @@
 package net.sf.juoserver.protocol;
 
-import java.nio.ByteBuffer;
-
-import net.sf.juoserver.api.Decodable;
-import net.sf.juoserver.api.Layer;
 import net.sf.juoserver.api.Item;
+import net.sf.juoserver.api.Layer;
 import net.sf.juoserver.api.Mobile;
 
-@Decodable(code = WearItem.CODE)
+import java.nio.ByteBuffer;
+
 public class WearItem extends AbstractMessage {
 	private static final long serialVersionUID = 1L;
 	protected static final int CODE = 0x13;

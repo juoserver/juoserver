@@ -1,7 +1,6 @@
 package net.sf.juoserver.protocol;
 
 import net.sf.juoserver.TestingFactory;
-import net.sf.juoserver.api.Decodable;
 import net.sf.juoserver.api.Message;
 import net.sf.juoserver.api.MessageReader;
 import net.sf.juoserver.api.Mobile;
@@ -17,7 +16,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +33,7 @@ public class MessageReaderTest {
 	@BeforeEach
 	public void setUp() throws DecoderException {
 		reader = new UOProtocolMessageReader();
-		initializedReader = new UOProtocolMessageReader(new ClasspathMessageDecoderProvider(), true);
+		initializedReader = new UOProtocolMessageReader(new DefaultMessageDecodeProvider(), true);
 		
 		ipBytes = Hex.decodeHex( "0A000064".toCharArray() );
 		
@@ -71,11 +69,9 @@ public class MessageReaderTest {
 	
 	@Test
 	public void buildReader() {
-		ClasspathMessageDecoderProvider mdp = new ClasspathMessageDecoderProvider();
 		UOProtocolMessageReader reader = new UOProtocolMessageReader();
-		UOProtocolMessageReader initializedReader = new UOProtocolMessageReader(mdp, true);
+		UOProtocolMessageReader initializedReader = new UOProtocolMessageReader(new DefaultMessageDecodeProvider(), true);
 		assertNotNull(reader);
-		Assertions.assertTrue(mdp.getDecoders().values().size() > 0);
 		Assertions.assertFalse(reader.seedSent);
 		assertNotNull(initializedReader);
 		Assertions.assertTrue(initializedReader.seedSent);

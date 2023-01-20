@@ -14,8 +14,6 @@ dependencies {
 
     implementation 'commons-codec:commons-codec:1.15'
     implementation 'commons-lang:commons-lang:2.6'
-    implementation 'net.sf.scannotation:scannotation:1.0.2'
-    implementation 'org.burningwave:core:12.62.5'
     implementation 'org.apache.mina:mina-core:2.2.1'
 
     testImplementation 'junit:junit:4.13.2'
