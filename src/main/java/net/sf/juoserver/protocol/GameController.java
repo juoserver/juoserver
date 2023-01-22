@@ -225,11 +225,15 @@ public class GameController extends AbstractProtocolController implements ModelO
 		}
 	}
 	
-	public void handle(GeneralInformation info) {
+	public List<Message> handle(GeneralInformation info) {
 		Subcommand<GeneralInformation, SubcommandType> sc = info.getSubCommand();
 		if (sc != null) {
 			LOGGER.debug(String.valueOf(sc));
 		}
+		if (sc instanceof GeneralInformation.StatsLook) {
+			return List.of(new SendSpeech(((GeneralInformation.StatsLook) sc).getSerialId(), 0, 0, 0, 0, "maycon", ""));
+		}
+		return Collections.emptyList();
 	}
 	
 	public void handle(SpyOnClient spyOnClient) {} // Ignore this message
