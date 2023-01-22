@@ -2,6 +2,7 @@ package net.sf.juoserver.protocol;
 
 import net.sf.juoserver.api.Coded;
 import net.sf.juoserver.model.ClientFlag;
+import org.apache.commons.codec.binary.Hex;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -25,7 +26,8 @@ public class GeneralInformation extends AbstractMessage {
 		ScreenSize(5), ClientLanguage(0x0B), ClientType(0x0F),
 		Unhandled(0x24),
 		SetCursorHueSetMap(8), EnableMapDiff(0x12),
-		CloseStatusGump(0xc), Teste(16);
+		CloseStatusGump(0xc), Teste(16),
+		StatsLook(19);
 		private int code;
 		private SubcommandType(int subcmd) {
 			this.code = subcmd;
@@ -189,6 +191,21 @@ public class GeneralInformation extends AbstractMessage {
 		}
 		
 	}
+
+	public static class StatsLook extends Subcommand<GeneralInformation, SubcommandType> {
+
+		private final int serialId;
+
+		public StatsLook(int serialId) {
+			super(SubcommandType.StatsLook);
+			this.serialId = serialId;
+		}
+
+		public int getSerialId() {
+			return serialId;
+		}
+	}
+
 	private Subcommand<GeneralInformation, SubcommandType> subCommand;
 	// ============== client ==============
 	public GeneralInformation(byte[] contents) {
@@ -209,9 +226,13 @@ public class GeneralInformation extends AbstractMessage {
 			break;
 		case CloseStatusGump:
 			subCommand = new CloseStatusGump(bb.getInt());
+			break;
 		case Unhandled:
 			break;
 		case Teste:
+			break;
+		case StatsLook:
+			subCommand = new StatsLook(bb.getInt());
 			break;
 		default:
 			throw new IllegalStateException("Unknown subcommand: " + subcommandType);
