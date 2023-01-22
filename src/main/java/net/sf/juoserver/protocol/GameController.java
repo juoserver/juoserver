@@ -224,15 +224,31 @@ public class GameController extends AbstractProtocolController implements ModelO
 					false, false));
 		} else {
 			Item item = core.findItemByID(doubleClick.getObjectSerialId());
-			return itemManager.use(item);
+			if (item != null) {
+				return itemManager.use(item);
+			}
 		}
+		return Collections.emptyList();
 	}
 	
-	public void handle(GeneralInformation info) {
+	public List<Message> handle(GeneralInformation info) {
 		Subcommand<GeneralInformation, SubcommandType> sc = info.getSubCommand();
 		if (sc != null) {
 			LOGGER.debug(String.valueOf(sc));
 		}
+		if (sc instanceof GeneralInformation.StatsLook) {
+			var serialId = ((GeneralInformation.StatsLook) sc).getSerialId();
+			var item = core.findItemByID(serialId);
+			if (item != null) {
+				return List.of(new SendSpeech(item));
+			}
+			var mobile = core.findMobileByID(serialId);
+			if (mobile != null) {
+				return List.of(new SendSpeech(mobile));
+			}
+			return Collections.emptyList();
+		}
+		return Collections.emptyList();
 	}
 	
 	public void handle(SpyOnClient spyOnClient) {} // Ignore this message
@@ -245,7 +261,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 			return new ClilocMessage(mobile);
 		} else {
 			Item item = core.findItemByID( lookRequest.getSerialId() );
-			return new ClilocMessage(item);
+			return new SendSpeech(item);
 			// TODO: handle items' stacks too
 		}
 	}
