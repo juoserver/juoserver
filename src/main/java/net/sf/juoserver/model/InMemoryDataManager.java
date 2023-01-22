@@ -48,7 +48,7 @@ public class InMemoryDataManager implements DataManager {
 				return 0x68;
 			}
 		});
-		mobile.setItemOnLayer(Layer.Backpack, new UOContainer(mobile.getSerialId() + 1000 + UOCore.ITEMS_MAX_SERIAL_ID, 0x0E75, 0, 0x003C,
+		mobile.setItemOnLayer(Layer.Backpack, new UOContainer(mobile.getSerialId() + 1000 + UOCore.ITEMS_MAX_SERIAL_ID, 0x0E75, 0, "Backpack",0x003C,
 				Arrays.asList(brick),
 				positions));
 		mobile.setItemOnLayer(Layer.InnerTorso, new UOItem(mobile.getSerialId() + 0x1A + UOCore.ITEMS_MAX_SERIAL_ID, 0x1F7B, 0x7E));

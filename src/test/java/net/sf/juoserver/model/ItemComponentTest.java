@@ -21,7 +21,7 @@ public class ItemComponentTest extends AbstractComponentTest {
 	private final Item pants = new UOItem(12, 1, 2);
 	private final Item shoesWereInBackpack = new UOItem(13, 1, 2);
 	@SuppressWarnings("serial")
-	private final Container backpack = new UOContainer(100, 1, 2, 3, Arrays.asList(bottleWasInBackpack, shoesWereInBackpack),
+	private final Container backpack = new UOContainer(100, 1, 2, "Backpack",3, Arrays.asList(bottleWasInBackpack, shoesWereInBackpack),
 			new HashMap<Item, Point2D>() {{
 				put(bottleWasInBackpack, new Position(10, 11));
 				put(shoesWereInBackpack, new Position(12, 13));

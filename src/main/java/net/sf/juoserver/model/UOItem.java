@@ -22,6 +22,7 @@ public class UOItem implements Item {
 		this.serialId = serialId;
 		this.modelId = modelId;
 		this.hue = hue;
+		this.name = name;
 	}
 
 	@Override
