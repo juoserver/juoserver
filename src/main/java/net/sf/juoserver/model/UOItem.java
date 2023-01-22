@@ -7,8 +7,17 @@ public class UOItem implements Item {
 	private int serialId;
 	private int modelId;
 	private int hue;
+	private String name;
 
 	public UOItem(int serialId, int modelId, int hue) {
+		super();
+		this.serialId = serialId;
+		this.modelId = modelId;
+		this.hue = hue;
+		this.name = "Unknown";
+	}
+
+	public UOItem(int serialId, int modelId, int hue, String name) {
 		super();
 		this.serialId = serialId;
 		this.modelId = modelId;
@@ -28,6 +37,11 @@ public class UOItem implements Item {
 	@Override
 	public int getHue() {
 		return hue;
+	}
+
+	@Override
+	public String getName() {
+		return name;
 	}
 
 	@Override
