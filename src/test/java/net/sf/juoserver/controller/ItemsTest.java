@@ -29,7 +29,7 @@ import org.junit.Test;
 
 public class ItemsTest extends AbstractGameControllerTest {
 	private final Item item = new UOItem(45, 46, 3);
-	private final Container backpack = new UOContainer(50, 51, 52, 53, Arrays.asList(item),
+	private final Container backpack = new UOContainer(50, 51, 52, "Backpack",53, Arrays.asList(item),
 			new HashMap<Item, Point2D>());
 	
 	@Before
@@ -84,7 +84,7 @@ public class ItemsTest extends AbstractGameControllerTest {
 	@Test
 	public void subsequentMessagesHoldRespectiveItemsLists() {
 		@SuppressWarnings("serial")
-		UOContainer container = new UOContainer(100, 101, 102, 103, Arrays.asList(new UOItem(1, 2, 3)), new HashMap<Item, Point2D>() {{
+		UOContainer container = new UOContainer(100, 101, 102, "Backpack",103, Arrays.asList(new UOItem(1, 2, 3)), new HashMap<Item, Point2D>() {{
 			put(new UOItem(1, 2, 3), new Position(0, 1));
 		}});
 		ContainerItems v1 = new ContainerItems(container);

@@ -20,7 +20,7 @@ public class ItemManagerTest {
 	@Test
 	public void openContainer() {
 		Item item = new UOItem(1, 2, 3);
-		Container cont = new UOContainer(42, 43, 44, 45, Arrays.asList(item), new HashMap<Item, Point2D>());
+		Container cont = new UOContainer(42, 43, 44,"Backpack", 45, Arrays.asList(item), new HashMap<Item, Point2D>());
 		ItemManager im = new ItemManager();
 		assertEquals(Arrays.asList(new DrawContainer(cont), new ContainerItems(cont)), im.use(cont));
 	}

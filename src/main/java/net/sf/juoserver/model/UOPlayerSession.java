@@ -33,7 +33,7 @@ public class UOPlayerSession implements PlayerSession {
 	private Mobile mobile;
 	
 	protected Mobile attacking;
-	protected final Set<Mobile> attackingMe = new HashSet<Mobile>(); 
+	protected final Set<Mobile> attackingMe = new HashSet<>();
 	
 	public UOPlayerSession(Core core, Account account, ModelOutputPort serverResponseListener,
 			InterClientNetwork network) {
@@ -229,18 +229,17 @@ public class UOPlayerSession implements PlayerSession {
 	}
 
 	@Override
-	public void attack(Mobile attacked) {		
-		// TODO identify player that started the fight
+	public void attack(Mobile attacked) {
 		network.notifyAttacked(mobile, attacked);
 	}
 	
 	@Override
 	public void onAttacked(Mobile attacker, Mobile attacked) {			
-		if (isAttacked(attacked)) {
+		if (mobile.equals(attacked)) {
 			attackingMe.add(attacker);			
 			serverResponseListener.mobileAttacked(attacker);
 		} else {
-			if (isAttacker(attacker)) {
+			if (mobile.equals(attacker)) {
 				attacking = attacked;
 			}
 		}		
@@ -248,35 +247,42 @@ public class UOPlayerSession implements PlayerSession {
 	
 	@Override
 	public void onAttackFinished(Mobile attacker, Mobile attacked) {		
-		if (isAttacker(attacker)) {
+		if (mobile.equals(attacker)) {
 			attacking = null;
-			if (imNotUnderAttack(attacked)) {
+			if (!attackingMe.contains(attacked)) {
 				serverResponseListener.mobileAttackFinished(attacked);
 			}			
 		} else {
-			if (isAttacked(attacked)) {		
+			if (mobile.equals(attacked)) {
 				attackingMe.remove(attacker);
-				if (imNotAttacking()) {
+				if (attacking == null) {
 					serverResponseListener.mobileAttackFinished(attacker);
 				}				
 			}
 		}
 	}
-	
-	private boolean imNotUnderAttack(Mobile attacked) {
-		return !attackingMe.contains(attacked);
+
+	@Override
+	public void applyDamage(int damage) {
+		mobile.setCurrentHitPoints( mobile.getCurrentHitPoints() - damage );
+		serverResponseListener.mobileDamaged(mobile, damage);
+
+		network.notifyOtherDamaged(mobile, damage);
 	}
-	
-	private boolean imNotAttacking() {
-		return attacking == null;
+
+	@Override
+	public void onOtherDamaged(Mobile mobile, int damage) {
+		serverResponseListener.mobileDamaged(mobile, damage);
 	}
-	
-	private boolean isAttacked(Mobile attacked) {
-		return mobile.equals(attacked);
+
+	@Override
+	public void fightOccurring(Mobile opponent) {
+		// TODO calculate stamina consumption
+		network.notifyFightOccurring(mobile, opponent);
 	}
-	
-	private boolean isAttacker(Mobile attacker) {
-		return mobile.equals(attacker);
+
+	@Override
+	public void onFightOccurring(Mobile opponent1, Mobile opponent2) {
+		serverResponseListener.fightOccurring(opponent1, opponent2);
 	}
-	
 }

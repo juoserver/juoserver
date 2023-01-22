@@ -4,6 +4,7 @@ import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.*;
 import net.sf.juoserver.protocol.GeneralInformation.SubcommandType;
 import net.sf.juoserver.protocol.SkillUpdate.SkillUpdateType;
+import net.sf.juoserver.protocol.combat.CombatSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,13 +29,14 @@ public class GameController extends AbstractProtocolController implements ModelO
 	private final LoginManager loginManager;
 	private final InterClientNetwork network;
 	private final CommandHandler commandHandler;
+	private final CombatSystem combatSystem;
 
 	private ClientVersion clientVersion;
 	private PlayerSession session;
 
 	public GameController(String clientName, ProtocolIoPort clientHandler, Core core,
 			ClientMovementTracker movementTracker, LoginManager loginManager, InterClientNetwork network,
-		  CommandHandler commandHandler) {
+		  CommandHandler commandHandler, CombatSystem combatSystem) {
 		super();
 		this.controllerId = clientName + CONTROLLER_ID_POSTFIX;
 		this.clientHandler = clientHandler;
@@ -43,6 +45,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 		this.loginManager = loginManager;
 		this.network = network;
 		this.commandHandler = commandHandler;
+		this.combatSystem = combatSystem;
 	}
 	
 	// This message is sent in the second connection right after the new seed
@@ -154,7 +157,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 	
 	public void handle(UnicodeSpeechRequest request) {
 		if (commandHandler.isCommand(request)) {
-			commandHandler.execute(session, request);
+			commandHandler.execute(clientHandler, session, request);
 		} else {
 			session.speak(request.getMessageType(), request.getHue(),
 					request.getFont(), request.getLanguage(), request.getText());
@@ -179,7 +182,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 	 * @return tooltip information
 	 */
 	public List<Message> handle(MegaClilocRequest mcr) {
-		List<Message> msgs = new ArrayList<Message>();
+		List<Message> msgs = new ArrayList<>();
 		for (int querySerial : mcr.getQuerySerials()) {
 			// TODO: distinguish between items and mobiles as in handle(LookRequest)
 			Mobile mobile = core.findMobileByID( querySerial );
@@ -329,19 +332,35 @@ public class GameController extends AbstractProtocolController implements ModelO
 	}
 	
 	public List<Message> handle(AttackRequest attackRequest) {
-		Mobile attacked = core.findMobileByID(attackRequest.getMobileID());		
-		session.attack(attacked);				
+		var attacked = core.findMobileByID(attackRequest.getMobileID());
+		var attacker = session.getMobile();
+
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("{} is attacking {} ", attacker, attacked);
+		}
+
+		combatSystem.attackStarted(session, attacked);
+		session.attack(attacked);
+
 		return asList(new AttackOK(attacked), 
-				new FightOccurring(session.getMobile(), attacked),
+				new FightOccurring(attacker, attacked),
 				new AttackSucceed(attacked));
 	}
 	
 	@Override
 	public void mobileAttacked(Mobile attacker) {
+		var attacked = session.getMobile();
+
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("{} attacked by {}", attacked, attacker);
+		}
+
+		combatSystem.defenseStarted(session, attacker);
+
 		try {
 			clientHandler.sendToClient(new AttackOK(attacker.getSerialId()), 
 					new AttackSucceed(attacker),
-					new FightOccurring(session.getMobile(), attacker));
+					new FightOccurring(attacked, attacker));
 		} catch (IOException e) {
 			throw new IntercomException(e);
 		}		
@@ -349,13 +368,34 @@ public class GameController extends AbstractProtocolController implements ModelO
 	
 	@Override
 	public void mobileAttackFinished(Mobile attacker) {		
-		try {								
+		try {
+			LOGGER.debug("{} Attack finished {}", session.getMobile(), attacker);
+			combatSystem.combatFinished(attacker, session.getMobile());
 			clientHandler.sendToClient(new AttackSucceed(0));
 		} catch (IOException e) {
 			throw new IntercomException(e);
 		}
 	}
-	
+
+	@Override
+	public void mobileDamaged(Mobile mobile, int damage) {
+		try {
+			clientHandler.sendToClient(new StatusBarInfo(mobile), new CharacterAnimation(mobile, AnimationRepeat.ONCE, AnimationType.GET_HIT, 10, AnimationDirection.BACKWARD));
+		} catch (IOException e) {
+			throw new IntercomException(e);
+		}
+	}
+
+	@Override
+	public void fightOccurring(Mobile opponent1, Mobile opponent2) {
+		try {
+			clientHandler.sendToClient(new CharacterAnimation(opponent1, AnimationRepeat.ONCE, AnimationType.ATTACK_WITH_SWORD_OVER_AND_SIDE, 10, AnimationDirection.FORWARD),
+					new CharacterAnimation(opponent2, AnimationRepeat.ONCE, AnimationType.ATTACK_WITH_SWORD_OVER_AND_SIDE, 10, AnimationDirection.FORWARD));
+		} catch (IOException e) {
+			throw new IntercomException(e);
+		}
+	}
+
 	// ====================== END COMBAT ======================
 	
 	public void handle(GenericAOSCommands commands) {

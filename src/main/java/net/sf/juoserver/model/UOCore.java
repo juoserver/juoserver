@@ -1,24 +1,12 @@
 package net.sf.juoserver.model;
 
+import net.sf.juoserver.api.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.sf.juoserver.api.Container;
-import net.sf.juoserver.api.Core;
-import net.sf.juoserver.api.DataManager;
-import net.sf.juoserver.api.FileReadersFactory;
-import net.sf.juoserver.api.Configuration;
-import net.sf.juoserver.api.LoadException;
-import net.sf.juoserver.api.MapFileReader;
-import net.sf.juoserver.api.MapLocation;
-import net.sf.juoserver.api.MapTile;
-import net.sf.juoserver.api.Account;
-import net.sf.juoserver.api.Item;
-import net.sf.juoserver.api.Mobile;
-import net.sf.juoserver.api.Point2D;
 
 /**
  * The <b>Core</b> facade.
@@ -182,4 +170,5 @@ public final class UOCore implements Core {
 	public void addItemToContainer(Item item, Container container) {
 		containersByContainedItems.put(item, container);
 	}
+
 }

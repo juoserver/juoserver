@@ -155,6 +155,11 @@ public class UOMobile implements Mobile {
 	}
 
 	@Override
+	public void setCurrentHitPoints(int currentHitPoints) {
+		this.currentHitPoints = currentHitPoints;
+	}
+
+	@Override
 	public int getMaxHitPoints() {
 		return maxHitPoints;
 	}

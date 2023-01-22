@@ -8,6 +8,8 @@ import net.sf.juoserver.model.UOCore;
 import net.sf.juoserver.networking.mina.MinaMultiplexingServerAdapter;
 import net.sf.juoserver.networking.threaded.ThreadedServerAdapter;
 import net.sf.juoserver.protocol.ControllerFactory;
+import net.sf.juoserver.protocol.combat.CombatSystem;
+import net.sf.juoserver.protocol.combat.CombatSystemImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +17,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public final class JUOServerBuilder {
@@ -24,6 +29,7 @@ public final class JUOServerBuilder {
     private DataManager dataManager;
     private final List<ServerModule> modules = new ArrayList<>();
     private ServerType serverType;
+    private CombatSystem combatSystem;
 
     private JUOServerBuilder() {
     }
@@ -33,6 +39,7 @@ public final class JUOServerBuilder {
         builder.configuration = new PropertyFileBasedConfiguration();
         builder.dataManager = new InMemoryDataManager();
         builder.serverType = ServerType.THREADED;
+        builder.combatSystem = new CombatSystemImpl();
         return builder;
     }
 
@@ -49,24 +56,26 @@ public final class JUOServerBuilder {
     public JUOServer build() {
         Core core = new UOCore(new MondainsLegacyFileReadersFactory(), dataManager, configuration);
         Server server = getServer(core);
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
         return () -> {
             LOGGER.info("Initializing!!");
             core.init();
+            executorService.scheduleWithFixedDelay(()->combatSystem.execute(), 500, 1000, TimeUnit.MILLISECONDS);
             server.acceptClientConnections();
         };
     }
 
     private Server getServer(Core core) {
-        Collection<Command> commands = modules.stream()
+        var commands = modules.stream()
                 .map(ServerModule::getCommands)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
         switch (serverType) {
             case THREADED:
-                return new ThreadedServerAdapter(configuration, new ControllerFactory(core, configuration, commands));
+                return new ThreadedServerAdapter(configuration, new ControllerFactory(core, configuration, commands, combatSystem));
             case MULTIPLEXING:
-                return new MinaMultiplexingServerAdapter(configuration, new ControllerFactory(core, configuration, commands));
+                return new MinaMultiplexingServerAdapter(configuration, new ControllerFactory(core, configuration, commands, combatSystem));
             default:
                 throw new IllegalArgumentException(String.format("ServerType %s does not exist", serverType));
         }

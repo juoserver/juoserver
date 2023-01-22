@@ -29,11 +29,11 @@ public class CommandHandlerImpl implements CommandHandler {
     }
 
     @Override
-    public void execute(PlayerSession session, UnicodeSpeechRequest request) {
+    public void execute(ProtocolIoPort protocolIoPort, PlayerSession session, UnicodeSpeechRequest request) {
         StringTokenizer tokenizer = new StringTokenizer(request.getText().substring(1), " ");
         String commandName = tokenizer.nextToken().toLowerCase();
         if (commands.containsKey(commandName)) {
-            commands.get(commandName).execute(new CommandContext(core, network, session, getCommandArgs(tokenizer)));
+            commands.get(commandName).execute(new CommandContext(core, network, session, protocolIoPort, getCommandArgs(tokenizer)));
         } else {
             LOGGER.info("Unknown Command {}", commandName);
         }

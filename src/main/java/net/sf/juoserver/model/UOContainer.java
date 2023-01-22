@@ -14,9 +14,9 @@ public class UOContainer extends UOItem implements Container {
 	private int gumpId;
 	private Map<Item, Point2D> positions;
 	
-	public UOContainer(int serialId, int modelId, int hue, int gumpId, List<? extends Item> items,
+	public UOContainer(int serialId, int modelId, int hue, String name, int gumpId, List<? extends Item> items,
 			Map<Item, Point2D> positions) {
-		super(serialId, modelId, hue);
+		super(serialId, modelId, hue, name);
 		this.gumpId = gumpId;
 		this.items = new ArrayList<Item>(items);
 		this.positions = positions;
