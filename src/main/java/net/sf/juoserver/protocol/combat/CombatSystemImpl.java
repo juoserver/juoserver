@@ -1,6 +1,8 @@
 package net.sf.juoserver.protocol.combat;
 
+import net.sf.juoserver.api.CombatSystem;
 import net.sf.juoserver.api.Mobile;
+import net.sf.juoserver.api.PhysicalDamageCalculator;
 import net.sf.juoserver.api.PlayerSession;
 
 import java.util.Collections;
@@ -11,6 +13,11 @@ import java.util.Objects;
 public class CombatSystemImpl implements CombatSystem {
 
     private final Map<KeyPair, ValuePair> combatSessions = Collections.synchronizedMap(new HashMap<>());
+    private final PhysicalDamageCalculator physicalDamageCalculator;
+
+    public CombatSystemImpl(PhysicalDamageCalculator physicalDamageCalculator) {
+        this.physicalDamageCalculator = physicalDamageCalculator;
+    }
 
     @Override
     public void attackStarted(PlayerSession attackerSession, Mobile attacked) {
@@ -33,16 +40,19 @@ public class CombatSystemImpl implements CombatSystem {
 
     @Override
     public void execute() {
-        combatSessions.values().forEach(e->{
-            var attacker = e.getAttackerSession();
-            var attacked = e.getAttackedSession();
+        combatSessions.values().forEach(entry->{
+            var attackerSession = entry.getAttackerSession();
+            var attackerMobile = attackerSession.getMobile();
 
-            if (getMobileDistance(attacker.getMobile(), attacked.getMobile()) <= 1) {
-                attacker.fightOccurring(attacked.getMobile());
-                attacked.fightOccurring(attacker.getMobile());
+            var attackedSession = entry.getAttackedSession();
+            var attackedMobile = attackedSession.getMobile();
 
-                // TODO calculate damage
-                attacked.applyDamage(1);
+            if (getMobileDistance(attackerMobile, attackedMobile) <= 1) {
+                attackerSession.fightOccurring(attackedMobile);
+                attackerSession.applyDamage(physicalDamageCalculator.calculate(attackedMobile, attackerMobile));
+
+                attackedSession.fightOccurring(attackerSession.getMobile());
+                attackedSession.applyDamage(physicalDamageCalculator.calculate(attackerMobile, attackedMobile));
             }
         });
     }

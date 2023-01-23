@@ -6,4 +6,6 @@ public interface JUoEntity {
 	int getSerialId();
 
 	int getHue();
+
+	String getName();
 }

@@ -8,8 +8,9 @@ import net.sf.juoserver.model.UOCore;
 import net.sf.juoserver.networking.mina.MinaMultiplexingServerAdapter;
 import net.sf.juoserver.networking.threaded.ThreadedServerAdapter;
 import net.sf.juoserver.protocol.ControllerFactory;
-import net.sf.juoserver.protocol.combat.CombatSystem;
+import net.sf.juoserver.api.CombatSystem;
 import net.sf.juoserver.protocol.combat.CombatSystemImpl;
+import net.sf.juoserver.protocol.combat.PhysicalDamageCalculatorImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +40,7 @@ public final class JUOServerBuilder {
         builder.configuration = new PropertyFileBasedConfiguration();
         builder.dataManager = new InMemoryDataManager();
         builder.serverType = ServerType.THREADED;
-        builder.combatSystem = new CombatSystemImpl();
+        builder.combatSystem = new CombatSystemImpl(new PhysicalDamageCalculatorImpl());
         return builder;
     }
 
@@ -61,7 +62,13 @@ public final class JUOServerBuilder {
         return () -> {
             LOGGER.info("Initializing!!");
             core.init();
-            executorService.scheduleWithFixedDelay(()->combatSystem.execute(), 500, 1000, TimeUnit.MILLISECONDS);
+            executorService.scheduleWithFixedDelay(()->{
+                try {
+                    combatSystem.execute();
+                } catch (RuntimeException exception) {
+                    LOGGER.error("Error executing CombatSystem", exception);
+                }
+            }, 500, 1000, TimeUnit.MILLISECONDS);
             server.acceptClientConnections();
         };
     }

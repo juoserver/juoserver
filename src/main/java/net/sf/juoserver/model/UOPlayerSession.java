@@ -283,6 +283,7 @@ public class UOPlayerSession implements PlayerSession {
 
 	@Override
 	public void onFightOccurring(Mobile opponent1, Mobile opponent2) {
+
 		serverResponseListener.fightOccurring(opponent1, opponent2);
 	}
 }

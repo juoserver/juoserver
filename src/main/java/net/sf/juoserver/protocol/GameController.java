@@ -4,7 +4,7 @@ import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.*;
 import net.sf.juoserver.protocol.GeneralInformation.SubcommandType;
 import net.sf.juoserver.protocol.SkillUpdate.SkillUpdateType;
-import net.sf.juoserver.protocol.combat.CombatSystem;
+import net.sf.juoserver.api.CombatSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -315,6 +315,34 @@ public class GameController extends AbstractProtocolController implements ModelO
 			throw new IntercomException(e);
 		}
 	}
+
+	@Override
+	public void mobileChanged(Mobile mobile) {
+		try {
+			clientHandler.sendToClient(new UpdatePlayer(mobile));
+		} catch (IOException e) {
+			throw new ProtocolException(e);
+		}
+	}
+
+	@Override
+	public void mobileApproached(Mobile mobile) {
+		try {
+			clientHandler.sendToClient(new CharacterDraw(mobile), new ObjectRevision(mobile));
+		} catch (IOException e) {
+			throw new ProtocolException(e);
+		}
+	}
+
+	@Override
+	public void mobileDroppedCloth(Mobile mobile, Item droppedCloth) {
+		try {
+			clientHandler.sendToClient(new DeleteItem(droppedCloth.getSerialId()));
+			// TODO: send sound (0x54) too - e.g., 54 01 00 57 00 00 0F 41  01 C8 00 00
+		} catch (IOException e) {
+			throw new ProtocolException(e);
+		}
+	}
 	
 	// ====================== COMBAT =========================
 	public List<Message> handle(WarMode warMode) {
@@ -367,7 +395,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 	}
 	
 	@Override
-	public void mobileAttackFinished(Mobile attacker) {		
+	public void mobileAttackFinished(Mobile attacker) {
 		try {
 			LOGGER.debug("{} Attack finished {}", session.getMobile(), attacker);
 			combatSystem.combatFinished(attacker, session.getMobile());
@@ -390,7 +418,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 	public void fightOccurring(Mobile opponent1, Mobile opponent2) {
 		try {
 			clientHandler.sendToClient(new CharacterAnimation(opponent1, AnimationRepeat.ONCE, AnimationType.ATTACK_WITH_SWORD_OVER_AND_SIDE, 10, AnimationDirection.FORWARD),
-					new CharacterAnimation(opponent2, AnimationRepeat.ONCE, AnimationType.ATTACK_WITH_SWORD_OVER_AND_SIDE, 10, AnimationDirection.FORWARD));
+					new CharacterAnimation(opponent2, AnimationRepeat.ONCE, AnimationType.CROSSBOW, 10, AnimationDirection.FORWARD));
 		} catch (IOException e) {
 			throw new IntercomException(e);
 		}
@@ -403,37 +431,9 @@ public class GameController extends AbstractProtocolController implements ModelO
 	}
 
 	// ======================= HANDLE HELP ====================
-	public List<Message> handle(RequestHelp requestHelp) {
+	public List handle(RequestHelp requestHelp) {
 		System.out.println("User "+session.getMobile().getName()+" requested help");
-		return (List) Collections.singletonList(new WarMode(CharacterStatus.WarMode));
-	}
-
-	@Override
-	public void mobileChanged(Mobile mobile) {
-		try {
-			clientHandler.sendToClient(new UpdatePlayer(mobile));
-		} catch (IOException e) {
-			throw new ProtocolException(e);
-		}
-	}
-
-	@Override
-	public void mobileApproached(Mobile mobile) {
-		try {
-			clientHandler.sendToClient(new CharacterDraw(mobile), new ObjectRevision(mobile));
-		} catch (IOException e) {
-			throw new ProtocolException(e);
-		}
-	}
-
-	@Override
-	public void mobileDroppedCloth(Mobile mobile, Item droppedCloth) {
-		try {
-			clientHandler.sendToClient(new DeleteItem(droppedCloth.getSerialId()));
-			// TODO: send sound (0x54) too - e.g., 54 01 00 57 00 00 0F 41  01 C8 00 00
-		} catch (IOException e) {
-			throw new ProtocolException(e);
-		}
+		return Collections.singletonList(new WarMode(CharacterStatus.WarMode));
 	}
 
 	@Override
