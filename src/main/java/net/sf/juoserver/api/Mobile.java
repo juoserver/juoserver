@@ -14,8 +14,6 @@ public interface Mobile extends JUoEntity, Point3D {
 
 	void setRunning(boolean running);
 
-	String getName();
-
 	int getCurrentHitPoints();
 
 	void setCurrentHitPoints(int currentHitPoints);
@@ -82,4 +80,6 @@ public interface Mobile extends JUoEntity, Point3D {
 	void emptyLayer(Layer layer);
 	
 	void setCharacterStatus(CharacterStatus characterStatus);
+
+	int getWeaponBaseDamage();
 }

@@ -58,4 +58,14 @@ class TestConfiguration implements Configuration {
 	public String getCommandActivationCharacter() {
 		return null;
 	}
+
+	@Override
+	public StatsConfiguration getStats() {
+		return null;
+	}
+
+	@Override
+	public CombatConfiguration getCombat() {
+		return null;
+	}
 }

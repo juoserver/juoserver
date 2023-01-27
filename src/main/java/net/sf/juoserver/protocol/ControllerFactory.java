@@ -3,11 +3,9 @@ package net.sf.juoserver.protocol;
 import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.Intercom;
 import net.sf.juoserver.model.UOLoginManager;
-import net.sf.juoserver.protocol.combat.CombatSystem;
-import net.sf.juoserver.protocol.combat.CombatSystemImpl;
+import net.sf.juoserver.api.CombatSystem;
 
 import java.util.Collection;
-import java.util.Set;
 
 public final class ControllerFactory {
 	private final Core core;

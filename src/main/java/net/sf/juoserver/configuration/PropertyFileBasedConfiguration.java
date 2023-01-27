@@ -1,6 +1,7 @@
 package net.sf.juoserver.configuration;
 
 import net.sf.juoserver.api.Configuration;
+import net.sf.juoserver.protocol.combat.CombatSystemImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -135,5 +136,40 @@ public class PropertyFileBasedConfiguration implements Configuration {
 	@Override
 	public boolean isPacketLoggingEnabled() {
 		return Boolean.parseBoolean(getProperty("packet.logging", DEFAULT_PACKET_LOGGING_ENABLED));
+	}
+
+	@Override
+	public StatsConfiguration getStats() {
+		return new StatsConfiguration() {
+			@Override
+			public int getLifeLimit() {
+				return 100;
+			}
+		};
+	}
+
+	@Override
+	public CombatConfiguration getCombat() {
+		return new CombatConfiguration() {
+			@Override
+			public int getDexAttackDivisorModifier() {
+				return 5;
+			}
+
+			@Override
+			public int getStrAttackDivisorModifier() {
+				return 2;
+			}
+
+			@Override
+			public int getDexDefenseDivisorModifier() {
+				return 5;
+			}
+
+			@Override
+			public int getStrDefenseDivisorModifier() {
+				return 2;
+			}
+		};
 	}
 }

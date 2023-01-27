@@ -305,32 +305,6 @@ public class UOMobile implements Mobile {
 			break;
 		}
 	}
-	
-	@Override
-	public final int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + serialId;
-		return result;
-	}
-	
-	@Override
-	public final boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		UOMobile other = (UOMobile) obj;
-		if (serialId != other.serialId)
-			return false;
-		return true;
-	}
-	@Override
-	public String toString() {
-		return name;
-	}
 
 	@Override
 	public String getPrefixNameSuffix() {
@@ -376,5 +350,38 @@ public class UOMobile implements Mobile {
 	public void setCharacterStatus(CharacterStatus characterStatus) {
 		this.characterStatus = characterStatus;		
 	}
-	
+
+	@Override
+	public int getWeaponBaseDamage() {
+		if (items.containsKey(Layer.FirstValid)) {
+			return items.get(Layer.FirstValid).getBaseDamage();
+		}
+		return 1;
+	}
+
+	@Override
+	public final int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + serialId;
+		return result;
+	}
+
+	@Override
+	public final boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UOMobile other = (UOMobile) obj;
+		if (serialId != other.serialId)
+			return false;
+		return true;
+	}
+	@Override
+	public String toString() {
+		return name;
+	}
 }

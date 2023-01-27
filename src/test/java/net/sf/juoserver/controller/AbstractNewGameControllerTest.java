@@ -6,7 +6,7 @@ import net.sf.juoserver.model.UOAccount;
 import net.sf.juoserver.protocol.CircularClientMovementTracker;
 import net.sf.juoserver.protocol.GameController;
 import net.sf.juoserver.protocol.ProtocolIoPort;
-import net.sf.juoserver.protocol.combat.CombatSystem;
+import net.sf.juoserver.api.CombatSystem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

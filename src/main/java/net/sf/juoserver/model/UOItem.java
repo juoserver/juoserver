@@ -8,6 +8,7 @@ public class UOItem implements Item {
 	private int modelId;
 	private int hue;
 	private String name;
+	private int baseDamage;
 
 	public UOItem(int serialId, int modelId, int hue) {
 		super();
@@ -17,12 +18,13 @@ public class UOItem implements Item {
 		this.name = "Unknown";
 	}
 
-	public UOItem(int serialId, int modelId, int hue, String name) {
+	public UOItem(int serialId, int modelId, int hue, String name, int baseDamage) {
 		super();
 		this.serialId = serialId;
 		this.modelId = modelId;
 		this.hue = hue;
 		this.name = name;
+		this.baseDamage = baseDamage;
 	}
 
 	@Override
@@ -43,6 +45,11 @@ public class UOItem implements Item {
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public int getBaseDamage() {
+		return baseDamage;
 	}
 
 	@Override

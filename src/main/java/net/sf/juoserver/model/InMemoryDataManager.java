@@ -36,7 +36,7 @@ public class InMemoryDataManager implements DataManager {
 
 	private Mobile dressUp(Mobile mobile) {
 		// The items' serialIDs must NOT overlap, otherwise the last character "wearing" them will "steal" them from the others
-		UOItem brick = new UOItem(mobile.getSerialId() + 1800 + UOCore.ITEMS_MAX_SERIAL_ID, 0x1F9E, 0);
+		UOItem brick = new UOItem(mobile.getSerialId() + 1800 + UOCore.ITEMS_MAX_SERIAL_ID, 0x1F9E, 0, "pitcher of water", 0);
 		HashMap<Item, Point2D> positions = new HashMap<Item, Point2D>();
 		positions.put(brick, new Point2D() {
 			@Override
@@ -48,16 +48,16 @@ public class InMemoryDataManager implements DataManager {
 				return 0x68;
 			}
 		});
-		mobile.setItemOnLayer(Layer.Backpack, new UOContainer(mobile.getSerialId() + 1000 + UOCore.ITEMS_MAX_SERIAL_ID, 0x0E75, 0, "Backpack",0x003C,
+		mobile.setItemOnLayer(Layer.Backpack, new UOContainer(mobile.getSerialId() + 1000 + UOCore.ITEMS_MAX_SERIAL_ID, 0x0E75, 0, "backpack",0x003C,
 				Arrays.asList(brick),
 				positions));
-		mobile.setItemOnLayer(Layer.InnerTorso, new UOItem(mobile.getSerialId() + 0x1A + UOCore.ITEMS_MAX_SERIAL_ID, 0x1F7B, 0x7E));
-		mobile.setItemOnLayer(Layer.OuterTorso, new UOItem(mobile.getSerialId() + 1200 + UOCore.ITEMS_MAX_SERIAL_ID, 0x1F03, 0x04D9));
-		mobile.setItemOnLayer(Layer.FirstValid, new UOItem(mobile.getSerialId() + 1300 + UOCore.ITEMS_MAX_SERIAL_ID, 0x13FF, 0));
-		mobile.setItemOnLayer(Layer.MiddleTorso, new UOItem(mobile.getSerialId() + 1400 + UOCore.ITEMS_MAX_SERIAL_ID, 0x13BF, 0x0381));
-		mobile.setItemOnLayer(Layer.Pants, new UOItem(mobile.getSerialId() + 1500 + UOCore.ITEMS_MAX_SERIAL_ID, 0x13BE, 0x0090));
-		mobile.setItemOnLayer(Layer.Shoes, new UOItem(mobile.getSerialId() + 1600 + UOCore.ITEMS_MAX_SERIAL_ID, 0x26AF, 0x06A8));
-		mobile.setItemOnLayer(Layer.Hair, new UOItem(mobile.getSerialId() + 1700 + UOCore.ITEMS_MAX_SERIAL_ID, 0xA03B, 0x044E));
+		mobile.setItemOnLayer(Layer.InnerTorso, new UOItem(mobile.getSerialId() + 0x1A + UOCore.ITEMS_MAX_SERIAL_ID, 0x1F7B, 0x7E, "doublet", 0));
+		mobile.setItemOnLayer(Layer.OuterTorso, new UOItem(mobile.getSerialId() + 1200 + UOCore.ITEMS_MAX_SERIAL_ID, 0x1F03, 0x3F, "robe", 0));
+		mobile.setItemOnLayer(Layer.FirstValid, new UOItem(mobile.getSerialId() + 1300 + UOCore.ITEMS_MAX_SERIAL_ID, 0x143A, 0, "maul", 5));
+		mobile.setItemOnLayer(Layer.MiddleTorso, new UOItem(mobile.getSerialId() + 1400 + UOCore.ITEMS_MAX_SERIAL_ID, 0x13BF, 0x0381, "chainmail tunic", 0));
+		mobile.setItemOnLayer(Layer.Pants, new UOItem(mobile.getSerialId() + 1500 + UOCore.ITEMS_MAX_SERIAL_ID, 0x13BE, 0x0090, "chainmail leggings", 0));
+		mobile.setItemOnLayer(Layer.Shoes, new UOItem(mobile.getSerialId() + 1600 + UOCore.ITEMS_MAX_SERIAL_ID, 0x26AF, 0x06A8, "Arcane Thigh Boots", 0));
+		mobile.setItemOnLayer(Layer.Hair, new UOItem(mobile.getSerialId() + 1700 + UOCore.ITEMS_MAX_SERIAL_ID, 0x203C, 0x044E, "long hair", 0));
 		return mobile;
 	}
 
