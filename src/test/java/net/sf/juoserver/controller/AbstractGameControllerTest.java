@@ -29,7 +29,7 @@ public class AbstractGameControllerTest {
 	protected final ProtocolIoPort clientHandler = context.mock(ProtocolIoPort.class);
 	protected final CommandHandler commandManager = context.mock(CommandHandler.class);
 	protected final GameController gameController = 
-			new GameController("client", clientHandler, core, new CircularClientMovementTracker(), loginManager, intercom, commandManager, new CombatSystemImpl(new PhysicalDamageCalculatorImpl()));
+			new GameController("client", clientHandler, core, new CircularClientMovementTracker(), loginManager, intercom, commandManager, new CombatSystemImpl(new PhysicalDamageCalculatorImpl(null)));
 	
 	@Before
 	public final void createComponents() throws IOException {

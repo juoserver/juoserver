@@ -40,7 +40,7 @@ public final class JUOServerBuilder {
         builder.configuration = new PropertyFileBasedConfiguration();
         builder.dataManager = new InMemoryDataManager();
         builder.serverType = ServerType.THREADED;
-        builder.combatSystem = new CombatSystemImpl(new PhysicalDamageCalculatorImpl());
+        builder.combatSystem = new CombatSystemImpl(new PhysicalDamageCalculatorImpl(builder.configuration));
         return builder;
     }
 

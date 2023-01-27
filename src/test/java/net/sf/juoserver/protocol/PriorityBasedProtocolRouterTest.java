@@ -25,7 +25,7 @@ public class PriorityBasedProtocolRouterTest {
 	private final AuthenticationController auth = new AuthenticationController(clientHandler,
 			TestingFactory.createTestConfiguration(), loginManager);
 	private final GameController game = new GameController("client", clientHandler, context.mock(Core.class),
-			context.mock(ClientMovementTracker.class), loginManager, network, commandManager, new CombatSystemImpl(new PhysicalDamageCalculatorImpl()));
+			context.mock(ClientMovementTracker.class), loginManager, network, commandManager, new CombatSystemImpl(new PhysicalDamageCalculatorImpl(null)));
 	
 	@Test
 	public void authenticationIsTheOnlyControllerInterestedInFirstConnectionMessages() throws UnknownHostException {

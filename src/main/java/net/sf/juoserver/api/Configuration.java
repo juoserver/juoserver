@@ -13,4 +13,18 @@ public interface Configuration {
 	String getServerHost();
 	boolean isPacketLoggingEnabled();
 	String getCommandActivationCharacter();
+	StatsConfiguration getStats();
+	CombatConfiguration getCombat();
+
+	interface StatsConfiguration {
+		int getLifeLimit();
+	}
+
+	interface CombatConfiguration {
+		int getDexAttackDivisorModifier();
+		int getStrAttackDivisorModifier();
+
+		int getDexDefenseDivisorModifier();
+		int getStrDefenseDivisorModifier();
+	}
 }

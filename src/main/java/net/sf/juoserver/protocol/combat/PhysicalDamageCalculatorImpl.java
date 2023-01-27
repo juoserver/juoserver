@@ -1,30 +1,42 @@
 package net.sf.juoserver.protocol.combat;
 
-import net.sf.juoserver.api.Layer;
+import net.sf.juoserver.api.Configuration;
 import net.sf.juoserver.api.Mobile;
 import net.sf.juoserver.api.PhysicalDamageCalculator;
 
 public class PhysicalDamageCalculatorImpl implements PhysicalDamageCalculator {
 
-    private static final int STRENGTH_DIVISOR = 10;
-    private static final int DEXTERITY_DIVISOR = 50;
+    private final Configuration configuration;
+
+    private final double normalizer;
+
+    public PhysicalDamageCalculatorImpl(Configuration configuration) {
+        this.configuration = configuration;
+        var lifeLimit = configuration.getStats().getLifeLimit();
+        normalizer = lifeLimit / (lifeLimit + (0.9 * lifeLimit));
+    }
 
     @Override
     public int calculate(Mobile attacker, Mobile attacked) {
-        var baseDamage = attacker.getItemByLayer(Layer.FirstValid).getBaseDamage();
+        var combatConfiguration = configuration.getCombat();
+        var baseDamage = attacker.getWeaponBaseDamage();
         var armorRating = attacked.getArmorRating();
 
         // Strength Modifier
-        var damageModifier = baseDamage + (attacker.getStrength() / STRENGTH_DIVISOR);
-        var armorModifier = armorRating + (attacked.getStrength() / STRENGTH_DIVISOR);
+        // Attack
+        var damageModifier = baseDamage + (attacker.getStrength() / combatConfiguration.getStrAttackDivisorModifier());
+        // Defense
+        var armorModifier = armorRating + (attacked.getStrength() / combatConfiguration.getStrDefenseDivisorModifier());
 
         // Dexterity Modifier
-        damageModifier = damageModifier + (attacker.getDexterity() / DEXTERITY_DIVISOR);
-        armorModifier = armorModifier + (attacked.getDexterity() / DEXTERITY_DIVISOR);
+        // Attack
+        damageModifier = damageModifier + (attacker.getDexterity() / combatConfiguration.getDexAttackDivisorModifier());
+        // Defense
+        armorModifier = armorModifier + (attacked.getDexterity() / combatConfiguration.getDexDefenseDivisorModifier());
 
         var damage = Math.floor(damageModifier / ((armorModifier + 100.0) / 100));
 
-        return (int) damage;
+        return (int) (damage * normalizer);
     }
 
 }
