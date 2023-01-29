@@ -1,12 +1,12 @@
 package net.sf.juoserver.protocol;
 
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.List;
-
 import net.sf.juoserver.model.City;
 import net.sf.juoserver.model.Flag;
 import net.sf.juoserver.model.PlayingCharacter;
+
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.List;
 
 public class CharacterList extends AbstractMessage {
 	private static final long serialVersionUID = 1L;

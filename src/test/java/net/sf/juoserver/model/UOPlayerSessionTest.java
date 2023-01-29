@@ -1,20 +1,15 @@
 package net.sf.juoserver.model;
 
-import static org.junit.Assert.*;
-
+import net.sf.juoserver.TestingFactory;
+import net.sf.juoserver.api.*;
+import net.sf.juoserver.files.mondainslegacy.MondainsLegacyMapTile;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import net.sf.juoserver.TestingFactory;
-import net.sf.juoserver.api.Account;
-import net.sf.juoserver.api.Core;
-import net.sf.juoserver.api.Direction;
-import net.sf.juoserver.api.InterClientNetwork;
-import net.sf.juoserver.api.Mobile;
-import net.sf.juoserver.files.mondainslegacy.MondainsLegacyMapTile;
+import static org.junit.Assert.assertEquals;
 
 public class UOPlayerSessionTest {
 	@Rule public final JUnitRuleMockery context = new JUnitRuleMockery();

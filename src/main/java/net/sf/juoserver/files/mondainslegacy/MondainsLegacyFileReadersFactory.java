@@ -1,12 +1,12 @@
 package net.sf.juoserver.files.mondainslegacy;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-
 import net.sf.juoserver.api.FileReadersFactory;
 import net.sf.juoserver.api.IdxFileReader;
 import net.sf.juoserver.api.MapFileReader;
 import net.sf.juoserver.api.SkillsMulFileReader;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 
 public final class MondainsLegacyFileReadersFactory implements FileReadersFactory {
 	@Override

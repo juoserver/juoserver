@@ -2,7 +2,6 @@ package net.sf.juoserver.protocol;
 
 import net.sf.juoserver.api.Coded;
 import net.sf.juoserver.model.ClientFlag;
-import org.apache.commons.codec.binary.Hex;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;

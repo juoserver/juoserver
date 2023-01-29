@@ -1,9 +1,9 @@
 package net.sf.juoserver.protocol;
 
+import net.sf.juoserver.api.Mobile;
+
 import java.nio.ByteBuffer;
 import java.util.Objects;
-
-import net.sf.juoserver.api.Mobile;
 
 public class AttackOK extends AbstractMessage {
 	private static final long serialVersionUID = 1L;

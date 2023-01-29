@@ -6,7 +6,6 @@ import net.sf.juoserver.api.Core;
 import net.sf.juoserver.api.InterClientNetwork;
 import net.sf.juoserver.api.Mobile;
 import net.sf.juoserver.files.mondainslegacy.MondainsLegacyMapTile;
-
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;

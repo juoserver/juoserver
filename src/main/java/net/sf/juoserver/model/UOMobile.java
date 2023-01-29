@@ -1,23 +1,8 @@
 package net.sf.juoserver.model;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import net.sf.juoserver.api.*;
 
-import net.sf.juoserver.api.CharacterStatus;
-import net.sf.juoserver.api.Direction;
-import net.sf.juoserver.api.Layer;
-import net.sf.juoserver.api.Notoriety;
-import net.sf.juoserver.api.RaceFlag;
-import net.sf.juoserver.api.SexRace;
-import net.sf.juoserver.api.Skill;
-import net.sf.juoserver.api.SkillLockFlag;
-import net.sf.juoserver.api.StatusFlag;
-import net.sf.juoserver.api.Item;
-import net.sf.juoserver.api.Mobile;
+import java.util.*;
 
 public class UOMobile implements Mobile {
 	private int serialId;

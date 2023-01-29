@@ -1,7 +1,5 @@
 package net.sf.juoserver.protocol;
 
-import net.sf.juoserver.protocol.CircularClientMovementTracker;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

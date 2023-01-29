@@ -42,7 +42,7 @@ public class MinaMultiplexingServerAdapter implements Server {
 		acceptor.getSessionConfig().setReadBufferSize(BUF_SIZE);
 		acceptor.getSessionConfig().setReuseAddress(true);
 		acceptor.setHandler(new UOIoHandler(acceptor, controllerFactory));
-		acceptor.bind(new InetSocketAddress(configuration.getServerPort()));
-		LOGGER.info("Listening on port " + configuration.getServerPort());
+		acceptor.bind(new InetSocketAddress(configuration.getServer().getPort()));
+		LOGGER.info("Listening on port " + configuration.getServer().getPort());
 	}
 }

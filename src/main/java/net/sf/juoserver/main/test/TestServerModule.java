@@ -1,6 +1,9 @@
 package net.sf.juoserver.main.test;
 
-import net.sf.juoserver.api.*;
+import net.sf.juoserver.api.AnimationDirection;
+import net.sf.juoserver.api.AnimationRepeat;
+import net.sf.juoserver.api.AnimationType;
+import net.sf.juoserver.api.CommandContext;
 import net.sf.juoserver.builder.JUOServerModule;
 import net.sf.juoserver.protocol.AbstractCommand;
 import net.sf.juoserver.protocol.CharacterAnimation;

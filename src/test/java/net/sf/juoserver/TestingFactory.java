@@ -20,7 +20,7 @@ class TestConfiguration implements Configuration {
 	}
 
 	@Override
-	public String getUOPath() {
+	public FilesConfiguration getFiles() {
 		return null;
 	}
 
@@ -30,17 +30,7 @@ class TestConfiguration implements Configuration {
 	}
 
 	@Override
-	public int getServerPort() {
-		return 0;
-	}
-
-	@Override
-	public String getServerName() {
-		return null;
-	}
-
-	@Override
-	public String getServerHost() {
+	public ServerConfiguration getServer() {
 		return null;
 	}
 

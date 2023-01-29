@@ -1,8 +1,8 @@
 package net.sf.juoserver.protocol;
 
-import java.io.Serializable;
-
 import net.sf.juoserver.api.Coded;
+
+import java.io.Serializable;
 
 public abstract class Subcommand<T extends AbstractMessage, S extends Coded>
 		implements Serializable {

@@ -1,9 +1,9 @@
 package net.sf.juoserver.protocol;
 
+import net.sf.juoserver.model.ClientFeature;
+
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-
-import net.sf.juoserver.model.ClientFeature;
 
 public class ClientFeatures extends AbstractMessage {
 	private static final long serialVersionUID = 1L;

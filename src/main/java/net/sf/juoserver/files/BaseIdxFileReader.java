@@ -1,14 +1,14 @@
 package net.sf.juoserver.files;
 
+import net.sf.juoserver.api.IdxFileEntry;
+import net.sf.juoserver.api.IdxFileReader;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
-
-import net.sf.juoserver.api.IdxFileEntry;
-import net.sf.juoserver.api.IdxFileReader;
 
 
 /**

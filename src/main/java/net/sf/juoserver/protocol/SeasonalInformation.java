@@ -1,8 +1,8 @@
 package net.sf.juoserver.protocol;
 
-import java.nio.ByteBuffer;
-
 import net.sf.juoserver.api.Season;
+
+import java.nio.ByteBuffer;
 
 public class SeasonalInformation extends AbstractMessage {
 	private static final long serialVersionUID = 1L;

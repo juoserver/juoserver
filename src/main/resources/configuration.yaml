@@ -1,0 +1,11 @@
+
+packet:
+  logging: true
+stats:
+  lifeLimit: 100
+server:
+  name: JUOServer
+  host: localhost
+  port: 7775
+combat:
+  dexAttackDivisorModifier: 10

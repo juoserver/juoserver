@@ -1,19 +1,18 @@
 package net.sf.juoserver.model;
 
-import static org.junit.Assert.*;
+import net.sf.juoserver.api.Container;
+import net.sf.juoserver.api.Item;
+import net.sf.juoserver.api.Layer;
+import net.sf.juoserver.api.Point2D;
+import org.jmock.Expectations;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import net.sf.juoserver.api.Container;
-import net.sf.juoserver.api.Item;
-import net.sf.juoserver.api.Layer;
-import net.sf.juoserver.api.Point2D;
-
-import org.jmock.Expectations;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class ItemComponentTest extends AbstractComponentTest {
 	private final Item bottleWasInBackpack = new UOItem(10, 1, 2);

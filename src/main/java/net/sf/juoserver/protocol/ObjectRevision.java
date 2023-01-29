@@ -1,10 +1,10 @@
 package net.sf.juoserver.protocol;
 
-import java.nio.ByteBuffer;
-
 import net.sf.juoserver.api.Item;
-import net.sf.juoserver.api.Mobile;
 import net.sf.juoserver.api.JUoEntity;
+import net.sf.juoserver.api.Mobile;
+
+import java.nio.ByteBuffer;
 
 public class ObjectRevision extends AbstractMessage {
 	private static final long serialVersionUID = 1L;

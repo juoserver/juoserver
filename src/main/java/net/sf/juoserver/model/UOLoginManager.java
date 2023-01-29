@@ -1,14 +1,10 @@
 package net.sf.juoserver.model;
 
+import net.sf.juoserver.api.*;
+
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
-
-import net.sf.juoserver.api.Account;
-import net.sf.juoserver.api.Core;
-import net.sf.juoserver.api.LoginManager;
-import net.sf.juoserver.api.NoSuchCharacterException;
-import net.sf.juoserver.api.WrongPasswordException;
 
 public class UOLoginManager implements LoginManager {
 	private final Map<Integer, Account> authorizedAccountsByKeys = new ConcurrentHashMap<Integer, Account>();

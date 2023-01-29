@@ -5,7 +5,6 @@ import net.sf.juoserver.api.Mobile;
 import net.sf.juoserver.api.TextType;
 
 import java.nio.ByteBuffer;
-import java.util.Optional;
 
 public class SendSpeech extends AbstractMessage {
     protected static final int CODE = 0x1c;

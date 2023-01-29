@@ -1,9 +1,9 @@
 package net.sf.juoserver.networking.threaded;
 
+import net.sf.juoserver.api.Message;
+
 import java.io.IOException;
 import java.util.List;
-
-import net.sf.juoserver.api.Message;
 
 public interface MessageWire {
 	void init() throws IOException;

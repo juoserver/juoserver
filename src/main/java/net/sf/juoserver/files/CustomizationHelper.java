@@ -1,15 +1,11 @@
 package net.sf.juoserver.files;
 
+import net.sf.juoserver.api.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.sf.juoserver.api.FileReadersFactory;
-import net.sf.juoserver.api.Configuration;
-import net.sf.juoserver.api.IdxFileReader;
-import net.sf.juoserver.api.SkillsFileEntry;
-import net.sf.juoserver.api.SkillsMulFileReader;
 
 /**
  * This helper class contains methods useful to customizing

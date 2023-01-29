@@ -1,11 +1,11 @@
 package net.sf.juoserver.networking;
 
-import java.util.Arrays;
-import java.util.List;
-
 import net.sf.juoserver.api.Message;
 import net.sf.juoserver.api.ProtocolController;
 import net.sf.juoserver.api.ProtocolRouter;
+
+import java.util.Arrays;
+import java.util.List;
 
 public final class PriorityBasedProtocolRouter implements ProtocolRouter {
 	private List<ProtocolController> controllers;

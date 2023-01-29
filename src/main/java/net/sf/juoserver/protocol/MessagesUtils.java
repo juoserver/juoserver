@@ -1,14 +1,13 @@
 package net.sf.juoserver.protocol;
 
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang.ArrayUtils;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.util.Arrays;
-
-
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.lang.ArrayUtils;
 
 final class MessagesUtils {
 	/**

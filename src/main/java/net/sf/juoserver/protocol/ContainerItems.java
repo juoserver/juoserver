@@ -1,13 +1,13 @@
 package net.sf.juoserver.protocol;
 
+import net.sf.juoserver.api.Container;
+import net.sf.juoserver.api.Item;
+import net.sf.juoserver.api.Point2D;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import net.sf.juoserver.api.Container;
-import net.sf.juoserver.api.Item;
-import net.sf.juoserver.api.Point2D;
 
 public class ContainerItems extends AbstractMessage {
 	private static final long serialVersionUID = 1L;

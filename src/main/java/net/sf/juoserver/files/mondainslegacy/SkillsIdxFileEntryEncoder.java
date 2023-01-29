@@ -1,10 +1,10 @@
 package net.sf.juoserver.files.mondainslegacy;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
 import net.sf.juoserver.api.IdxFileEntry;
 import net.sf.juoserver.files.IdxFileEntryEncoder;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 /**
  * Encoder for the skills index file (namely, <tt>skills.idx</tt>).

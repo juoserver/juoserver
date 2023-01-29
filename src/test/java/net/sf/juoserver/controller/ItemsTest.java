@@ -1,11 +1,5 @@
 package net.sf.juoserver.controller;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-
 import net.sf.juoserver.api.Container;
 import net.sf.juoserver.api.Item;
 import net.sf.juoserver.api.Layer;
@@ -14,18 +8,17 @@ import net.sf.juoserver.model.PointInSpace;
 import net.sf.juoserver.model.Position;
 import net.sf.juoserver.model.UOContainer;
 import net.sf.juoserver.model.UOItem;
-import net.sf.juoserver.protocol.ClilocMessage;
-import net.sf.juoserver.protocol.ContainerItems;
-import net.sf.juoserver.protocol.DoubleClick;
-import net.sf.juoserver.protocol.DrawContainer;
-import net.sf.juoserver.protocol.DropItem;
-import net.sf.juoserver.protocol.LookRequest;
-import net.sf.juoserver.protocol.PickUpItem;
-import net.sf.juoserver.protocol.WearItem;
-
+import net.sf.juoserver.protocol.*;
 import org.jmock.Expectations;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ItemsTest extends AbstractGameControllerTest {
 	private final Item item = new UOItem(45, 46, 3);

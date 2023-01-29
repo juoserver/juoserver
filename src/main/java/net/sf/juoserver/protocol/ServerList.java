@@ -1,12 +1,11 @@
 package net.sf.juoserver.protocol;
 
+import net.sf.juoserver.model.ServerInfo;
+import org.apache.commons.lang.ArrayUtils;
+
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
-
-import net.sf.juoserver.model.ServerInfo;
-
-import org.apache.commons.lang.ArrayUtils;
 
 public class ServerList extends AbstractMessage {
 	private static final long serialVersionUID = 1L;

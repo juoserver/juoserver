@@ -1,9 +1,9 @@
 package net.sf.juoserver.model;
 
+import net.sf.juoserver.api.Account;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import net.sf.juoserver.api.Account;
 
 public class UOAccount implements Account {
 	public static Account createAccount(int accountId, String username,

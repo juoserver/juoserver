@@ -1,15 +1,9 @@
 package net.sf.juoserver.model;
 
+import net.sf.juoserver.api.*;
+
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import net.sf.juoserver.api.InterClientNetwork;
-import net.sf.juoserver.api.IntercomException;
-import net.sf.juoserver.api.IntercomListener;
-import net.sf.juoserver.api.Item;
-import net.sf.juoserver.api.JUoEntity;
-import net.sf.juoserver.api.MessageType;
-import net.sf.juoserver.api.Mobile;
 
 /**
  * This class acts as a <b>mediator</b> between clients, providing the

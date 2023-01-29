@@ -1,8 +1,8 @@
 package net.sf.juoserver.protocol;
 
-import java.nio.ByteBuffer;
-
 import net.sf.juoserver.api.Item;
+
+import java.nio.ByteBuffer;
 
 public class ObjectInfo extends AbstractMessage {
 	private static final int CODE = 0x1A;

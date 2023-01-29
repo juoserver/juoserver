@@ -1,11 +1,11 @@
 package net.sf.juoserver.protocol;
 
-import java.nio.ByteBuffer;
-
 import net.sf.juoserver.api.Item;
-import net.sf.juoserver.api.Mobile;
 import net.sf.juoserver.api.JUoEntity;
+import net.sf.juoserver.api.Mobile;
 import net.sf.juoserver.model.Clilocs;
+
+import java.nio.ByteBuffer;
 
 // TODO: by now we simply want to be able to display an approaching mobile's name above their head.
 // In time, we should be able to list all of their properties and do the same for items in order for tooltips to work.

@@ -1,13 +1,13 @@
 package net.sf.juoserver.model;
 
-import static org.junit.Assert.*;
-
 import net.sf.juoserver.TestingFactory;
 import net.sf.juoserver.api.Layer;
 import net.sf.juoserver.api.Mobile;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class MobileTest {
 

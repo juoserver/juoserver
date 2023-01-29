@@ -1,8 +1,8 @@
 package net.sf.juoserver.protocol;
 
-import java.nio.ByteBuffer;
-
 import net.sf.juoserver.model.HasLightLevel;
+
+import java.nio.ByteBuffer;
 
 public class PersonalLightLevel extends AbstractMessage {
 	private static final long serialVersionUID = 1L;

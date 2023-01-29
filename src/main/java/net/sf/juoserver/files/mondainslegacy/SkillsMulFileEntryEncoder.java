@@ -1,9 +1,9 @@
 package net.sf.juoserver.files.mondainslegacy;
 
-import java.util.Arrays;
-
 import net.sf.juoserver.api.GenericFileEntryEncoder;
 import net.sf.juoserver.api.SkillsFileEntry;
+
+import java.util.Arrays;
 
 /**
  * Encoder for the skills data file (namely, <tt>skills.mul</tt>).

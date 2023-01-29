@@ -1,13 +1,12 @@
 package net.sf.juoserver.model;
 
-import static org.junit.Assert.*;
+import net.sf.juoserver.api.CharacterStatus;
+import org.jmock.Expectations;
+import org.junit.Test;
 
 import java.io.IOException;
 
-import net.sf.juoserver.api.CharacterStatus;
-
-import org.jmock.Expectations;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class WarComponentTest extends AbstractComponentTest {
 	@Test

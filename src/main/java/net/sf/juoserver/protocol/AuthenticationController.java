@@ -1,15 +1,10 @@
 package net.sf.juoserver.protocol;
 
+import net.sf.juoserver.api.*;
+import net.sf.juoserver.model.ServerInfo;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
-import net.sf.juoserver.api.Account;
-import net.sf.juoserver.api.Configuration;
-import net.sf.juoserver.api.LoginManager;
-import net.sf.juoserver.api.Message;
-import net.sf.juoserver.api.NoSuchCharacterException;
-import net.sf.juoserver.api.WrongPasswordException;
-import net.sf.juoserver.model.ServerInfo;
 
 public class AuthenticationController extends AbstractProtocolController {
 	private final ProtocolIoPort clientHandler;
@@ -39,7 +34,7 @@ public class AuthenticationController extends AbstractProtocolController {
 		}
 		
 		try {
-			return new ServerList(new ServerInfo(configuration.getServerName(), InetAddress.getByName(configuration.getServerHost())));
+			return new ServerList(new ServerInfo(configuration.getServer().getName(), InetAddress.getByName(configuration.getServer().getHost())));
 		} catch (UnknownHostException e) {
 			throw new ProtocolException(e);
 		}
@@ -48,7 +43,7 @@ public class AuthenticationController extends AbstractProtocolController {
 	public Message handle(SelectServer request) {
 		try {
 			int key = loginManager.generateAuthenticationKey(account);
-			return new ServerConnect(InetAddress.getByName(configuration.getServerHost()), configuration.getServerPort(), key);
+			return new ServerConnect(InetAddress.getByName(configuration.getServer().getHost()), configuration.getServer().getPort(), key);
 		} catch (UnknownHostException e) {
 			throw new ProtocolException(e);
 		}

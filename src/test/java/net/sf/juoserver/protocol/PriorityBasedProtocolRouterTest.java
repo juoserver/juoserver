@@ -1,18 +1,18 @@
 package net.sf.juoserver.protocol;
 
-import static org.junit.Assert.*;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 import net.sf.juoserver.TestingFactory;
 import net.sf.juoserver.api.*;
-
 import net.sf.juoserver.protocol.combat.CombatSystemImpl;
 import net.sf.juoserver.protocol.combat.PhysicalDamageCalculatorImpl;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class PriorityBasedProtocolRouterTest {
 	@Rule public final JUnitRuleMockery context = new JUnitRuleMockery();
