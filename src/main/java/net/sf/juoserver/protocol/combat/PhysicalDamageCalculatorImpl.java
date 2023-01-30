@@ -12,7 +12,7 @@ public class PhysicalDamageCalculatorImpl implements PhysicalDamageCalculator {
 
     public PhysicalDamageCalculatorImpl(Configuration configuration) {
         this.configuration = configuration;
-        var lifeLimit = configuration.getStats().getLifeLimit();
+        var lifeLimit = configuration.getStats().getMaxHitPoints();
         normalizer = lifeLimit / (lifeLimit + (0.9 * lifeLimit));
     }
 

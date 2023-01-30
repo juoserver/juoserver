@@ -1,9 +1,5 @@
 package net.sf.juoserver.api;
 
-import net.sf.juoserver.api.Core;
-import net.sf.juoserver.api.InterClientNetwork;
-import net.sf.juoserver.api.PlayerSession;
-import net.sf.juoserver.protocol.ClientVersion;
 import net.sf.juoserver.protocol.ProtocolIoPort;
 
 import java.util.List;

@@ -1,6 +1,11 @@
 package net.sf.juoserver.files.mondainslegacy;
 
-import static org.junit.Assert.*;
+import net.sf.juoserver.api.FileReadersFactory;
+import net.sf.juoserver.api.IdxFileEntry;
+import net.sf.juoserver.api.IdxFileReader;
+import net.sf.juoserver.api.SkillsFileEntry;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,16 +14,7 @@ import java.io.RandomAccessFile;
 import java.util.Arrays;
 import java.util.List;
 
-
-import net.sf.juoserver.api.FileReadersFactory;
-import net.sf.juoserver.api.IdxFileEntry;
-import net.sf.juoserver.api.IdxFileReader;
-import net.sf.juoserver.api.SkillsFileEntry;
-import net.sf.juoserver.files.mondainslegacy.MondainsLegacyFileReadersFactory;
-import net.sf.juoserver.files.mondainslegacy.MondainsLegacySkillsMulFileReader;
-
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class FileReaderTest {
 	private String[] skills = { "Alchemy", "Anatomy", "Animal lore",

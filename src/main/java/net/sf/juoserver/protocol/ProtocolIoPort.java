@@ -1,8 +1,8 @@
 package net.sf.juoserver.protocol;
 
-import java.io.IOException;
-
 import net.sf.juoserver.api.Message;
+
+import java.io.IOException;
 
 /**
  * Protocol input/output boundary port. This interface is used by the protocol

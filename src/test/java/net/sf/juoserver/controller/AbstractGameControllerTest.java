@@ -1,20 +1,19 @@
 package net.sf.juoserver.controller;
 
-import java.io.IOException;
-
 import net.sf.juoserver.TestingFactory;
 import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.UOAccount;
-import net.sf.juoserver.protocol.ProtocolIoPort;
 import net.sf.juoserver.protocol.CircularClientMovementTracker;
 import net.sf.juoserver.protocol.GameController;
-
+import net.sf.juoserver.protocol.ProtocolIoPort;
 import net.sf.juoserver.protocol.combat.CombatSystemImpl;
 import net.sf.juoserver.protocol.combat.PhysicalDamageCalculatorImpl;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
 import org.junit.Rule;
+
+import java.io.IOException;
 
 public class AbstractGameControllerTest {
 	@Rule public final JUnitRuleMockery context = new JUnitRuleMockery();

@@ -3,7 +3,6 @@ package net.sf.juoserver.protocol;
 import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.Intercom;
 import net.sf.juoserver.model.UOLoginManager;
-import net.sf.juoserver.api.CombatSystem;
 
 import java.util.Collection;
 

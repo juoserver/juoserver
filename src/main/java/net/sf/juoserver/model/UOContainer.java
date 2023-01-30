@@ -1,13 +1,13 @@
 package net.sf.juoserver.model;
 
+import net.sf.juoserver.api.Container;
+import net.sf.juoserver.api.Item;
+import net.sf.juoserver.api.ItemVisitor;
+import net.sf.juoserver.api.Point2D;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import net.sf.juoserver.api.ItemVisitor;
-import net.sf.juoserver.api.Container;
-import net.sf.juoserver.api.Item;
-import net.sf.juoserver.api.Point2D;
 
 public class UOContainer extends UOItem implements Container {
 	private List<Item> items;

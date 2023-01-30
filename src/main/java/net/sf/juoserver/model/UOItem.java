@@ -1,7 +1,7 @@
 package net.sf.juoserver.model;
 
-import net.sf.juoserver.api.ItemVisitor;
 import net.sf.juoserver.api.Item;
+import net.sf.juoserver.api.ItemVisitor;
 
 public class UOItem implements Item {
 	private int serialId;

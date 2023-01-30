@@ -30,11 +30,11 @@ public class MinaMultiplexingServerAdapter implements Server {
 	public void acceptClientConnections() throws IOException {
 		LOGGER.info("Starting multiplexing server...");
 		NioSocketAcceptor acceptor = new NioSocketAcceptor();
-		if (configuration.isPacketLoggingEnabled()) {
+		if (configuration.getPacket().isLogging()) {
 			acceptor.getFilterChain().addLast("transport logger", new LoggingFilter());
 		}
 		acceptor.getFilterChain().addLast("protocol", new ProtocolCodecFilter(new UOProtocolFactory()));
-		if (configuration.isPacketLoggingEnabled()) {
+		if (configuration.getPacket().isLogging()) {
 			// Mina's LoggingFilter is bugged: https://issues.apache.org/jira/browse/DIRMINA-833
 			acceptor.getFilterChain().addLast("packets logger", new UOProtocolLoggingFilter());
 		}
@@ -42,7 +42,7 @@ public class MinaMultiplexingServerAdapter implements Server {
 		acceptor.getSessionConfig().setReadBufferSize(BUF_SIZE);
 		acceptor.getSessionConfig().setReuseAddress(true);
 		acceptor.setHandler(new UOIoHandler(acceptor, controllerFactory));
-		acceptor.bind(new InetSocketAddress(configuration.getServerPort()));
-		LOGGER.info("Listening on port " + configuration.getServerPort());
+		acceptor.bind(new InetSocketAddress(configuration.getServer().getPort()));
+		LOGGER.info("Listening on port " + configuration.getServer().getPort());
 	}
 }

@@ -1,17 +1,16 @@
 package net.sf.juoserver.controller;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-import java.util.Arrays;
-
 import net.sf.juoserver.api.Direction;
 import net.sf.juoserver.protocol.MoveRequest;
 import net.sf.juoserver.protocol.MovementAck;
 import net.sf.juoserver.protocol.MovementReject;
-
 import org.jmock.Expectations;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Arrays;
+
+import static org.junit.Assert.assertEquals;
 
 public class MovementControllerTest extends AbstractGameControllerTest {
 	@Test

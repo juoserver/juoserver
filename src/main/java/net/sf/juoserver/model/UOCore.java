@@ -4,6 +4,8 @@ import net.sf.juoserver.api.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,8 +57,11 @@ public final class UOCore implements Core {
 		try {
 			// TODO: coordinate the map index (the '0') with the number that we provide when we send
 			// the GeneralInformationSetCursorHueSetMap message.
-			mapReader = fileReadersFactory.createMapFileReader(new File(configuration.getUOPath()
-					+ File.separator + "map0.mul"), 4096);
+			var mulPath = configuration.getFiles().getMulPath();
+			if (mulPath == null || !Files.exists(Path.of(mulPath))) {
+				throw new LoadException("UO folder containing .mul files was not found, have you configured files.mulPath?");
+			}
+			mapReader = fileReadersFactory.createMapFileReader(new File(mulPath + File.separator + "map0.mul"), 4096);
 		} catch (FileNotFoundException e) {
 			throw new LoadException(e);
 		}

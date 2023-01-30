@@ -1,14 +1,13 @@
 package net.sf.juoserver.networking.mina;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.sf.juoserver.api.Message;
 import net.sf.juoserver.protocol.ControllerFactory;
-
 import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class UOIoHandler extends IoHandlerAdapter {
 	private final Map<Long, MinaProtocolIoPortAdapter> handlers = new HashMap<Long, MinaProtocolIoPortAdapter>();

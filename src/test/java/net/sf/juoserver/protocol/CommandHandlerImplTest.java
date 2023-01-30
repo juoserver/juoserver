@@ -1,23 +1,19 @@
 package net.sf.juoserver.protocol;
 
 import net.sf.juoserver.api.*;
-import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.Matchers.*;
 
 @ExtendWith(MockitoExtension.class)
 class CommandHandlerImplTest {
@@ -95,6 +91,9 @@ class CommandHandlerImplTest {
     }
 
     private CommandHandler givenHandler(Command command) {
+        var commandConfig = mock(Configuration.CommandConfiguration.class);
+        lenient().when(commandConfig.getActivationChar()).thenReturn(".");
+        lenient().when(configuration.getCommand()).thenReturn(commandConfig);
         return new CommandHandlerImpl(core, network, Collections.singleton(command), configuration);
     }
 }

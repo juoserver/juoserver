@@ -3,7 +3,6 @@ package net.sf.juoserver.model;
 import net.sf.juoserver.api.Account;
 import net.sf.juoserver.api.Core;
 import net.sf.juoserver.api.LoginManager;
-
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;

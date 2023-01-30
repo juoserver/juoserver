@@ -4,7 +4,6 @@ import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.*;
 import net.sf.juoserver.protocol.GeneralInformation.SubcommandType;
 import net.sf.juoserver.protocol.SkillUpdate.SkillUpdateType;
-import net.sf.juoserver.api.CombatSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

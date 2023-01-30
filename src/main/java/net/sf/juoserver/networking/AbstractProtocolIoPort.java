@@ -1,13 +1,13 @@
 package net.sf.juoserver.networking;
 
-import java.io.IOException;
-import java.util.List;
-
 import net.sf.juoserver.api.Message;
 import net.sf.juoserver.api.ProtocolController;
 import net.sf.juoserver.api.ProtocolRouter;
-import net.sf.juoserver.protocol.ProtocolIoPort;
 import net.sf.juoserver.protocol.ControllerFactory;
+import net.sf.juoserver.protocol.ProtocolIoPort;
+
+import java.io.IOException;
+import java.util.List;
 
 public abstract class AbstractProtocolIoPort implements ProtocolIoPort {
 	private final String clientName;

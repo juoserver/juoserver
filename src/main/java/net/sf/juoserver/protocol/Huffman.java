@@ -1,9 +1,9 @@
 package net.sf.juoserver.protocol;
 
+import net.sf.juoserver.api.Encoder;
+
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-
-import net.sf.juoserver.api.Encoder;
 
 /**
  * {@link Encoder} which compresses bytes using the Huffman algorithm.

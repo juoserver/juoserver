@@ -1,12 +1,12 @@
 package net.sf.juoserver.networking.threaded;
 
-import java.io.*;
-import java.util.Arrays;
-import java.util.List;
-
 import net.sf.juoserver.api.Message;
 import net.sf.juoserver.networking.AbstractProtocolIoPort;
 import net.sf.juoserver.protocol.ControllerFactory;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class ThreadedProtocolIoPort extends AbstractProtocolIoPort {
 	private final ThreadedServerAdapter server;

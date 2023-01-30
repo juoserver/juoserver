@@ -1,11 +1,10 @@
 package net.sf.juoserver.model;
 
-import java.io.IOException;
-
 import net.sf.juoserver.api.Direction;
-
 import org.jmock.Expectations;
 import org.junit.Test;
+
+import java.io.IOException;
 
 public class MovementComponentTest extends AbstractComponentTest {
 	@Test

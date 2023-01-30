@@ -1,12 +1,12 @@
 package net.sf.juoserver.protocol;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.sf.juoserver.api.ItemVisitor;
-import net.sf.juoserver.api.Message;
 import net.sf.juoserver.api.Container;
 import net.sf.juoserver.api.Item;
+import net.sf.juoserver.api.ItemVisitor;
+import net.sf.juoserver.api.Message;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemManager implements ItemVisitor {
 	private List<Message> messages = new ArrayList<Message>();

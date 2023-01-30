@@ -1,32 +1,19 @@
 package net.sf.juoserver.controller;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-import java.util.Arrays;
-
 import net.sf.juoserver.TestingFactory;
-import net.sf.juoserver.api.CharacterStatus;
-import net.sf.juoserver.api.LightLevels;
-import net.sf.juoserver.api.Mobile;
-import net.sf.juoserver.api.PlayerSession;
-import net.sf.juoserver.api.Season;
+import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.UOGameStatus;
-import net.sf.juoserver.protocol.CharacterList;
-import net.sf.juoserver.protocol.CharacterSelect;
-import net.sf.juoserver.protocol.ClientVersion;
-import net.sf.juoserver.protocol.ClilocMessage;
-import net.sf.juoserver.protocol.LookRequest;
-import net.sf.juoserver.protocol.MegaClilocRequest;
-import net.sf.juoserver.protocol.MegaClilocResponse;
-import net.sf.juoserver.protocol.ServerLoginRequest;
-import net.sf.juoserver.protocol.WarMode;
-
+import net.sf.juoserver.protocol.*;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.jmock.Expectations;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Arrays;
+
+import static org.junit.Assert.assertEquals;
 
 public class ControllerTest extends AbstractGameControllerTest {
 	@Test

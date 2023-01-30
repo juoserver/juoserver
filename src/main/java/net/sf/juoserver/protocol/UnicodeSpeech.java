@@ -1,9 +1,9 @@
 package net.sf.juoserver.protocol;
 
-import java.nio.ByteBuffer;
-
 import net.sf.juoserver.api.MessageType;
 import net.sf.juoserver.api.Mobile;
+
+import java.nio.ByteBuffer;
 
 public class UnicodeSpeech extends AbstractMessage {
 	private static final long serialVersionUID = 1L;

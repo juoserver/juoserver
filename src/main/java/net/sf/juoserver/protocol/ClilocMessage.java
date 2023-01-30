@@ -1,11 +1,11 @@
 package net.sf.juoserver.protocol;
 
-import java.nio.ByteBuffer;
-
-import net.sf.juoserver.api.MessageType;
 import net.sf.juoserver.api.Item;
+import net.sf.juoserver.api.MessageType;
 import net.sf.juoserver.api.Mobile;
 import net.sf.juoserver.model.Clilocs;
+
+import java.nio.ByteBuffer;
 
 public class ClilocMessage extends AbstractMessage {
 

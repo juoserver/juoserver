@@ -1,0 +1,15 @@
+
+packet:
+  logging: false
+stats:
+  maxHitPoints: 100
+  maxStamina: 100
+  maxMana: 100
+server:
+  name: JUOServer
+  host: localhost
+  port: 7775
+combat:
+  dexAttackDivisorModifier: 10
+command:
+  activationChar: .

@@ -1,12 +1,11 @@
 package net.sf.juoserver.controller;
 
-import java.io.IOException;
-
 import net.sf.juoserver.api.MessageType;
 import net.sf.juoserver.protocol.UnicodeSpeechRequest;
-
 import org.jmock.Expectations;
 import org.junit.Test;
+
+import java.io.IOException;
 
 public class SpeechTest extends AbstractGameControllerTest {
 	@Test

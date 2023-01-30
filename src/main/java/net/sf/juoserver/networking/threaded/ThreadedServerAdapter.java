@@ -38,9 +38,9 @@ public final class ThreadedServerAdapter implements Server {
 	@Override
 	public void acceptClientConnections() throws IOException {
 		LOGGER.info("Starting threaded server...");
-		serverSocket = new ServerSocket(configuration.getServerPort());
+		serverSocket = new ServerSocket(configuration.getServer().getPort());
 		active = true;
-		LOGGER.info("Listening on port " + configuration.getServerPort());
+		LOGGER.info("Listening on port " + configuration.getServer().getPort());
 		try {
 			while (active) {
 				Socket connection = waitForConnection();

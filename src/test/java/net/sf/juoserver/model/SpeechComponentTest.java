@@ -1,11 +1,10 @@
 package net.sf.juoserver.model;
 
-import java.io.IOException;
-
 import net.sf.juoserver.api.MessageType;
-
 import org.jmock.Expectations;
 import org.junit.Test;
+
+import java.io.IOException;
 
 public class SpeechComponentTest extends AbstractComponentTest {
 	@Test

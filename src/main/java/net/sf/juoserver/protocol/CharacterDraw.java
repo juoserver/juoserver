@@ -1,13 +1,9 @@
 package net.sf.juoserver.protocol;
 
+import net.sf.juoserver.api.*;
+
 import java.nio.ByteBuffer;
 import java.util.Map;
-
-import net.sf.juoserver.api.CharacterStatus;
-import net.sf.juoserver.api.Layer;
-import net.sf.juoserver.api.Notoriety;
-import net.sf.juoserver.api.Item;
-import net.sf.juoserver.api.Mobile;
 
 public class CharacterDraw extends AbstractMessage {
 	private static final long serialVersionUID = 1L;

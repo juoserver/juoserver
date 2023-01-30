@@ -7,17 +7,27 @@ package net.sf.juoserver.api;
 public interface Configuration {
 	String getSkillsIdxPath();
 	String getMulPath();
-	String getUOPath();
-	int getServerPort();
-	String getServerName();
-	String getServerHost();
-	boolean isPacketLoggingEnabled();
-	String getCommandActivationCharacter();
 	StatsConfiguration getStats();
 	CombatConfiguration getCombat();
+	ServerConfiguration getServer();
+	FilesConfiguration getFiles();
+	CommandConfiguration getCommand();
+	PacketConfiguration getPacket();
+
+	interface FilesConfiguration {
+		String getMulPath();
+	}
+
+	interface ServerConfiguration {
+		int getPort();
+		String getName();
+		String getHost();
+	}
 
 	interface StatsConfiguration {
-		int getLifeLimit();
+		int getMaxHitPoints();
+		int getMaxStamina();
+		int getMaxMana();
 	}
 
 	interface CombatConfiguration {
@@ -26,5 +36,13 @@ public interface Configuration {
 
 		int getDexDefenseDivisorModifier();
 		int getStrDefenseDivisorModifier();
+	}
+
+	interface CommandConfiguration {
+		String getActivationChar();
+	}
+
+	interface PacketConfiguration {
+		boolean isLogging();
 	}
 }

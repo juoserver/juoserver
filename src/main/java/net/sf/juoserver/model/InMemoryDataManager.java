@@ -1,19 +1,11 @@
 package net.sf.juoserver.model;
 
+import net.sf.juoserver.api.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-import net.sf.juoserver.api.DataManager;
-import net.sf.juoserver.api.Item;
-import net.sf.juoserver.api.Layer;
-import net.sf.juoserver.api.Point2D;
-import net.sf.juoserver.api.RaceFlag;
-import net.sf.juoserver.api.SexRace;
-import net.sf.juoserver.api.StatusFlag;
-import net.sf.juoserver.api.Account;
-import net.sf.juoserver.api.Mobile;
 
 public class InMemoryDataManager implements DataManager {
 	private static final int ACCOUNT_ID = 0;

@@ -1,9 +1,9 @@
 package net.sf.juoserver.protocol;
 
-import java.nio.ByteBuffer;
-
-import net.sf.juoserver.api.StatusFlag;
 import net.sf.juoserver.api.Mobile;
+import net.sf.juoserver.api.StatusFlag;
+
+import java.nio.ByteBuffer;
 
 public class StatusBarInfo extends AbstractMessage {
 	private static final long serialVersionUID = 1L;

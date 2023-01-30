@@ -1,9 +1,9 @@
 package net.sf.juoserver.protocol;
 
+import net.sf.juoserver.api.Skill;
+
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-
-import net.sf.juoserver.api.Skill;
 
 public class SkillUpdate extends AbstractMessage {
 	private static final long serialVersionUID = 1L;

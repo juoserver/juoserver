@@ -20,7 +20,7 @@ class TestConfiguration implements Configuration {
 	}
 
 	@Override
-	public String getUOPath() {
+	public FilesConfiguration getFiles() {
 		return null;
 	}
 
@@ -30,32 +30,12 @@ class TestConfiguration implements Configuration {
 	}
 
 	@Override
-	public int getServerPort() {
-		return 0;
-	}
-
-	@Override
-	public String getServerName() {
-		return null;
-	}
-
-	@Override
-	public String getServerHost() {
+	public ServerConfiguration getServer() {
 		return null;
 	}
 
 	@Override
 	public String getMulPath() {
-		return null;
-	}
-
-	@Override
-	public boolean isPacketLoggingEnabled() {
-		return false;
-	}
-
-	@Override
-	public String getCommandActivationCharacter() {
 		return null;
 	}
 
@@ -66,6 +46,16 @@ class TestConfiguration implements Configuration {
 
 	@Override
 	public CombatConfiguration getCombat() {
+		return null;
+	}
+
+	@Override
+	public CommandConfiguration getCommand() {
+		return null;
+	}
+
+	@Override
+	public PacketConfiguration getPacket() {
 		return null;
 	}
 }

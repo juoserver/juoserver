@@ -1,9 +1,9 @@
 package net.sf.juoserver.protocol;
 
+import org.apache.commons.lang.ArrayUtils;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
-import org.apache.commons.lang.ArrayUtils;
 
 /**
  * First message ever sent by a client.

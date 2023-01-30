@@ -1,9 +1,9 @@
 package net.sf.juoserver.protocol;
 
-import java.nio.ByteBuffer;
-
 import net.sf.juoserver.api.Item;
 import net.sf.juoserver.api.Mobile;
+
+import java.nio.ByteBuffer;
 
 public class DragItem extends AbstractMessage {
 	private static final long serialVersionUID = 1L;

@@ -1,14 +1,13 @@
 package net.sf.juoserver.builder;
 
 import net.sf.juoserver.api.*;
-import net.sf.juoserver.configuration.PropertyFileBasedConfiguration;
+import net.sf.juoserver.configuration.ConfigurationFactory;
 import net.sf.juoserver.files.mondainslegacy.MondainsLegacyFileReadersFactory;
 import net.sf.juoserver.model.InMemoryDataManager;
 import net.sf.juoserver.model.UOCore;
 import net.sf.juoserver.networking.mina.MinaMultiplexingServerAdapter;
 import net.sf.juoserver.networking.threaded.ThreadedServerAdapter;
 import net.sf.juoserver.protocol.ControllerFactory;
-import net.sf.juoserver.api.CombatSystem;
 import net.sf.juoserver.protocol.combat.CombatSystemImpl;
 import net.sf.juoserver.protocol.combat.PhysicalDamageCalculatorImpl;
 import org.slf4j.Logger;
@@ -37,7 +36,7 @@ public final class JUOServerBuilder {
 
     public static JUOServerBuilder newInstance() {
         JUOServerBuilder builder = new JUOServerBuilder();
-        builder.configuration = new PropertyFileBasedConfiguration();
+        builder.configuration = ConfigurationFactory.newInstance().newConfiguration();
         builder.dataManager = new InMemoryDataManager();
         builder.serverType = ServerType.THREADED;
         builder.combatSystem = new CombatSystemImpl(new PhysicalDamageCalculatorImpl(builder.configuration));

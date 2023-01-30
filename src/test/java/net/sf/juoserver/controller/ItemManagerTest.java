@@ -1,10 +1,5 @@
 package net.sf.juoserver.controller;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Arrays;
-import java.util.HashMap;
-
 import net.sf.juoserver.api.Container;
 import net.sf.juoserver.api.Item;
 import net.sf.juoserver.api.Point2D;
@@ -13,8 +8,12 @@ import net.sf.juoserver.model.UOItem;
 import net.sf.juoserver.protocol.ContainerItems;
 import net.sf.juoserver.protocol.DrawContainer;
 import net.sf.juoserver.protocol.ItemManager;
-
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.HashMap;
+
+import static org.junit.Assert.assertEquals;
 
 public class ItemManagerTest {
 	@Test
