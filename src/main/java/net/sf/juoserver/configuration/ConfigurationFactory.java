@@ -6,6 +6,9 @@ import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsSchema;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import net.sf.juoserver.api.Configuration;
+import net.sf.juoserver.protocol.GameController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,18 +21,20 @@ import java.util.Properties;
 
 public class ConfigurationFactory {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameController.class);
     private static final JavaPropsSchema JAVA_PROPS_SCHEMA = new JavaPropsSchema().withPathSeparator(".");
-    private final SimpleModule simpleModule;
     private final JavaPropsMapper propsMapper;
     private final YAMLMapper yamlMapper;
 
     private ConfigurationFactory() {
-        this.simpleModule = new SimpleModule();
-        this.simpleModule.addAbstractTypeMapping(Configuration.class, ConfigurationImpl.class);
-        this.simpleModule.addAbstractTypeMapping(Configuration.StatsConfiguration.class, StatsConfigurationImpl.class);
-        this.simpleModule.addAbstractTypeMapping(Configuration.CombatConfiguration.class, CombatConfigurationImpl.class);
-        this.simpleModule.addAbstractTypeMapping(Configuration.ServerConfiguration.class, ServerConfigurationImpl.class);
-        this.simpleModule.addAbstractTypeMapping(Configuration.FilesConfiguration.class, FilesConfigurationImpl.class);
+        SimpleModule simpleModule = new SimpleModule();
+        simpleModule.addAbstractTypeMapping(Configuration.class, ConfigurationImpl.class);
+        simpleModule.addAbstractTypeMapping(Configuration.StatsConfiguration.class, StatsConfigurationImpl.class);
+        simpleModule.addAbstractTypeMapping(Configuration.CombatConfiguration.class, CombatConfigurationImpl.class);
+        simpleModule.addAbstractTypeMapping(Configuration.ServerConfiguration.class, ServerConfigurationImpl.class);
+        simpleModule.addAbstractTypeMapping(Configuration.FilesConfiguration.class, FilesConfigurationImpl.class);
+        simpleModule.addAbstractTypeMapping(Configuration.CommandConfiguration.class, CommandConfigurationImpl.class);
+        simpleModule.addAbstractTypeMapping(Configuration.PacketConfiguration.class, PacketConfigurationImpl.class);
 
         this.propsMapper = new JavaPropsMapper();
         this.propsMapper.registerModule(simpleModule);
@@ -61,6 +66,9 @@ public class ConfigurationFactory {
 
             configMap.putAll(systemEnvToMap());
 
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Final configuration MAP: {}", configMap);
+            }
             return propsMapper.readMapAs(configMap, JAVA_PROPS_SCHEMA, Configuration.class);
         } catch (IOException e) {
             throw new RuntimeException(e);

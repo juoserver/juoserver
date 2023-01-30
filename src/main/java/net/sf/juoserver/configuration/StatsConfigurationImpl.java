@@ -2,16 +2,37 @@ package net.sf.juoserver.configuration;
 
 import net.sf.juoserver.api.Configuration;
 
-public class StatsConfigurationImpl implements Configuration.StatsConfiguration {
+class StatsConfigurationImpl implements Configuration.StatsConfiguration {
 
-    private int lifeLimit;
+    private int maxHitPoints;
 
+    private int maxStamina;
+
+    private int maxMana;
     @Override
-    public int getLifeLimit() {
-        return lifeLimit;
+    public int getMaxHitPoints() {
+        return maxHitPoints;
     }
 
-    public void setLifeLimit(int lifeLimit) {
-        this.lifeLimit = lifeLimit;
+    @Override
+    public int getMaxStamina() {
+        return maxStamina;
+    }
+
+    @Override
+    public int getMaxMana() {
+        return maxMana;
+    }
+
+    public void setMaxHitPoints(int maxHitPoints) {
+        this.maxHitPoints = maxHitPoints;
+    }
+
+    public void setMaxStamina(int maxStamina) {
+        this.maxStamina = maxStamina;
+    }
+
+    public void setMaxMana(int maxMana) {
+        this.maxMana = maxMana;
     }
 }

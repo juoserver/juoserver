@@ -2,7 +2,7 @@ package net.sf.juoserver.configuration;
 
 import net.sf.juoserver.api.Configuration;
 
-public class ServerConfigurationImpl implements Configuration.ServerConfiguration {
+class ServerConfigurationImpl implements Configuration.ServerConfiguration {
 
     private int port;
     private String name;

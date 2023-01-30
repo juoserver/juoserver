@@ -32,7 +32,7 @@ class PhysicalDamageCalculatorImplTest {
         lenient().when(combatConfiguration.getDexDefenseDivisorModifier()).thenReturn(5);
         lenient().when(combatConfiguration.getStrDefenseDivisorModifier()).thenReturn(2);
 
-        lenient().when(statsConfiguration.getLifeLimit()).thenReturn(100);
+        lenient().when(statsConfiguration.getMaxHitPoints()).thenReturn(100);
 
         physicalDamageCalculator = new PhysicalDamageCalculatorImpl(configuration);
     }

@@ -40,22 +40,22 @@ class TestConfiguration implements Configuration {
 	}
 
 	@Override
-	public boolean isPacketLoggingEnabled() {
-		return false;
-	}
-
-	@Override
-	public String getCommandActivationCharacter() {
-		return null;
-	}
-
-	@Override
 	public StatsConfiguration getStats() {
 		return null;
 	}
 
 	@Override
 	public CombatConfiguration getCombat() {
+		return null;
+	}
+
+	@Override
+	public CommandConfiguration getCommand() {
+		return null;
+	}
+
+	@Override
+	public PacketConfiguration getPacket() {
 		return null;
 	}
 }

@@ -65,7 +65,7 @@ public class UOProtocolWire implements MessageWire {
 	@Override
 	public void sendMessages(List<Message> messages) throws IOException {
 		for (Message reply : messages) {
-			if (configuration.isPacketLoggingEnabled()) {
+			if (configuration.getPacket().isLogging()) {
 				LOGGER.info("Sending message: " + reply);
 			}
 			if (reply.isCompressed()) {
@@ -81,11 +81,11 @@ public class UOProtocolWire implements MessageWire {
 		int nread = is.read(buffer, 0, BUF_SIZE);
 		if (nread != -1) {
 			byte[] inputBytes = Arrays.copyOf(buffer, nread);
-			if (configuration.isPacketLoggingEnabled()) {
+			if (configuration.getPacket().isLogging()) {
 				LOGGER.info("Received bytes: " + Hex.encodeHexString(inputBytes).toUpperCase());
 			}
 			List<Message> readMessages = messageReader.readMessages(inputBytes);
-			if (configuration.isPacketLoggingEnabled()) {
+			if (configuration.getPacket().isLogging()) {
 				for (Message message : readMessages) {
 					LOGGER.info("Received message: " + message);
 				}

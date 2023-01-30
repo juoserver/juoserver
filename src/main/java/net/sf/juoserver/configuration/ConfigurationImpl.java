@@ -11,6 +11,8 @@ public class ConfigurationImpl implements Configuration {
     private CombatConfiguration combat;
     private ServerConfiguration server;
     private FilesConfiguration files;
+    private CommandConfiguration command;
+    private PacketConfiguration packet;
 
     @Override
     public String getSkillsIdxPath() {
@@ -20,16 +22,6 @@ public class ConfigurationImpl implements Configuration {
     @Override
     public String getMulPath() {
         return mulPath;
-    }
-
-    @Override
-    public boolean isPacketLoggingEnabled() {
-        return packetLoggingEnabled;
-    }
-
-    @Override
-    public String getCommandActivationCharacter() {
-        return commandActivationCharacter;
     }
 
     @Override
@@ -50,6 +42,16 @@ public class ConfigurationImpl implements Configuration {
     @Override
     public FilesConfiguration getFiles() {
         return files;
+    }
+
+    @Override
+    public CommandConfiguration getCommand() {
+        return command;
+    }
+
+    @Override
+    public PacketConfiguration getPacket() {
+        return packet;
     }
 
     public void setSkillsIdxPath(String skillsIdxPath) {
@@ -82,5 +84,13 @@ public class ConfigurationImpl implements Configuration {
 
     public void setFiles(FilesConfiguration files) {
         this.files = files;
+    }
+
+    public void setCommand(CommandConfiguration command) {
+        this.command = command;
+    }
+
+    public void setPacket(PacketConfiguration packet) {
+        this.packet = packet;
     }
 }

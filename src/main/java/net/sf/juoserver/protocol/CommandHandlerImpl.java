@@ -20,7 +20,7 @@ public class CommandHandlerImpl implements CommandHandler {
         this.network = network;
         this.commands = commands.stream()
                 .collect(Collectors.toMap(command->command.getName().toLowerCase(), e->e));
-        this.activationCharacter = configuration.getCommandActivationCharacter();
+        this.activationCharacter = configuration.getCommand().getActivationChar();
     }
 
     @Override

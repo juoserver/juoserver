@@ -2,7 +2,7 @@ package net.sf.juoserver.configuration;
 
 import net.sf.juoserver.api.Configuration;
 
-public class CombatConfigurationImpl implements Configuration.CombatConfiguration {
+class CombatConfigurationImpl implements Configuration.CombatConfiguration {
     private int dexAttackDivisorModifier;
     private int strAttackDivisorModifier;
     private int dexDefenseDivisorModifier;

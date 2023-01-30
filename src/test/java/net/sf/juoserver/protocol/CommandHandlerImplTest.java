@@ -91,6 +91,9 @@ class CommandHandlerImplTest {
     }
 
     private CommandHandler givenHandler(Command command) {
+        var commandConfig = mock(Configuration.CommandConfiguration.class);
+        lenient().when(commandConfig.getActivationChar()).thenReturn(".");
+        lenient().when(configuration.getCommand()).thenReturn(commandConfig);
         return new CommandHandlerImpl(core, network, Collections.singleton(command), configuration);
     }
 }
