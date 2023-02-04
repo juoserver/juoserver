@@ -18,11 +18,11 @@ public class InMemoryDataManager implements DataManager {
 	@Override
 	public List<Mobile> loadMobiles() {
 		return Arrays.asList(
-				dressUp(new UOMobile(FIRST_SERIAL_ID, "Loller", 15,
-				20, false, StatusFlag.UOML, SexRace.MaleHuman, 10, 10, 10, 10,
+				dressUp(new UOMobile(FIRST_SERIAL_ID, "Loller", 80,
+				80, false, StatusFlag.UOML, SexRace.MaleHuman, 10, 10, 10, 10,
 				10, 10, 10, 1000, 5, 5, 50, RaceFlag.Human)),
 				dressUp(new UOMobile(PLAYER2_SERIAL,
-				"Asder", 10, 10, false, StatusFlag.UOML, SexRace.MaleHuman, 10,
+				"Asder", 100, 100, false, StatusFlag.UOML, SexRace.MaleHuman, 10,
 				10, 10, 10, 10, 10, 10, 1000, 5, 5, 50, RaceFlag.Human)));
 	}
 

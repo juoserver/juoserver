@@ -10,6 +10,9 @@ server:
   host: localhost
   port: 7775
 combat:
-  dexAttackDivisorModifier: 10
+  dexAttackDivisorModifier: 5
+  strAttackDivisorModifier: 2
+  dexDefenseDivisorModifier: 5
+  strDefenseDivisorModifier: 2
 command:
   activationChar: .
