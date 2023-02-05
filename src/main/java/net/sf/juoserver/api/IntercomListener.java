@@ -18,6 +18,6 @@ public interface IntercomListener {
 	void onAttackFinished(Mobile attacker, Mobile attacked);
 	void onOtherDamaged(Mobile mobile, int damage);
 	void onFightOccurring(Mobile opponent1, Mobile opponent2);
-	void onItemCreated(Item item);
+	void onGroundItemCreated(Item item);
 
 }

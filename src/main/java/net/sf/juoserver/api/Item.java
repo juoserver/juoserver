@@ -12,13 +12,13 @@ public interface Item extends JUoEntity, Point3D {
 	 * 2 - Graphic id for deaths when (modelId = 0x2006)
 	 * @param amount value
 	 */
-	Item amount(int amount);
+	Item setAmount(int amount);
 
-	Item location(int x, int y, int z);
+	Item setLocation(int x, int y, int z);
 
-	Item location(Point3D point3D);
+	Item setLocation(Point3D point3D);
 
-	Item name(String name);
+	Item setName(String name);
 
-	Item hue(int hue);
+	Item setHue(int hue);
 }

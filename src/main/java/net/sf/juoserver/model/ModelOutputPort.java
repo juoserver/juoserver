@@ -13,7 +13,7 @@ public interface ModelOutputPort {
 	void containerChangedContents(Container updatedContainer);
 	void itemDragged(Item item, Mobile droppingMobile, int targetSerialId);
 	void itemChanged(Item item);
-	void itemCreated(Item item);
+	void groundItemCreated(Item item);
 	void mobileChangedClothes(Mobile mobile);
 	void mobileChangedWarMode(Mobile mobile);
 	void mobileAttacked(Mobile attacker);

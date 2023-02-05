@@ -10,7 +10,7 @@ import java.util.Set;
 public class UOPlayerSession implements PlayerSession {
 	private final Core core;
 	private final Account account;
-	private final Set<Mobile> mobilesInRange = new HashSet<Mobile>();
+	private final Set<Mobile> mobilesInRange = new HashSet<>();
 	private final ModelOutputPort serverResponseListener;
 	private final InterClientNetwork network;
 	
@@ -30,7 +30,7 @@ public class UOPlayerSession implements PlayerSession {
 
 	@Override
 	public List<String> getCharacterNames() {
-		List<String> names = new ArrayList<String>();
+		List<String> names = new ArrayList<>();
 		for (int serialId : account.getCharactersSerials()) {
 			Mobile mobile = core.findMobileByID(serialId);
 			names.add(mobile.getName());
@@ -140,8 +140,8 @@ public class UOPlayerSession implements PlayerSession {
 		}
 		
 		if (droppedOnTheGround) {
-			droppedItem.location(targetPosition);
-			network.notifyItemDropped(mobile, droppedItem, droppedOnTheGround? 0 : targetContainerSerial);
+			droppedItem.setLocation(targetPosition);
+			network.notifyItemDropped(mobile, droppedItem, 0);
 		}
 	}
 	
@@ -270,12 +270,12 @@ public class UOPlayerSession implements PlayerSession {
 	}
 
 	@Override
-	public void createItem(Item item) {
-		network.notifyItemCreated(item);
+	public void createGroundItem(Item item) {
+		network.notifyGroundItemCreated(item);
 	}
 
 	@Override
-	public void onItemCreated(Item item) {
-		serverResponseListener.itemCreated(item);
+	public void onGroundItemCreated(Item item) {
+		serverResponseListener.groundItemCreated(item);
 	}
 }

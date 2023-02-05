@@ -77,7 +77,7 @@ public class UOItem implements Item {
 	}
 
 	@Override
-	public UOItem amount(int amount) {
+	public UOItem setAmount(int amount) {
 		this.amount = amount;
 		return this;
 	}
@@ -98,7 +98,7 @@ public class UOItem implements Item {
 	}
 
 	@Override
-	public Item location(int x, int y, int z) {
+	public Item setLocation(int x, int y, int z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -106,7 +106,7 @@ public class UOItem implements Item {
 	}
 
 	@Override
-	public Item location(Point3D point3D) {
+	public Item setLocation(Point3D point3D) {
 		this.x = point3D.getX();
 		this.y = point3D.getY();
 		this.z = point3D.getZ();
@@ -114,13 +114,13 @@ public class UOItem implements Item {
 	}
 
 	@Override
-	public Item name(String name) {
+	public Item setName(String name) {
 		this.name = name;
 		return this;
 	}
 
 	@Override
-	public Item hue(int hue) {
+	public Item setHue(int hue) {
 		this.hue = hue;
 		return this;
 	}

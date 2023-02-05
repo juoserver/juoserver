@@ -14,7 +14,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * according to the <b>observer</b> pattern.
  */
 public final class Intercom implements InterClientNetwork {
-	private List<IntercomListener> listeners = new CopyOnWriteArrayList<IntercomListener>();
+	private final List<IntercomListener> listeners = new CopyOnWriteArrayList<>();
 
 	@Override
 	public void addIntercomListener(IntercomListener listener) {
@@ -94,12 +94,6 @@ public final class Intercom implements InterClientNetwork {
 	 *            item
 	 * @param targetSerialId
 	 *            target serial ID
-	 * @param targetX
-	 *            target X
-	 * @param targetY
-	 *            target Y
-	 * @param targetZ
-	 *            target Z
 	 */
 	@Override
 	public void notifyItemDropped(Mobile droppingMobile, Item item, int targetSerialId) {
@@ -181,9 +175,9 @@ public final class Intercom implements InterClientNetwork {
 	}
 
 	@Override
-	public void notifyItemCreated(Item item) {
+	public void notifyGroundItemCreated(Item item) {
 		for (IntercomListener intercomListener : listeners) {
-			intercomListener.onItemCreated(item);
+			intercomListener.onGroundItemCreated(item);
 		}
 	}
 }

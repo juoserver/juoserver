@@ -14,5 +14,5 @@ public interface InterClientNetwork {
 	void notifyFightOccurring(Mobile opponent1, Mobile opponent2);
 	void removeIntercomListener(IntercomListener listener);
 	void addIntercomListener(IntercomListener listener);
-	void notifyItemCreated(Item item);
+	void notifyGroundItemCreated(Item item);
 }

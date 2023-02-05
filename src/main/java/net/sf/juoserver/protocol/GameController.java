@@ -59,11 +59,11 @@ public class GameController extends AbstractProtocolController implements ModelO
 		network.addIntercomListener(session);
 		
 		List<String> names = session.getCharacterNames();
-		List<PlayingCharacter> chars = new ArrayList<PlayingCharacter>();
+		List<PlayingCharacter> chars = new ArrayList<>();
 		for (String name : names) {
 			chars.add(new PlayingCharacter(name, account.getPassword()));
 		}
-		return new CharacterList(chars, new ArrayList<City>(),
+		return new CharacterList(chars, new ArrayList<>(),
 				// TODO: create constants/enum for the following two flags
 				new Flag(0x14),   // 1-char only 
 				new Flag(0x1A8)); // Mondain's Legacy
@@ -91,28 +91,28 @@ public class GameController extends AbstractProtocolController implements ModelO
 		LightLevels lightLevel = status.getLightLevel();
 		Season season = status.getSeason();
 		
-		List<Message> response = new ArrayList<Message>( asList(
-			new LoginConfirm(mobile.getSerialId(), (short) mobile.getModelId(),
-					(short) mobile.getX(), (short) mobile.getY(), (byte) mobile.getZ(),
-					(byte) mobile.getDirection().getCode(), (byte) mobile.getNotoriety().getCode(),
-					(short) 7168, (short) 4096),
-			// TODO: don't hard-code the map size (7168 x 4096) and index (0), see Core#init() [@ RunUo source]
-			new GeneralInformation(new GeneralInformation.SetCursorHueSetMap((byte) 0)),
-			new SeasonalInformation(season, true),
-			new DrawGamePlayer(mobile),
-			new CharacterDraw(mobile),
-			new OverallLightLevel(new UOProtocolLightLevel(lightLevel)),
-			new PersonalLightLevel(mobile.getSerialId(), new UOProtocolLightLevel(lightLevel)),
-			new ClientFeatures(ClientFeature.T2A, ClientFeature.UOR),
-			new CharacterWarmode((byte) 0),
-			new LoginComplete()
-		) );
+		List<Message> response = new ArrayList<>(asList(
+				new LoginConfirm(mobile.getSerialId(), (short) mobile.getModelId(),
+						(short) mobile.getX(), (short) mobile.getY(), (byte) mobile.getZ(),
+						(byte) mobile.getDirection().getCode(), (byte) mobile.getNotoriety().getCode(),
+						(short) 7168, (short) 4096),
+				// TODO: don't hard-code the map size (7168 x 4096) and index (0), see Core#init() [@ RunUo source]
+				new GeneralInformation(new GeneralInformation.SetCursorHueSetMap((byte) 0)),
+				new SeasonalInformation(season, true),
+				new DrawGamePlayer(mobile),
+				new CharacterDraw(mobile),
+				new OverallLightLevel(new UOProtocolLightLevel(lightLevel)),
+				new PersonalLightLevel(mobile.getSerialId(), new UOProtocolLightLevel(lightLevel)),
+				new ClientFeatures(ClientFeature.T2A, ClientFeature.UOR),
+				new CharacterWarmode((byte) 0),
+				new LoginComplete()
+		));
 		response.addAll( mobileObjectsRevisions( mobile ) );
 		return response;
 	}
 	
 	private Collection<? extends Message> mobileObjectsRevisions(Mobile mobile) {
-		List<Message> revisions = new ArrayList<Message>();
+		List<Message> revisions = new ArrayList<>();
 		for (Item item : mobile.getItems().values()) {
 			revisions.add( new ObjectRevision(item) );
 		}
@@ -218,7 +218,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 	public List<? extends Message> handle(DoubleClick doubleClick) {
 		if (doubleClick.isPaperdollRequest()) {
 			Mobile mob = core.findMobileByID(doubleClick.getObjectSerialId());
-			return Arrays.asList(new Paperdoll(doubleClick.getObjectSerialId(),
+			return List.of(new Paperdoll(doubleClick.getObjectSerialId(),
 					mob.getName() + ", " + mob.getTitle(),
 					false, false));
 		} else {
@@ -429,13 +429,13 @@ public class GameController extends AbstractProtocolController implements ModelO
 	}
 
 	// ======================= HANDLE HELP ====================
-	public List handle(RequestHelp requestHelp) {
+	public List<Message> handle(RequestHelp requestHelp) {
 		System.out.println("User "+session.getMobile().getName()+" requested help");
 		return Collections.singletonList(new WarMode(CharacterStatus.WarMode));
 	}
 
 	@Override
-	public void itemCreated(Item item) {
+	public void groundItemCreated(Item item) {
 		try {
 			clientHandler.sendToClient(new ObjectInfo(item));
 		} catch (IOException e) {
@@ -444,29 +444,16 @@ public class GameController extends AbstractProtocolController implements ModelO
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((controllerId == null) ? 0 : controllerId.hashCode());
-		return result;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		GameController that = (GameController) o;
+		return Objects.equals(controllerId, that.controllerId);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		GameController other = (GameController) obj;
-		if (controllerId == null) {
-			if (other.controllerId != null)
-				return false;
-		} else if (!controllerId.equals(other.controllerId))
-			return false;
-		return true;
+	public int hashCode() {
+		return Objects.hash(controllerId);
 	}
 
 	@Override

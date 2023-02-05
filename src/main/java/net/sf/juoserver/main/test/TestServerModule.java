@@ -5,7 +5,6 @@ import net.sf.juoserver.builder.JUOServerModule;
 import net.sf.juoserver.protocol.AbstractCommand;
 
 public class TestServerModule extends JUOServerModule {
-    private int x =1;
 
     public TestServerModule() {
         registerCommand(new AbstractCommand("command") {
@@ -16,12 +15,11 @@ public class TestServerModule extends JUOServerModule {
 
                     //var item = new UOItem(UOCore.ITEMS_MAX_SERIAL_ID+x++, 0x2006, 0);
                     var item = context.getCore().createItem(0x2006)
-                            .amount(0x190)
-                            .location(mobile)
-                            .name("Asder corpse");
+                            .setAmount(0x190)
+                            .setLocation(mobile)
+                            .setName("Asder corpse");
 
-
-                context.getSession().createItem(item);
+                context.getSession().createGroundItem(item);
 
                     //context.getProtocolIoPort().sendToClient(new CharacterAnimation(context.getSession().getMobile(), AnimationRepeat.TWICE, AnimationType.GET_HIT, 10, AnimationDirection.BACKWARD));
                 /*} catch (IOException e) {
