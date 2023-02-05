@@ -12,11 +12,12 @@ public interface IntercomListener {
 	void onOtherMobileSpeech(Mobile speaker, MessageType type, int hue, int font, String language, String text);
 	void onChangedClothes(Mobile wearingMobile);
 	void onDroppedCloth(Mobile mobile, Item droppedCloth);
-	void onItemDropped(Mobile droppingMobile, Item item, int targetSerialId, int targetX, int targetY, int targetZ);
+	void onItemDropped(Mobile droppingMobile, Item item, int targetSerialId);
 	void onChangedWarMode(Mobile mobile);
 	void onAttacked(Mobile attacker, Mobile attacked);
 	void onAttackFinished(Mobile attacker, Mobile attacked);
 	void onOtherDamaged(Mobile mobile, int damage);
 	void onFightOccurring(Mobile opponent1, Mobile opponent2);
+	void onItemCreated(Item item);
 
 }

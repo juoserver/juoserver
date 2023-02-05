@@ -140,8 +140,8 @@ public class UOPlayerSession implements PlayerSession {
 		}
 		
 		if (droppedOnTheGround) {
-			network.notifyItemDropped(mobile, droppedItem, droppedOnTheGround? 0 : targetContainerSerial,
-					targetPosition.getX(), targetPosition.getY(), targetPosition.getZ());
+			droppedItem.location(targetPosition);
+			network.notifyItemDropped(mobile, droppedItem, droppedOnTheGround? 0 : targetContainerSerial);
 		}
 	}
 	
@@ -162,12 +162,11 @@ public class UOPlayerSession implements PlayerSession {
 	}
 
 	@Override
-	public void onItemDropped(Mobile droppingMobile, Item item,
-			int targetSerialId, int targetX, int targetY, int targetZ) {
+	public void onItemDropped(Mobile droppingMobile, Item item, int targetSerialId) {
 		if (!mobile.equals(droppingMobile)) {
-			serverResponseListener.itemDragged(item, 1, droppingMobile, targetSerialId, new PointInSpace(targetX, targetY, targetZ));
+			serverResponseListener.itemDragged(item, droppingMobile, targetSerialId);
 		}
-		serverResponseListener.itemChanged(item, new PointInSpace(targetX, targetY, targetZ));
+		serverResponseListener.itemChanged(item);
 	}
 
 	@Override
@@ -267,7 +266,16 @@ public class UOPlayerSession implements PlayerSession {
 
 	@Override
 	public void onFightOccurring(Mobile opponent1, Mobile opponent2) {
-
 		serverResponseListener.fightOccurring(opponent1, opponent2);
+	}
+
+	@Override
+	public void createItem(Item item) {
+		network.notifyItemCreated(item);
+	}
+
+	@Override
+	public void onItemCreated(Item item) {
+		serverResponseListener.itemCreated(item);
 	}
 }

@@ -280,20 +280,19 @@ public class GameController extends AbstractProtocolController implements ModelO
 	}
 
 	@Override
-	public void itemDragged(Item item, int amount, Mobile droppingMobile,
-			int targetSerialId, Point3D targetPosition) {
+	public void itemDragged(Item item, Mobile droppingMobile,
+			int targetSerialId) {
 		try {
-			clientHandler.sendToClient(new DragItem(item, amount, droppingMobile, targetSerialId, targetPosition.getX(),
-					targetPosition.getY(), targetPosition.getZ()));
+			clientHandler.sendToClient(new DragItem(item, droppingMobile, targetSerialId));
 		} catch (IOException e) {
 			throw new ProtocolException(e);
 		}
 	}
 
 	@Override
-	public void itemChanged(Item item, Point3D where) {
+	public void itemChanged(Item item) {
 		try {
-			clientHandler.sendToClient(new ObjectInfo(item, where.getX(), where.getY(), where.getZ()), new ObjectRevision(item));
+			clientHandler.sendToClient(new ObjectInfo(item), new ObjectRevision(item));
 		} catch (IOException e) {
 			throw new ProtocolException(e);
 		}
@@ -433,6 +432,15 @@ public class GameController extends AbstractProtocolController implements ModelO
 	public List handle(RequestHelp requestHelp) {
 		System.out.println("User "+session.getMobile().getName()+" requested help");
 		return Collections.singletonList(new WarMode(CharacterStatus.WarMode));
+	}
+
+	@Override
+	public void itemCreated(Item item) {
+		try {
+			clientHandler.sendToClient(new ObjectInfo(item));
+		} catch (IOException e) {
+			throw new IntercomException(e);
+		}
 	}
 
 	@Override

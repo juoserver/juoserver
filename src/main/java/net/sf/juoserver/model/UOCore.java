@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The <b>Core</b> facade.
@@ -20,22 +21,27 @@ public final class UOCore implements Core {
 	//TODO: make this private
 	public static final int ITEMS_MAX_SERIAL_ID = MOBILES_MAX_SERIAL_ID + 1;
 	private static final int OBJECTS_MAX_SERIAL_ID = 0x7FFFFFFF;
-	
+
+	/**
+	 * Currently serialIds
+	 */
+	private final AtomicInteger itemSerial = new AtomicInteger();
+
 	/**
 	 * Currently managed mobiles.
 	 */
-	private final Map<Integer, Mobile> mobilesBySerialId = new HashMap<Integer, Mobile>();
+	private final Map<Integer, Mobile> mobilesBySerialId = new HashMap<>();
 	
 	/**
 	 * Currently managed items.
 	 */
-	private final Map<Integer, Item> itemsBySerialId = new HashMap<Integer, Item>();
-	private final Map<Item, Container> containersByContainedItems = new HashMap<Item, Container>();
+	private final Map<Integer, Item> itemsBySerialId = new HashMap<>();
+	private final Map<Item, Container> containersByContainedItems = new HashMap<>();
 	
 	/**
 	 * The accounts, by username.
 	 */
-	private final Map<String, Account> accounts = new HashMap<String, Account>();
+	private final Map<String, Account> accounts = new HashMap<>();
 	private final Configuration configuration;
 	private final FileReadersFactory fileReadersFactory;
 	private final DataManager dataManager;
@@ -83,6 +89,7 @@ public final class UOCore implements Core {
 	}
 
 	private void loadData() {
+
 		for (Mobile mobile : dataManager.loadMobiles()) {
 			mobilesBySerialId.put(mobile.getSerialId(), mobile);
 		}
@@ -94,6 +101,9 @@ public final class UOCore implements Core {
 		for (Mobile mob : mobilesBySerialId.values()) {
 			addItems(mob, mob.getItems().values());
 		}
+
+		addItems(null, dataManager.loadItems());
+		itemSerial.set(dataManager.getItemSerial());
 	}
 	
 	/**
@@ -176,4 +186,10 @@ public final class UOCore implements Core {
 		containersByContainedItems.put(item, container);
 	}
 
+	@Override
+	public Item createItem(int modelId) {
+		var item = new UOItem(ITEMS_MAX_SERIAL_ID + itemSerial.getAndIncrement(), modelId);
+		itemsBySerialId.put(item.getSerialId(), item);
+		return item;
+	}
 }

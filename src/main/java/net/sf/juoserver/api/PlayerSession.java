@@ -15,4 +15,5 @@ public interface PlayerSession extends IntercomListener {
 	void attack(Mobile enemy);
 	void applyDamage(int damage);
 	void fightOccurring(Mobile opponent);
+	void createItem(Item item);
 }

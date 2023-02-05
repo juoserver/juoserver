@@ -2,10 +2,7 @@ package net.sf.juoserver.model;
 
 import net.sf.juoserver.api.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryDataManager implements DataManager {
 	private static final int ACCOUNT_ID = 0;
@@ -57,5 +54,15 @@ public class InMemoryDataManager implements DataManager {
 	public List<Account> loadAccounts() {
 		return new ArrayList<Account>(Arrays.asList(UOAccount
 				.createAccount(ACCOUNT_ID, "admin", "admin", FIRST_SERIAL_ID), UOAccount.createAccount(PLAYER2_ID, "user", "user", PLAYER2_SERIAL)));
+	}
+
+	@Override
+	public List<Item> loadItems() {
+		return Collections.emptyList();
+	}
+
+	@Override
+	public Integer getItemSerial() {
+		return 1;
 	}
 }

@@ -102,11 +102,9 @@ public final class Intercom implements InterClientNetwork {
 	 *            target Z
 	 */
 	@Override
-	public void notifyItemDropped(Mobile droppingMobile, Item item,
-			int targetSerialId, int targetX, int targetY, int targetZ) {
+	public void notifyItemDropped(Mobile droppingMobile, Item item, int targetSerialId) {
 		for (IntercomListener l : listeners) {
-			l.onItemDropped(droppingMobile, item, targetSerialId, targetX,
-					targetY, targetZ);
+			l.onItemDropped(droppingMobile, item, targetSerialId);
 		}
 	}
 
@@ -179,6 +177,13 @@ public final class Intercom implements InterClientNetwork {
 	public void notifyFightOccurring(Mobile opponent1, Mobile opponent2) {
 		for (IntercomListener intercomListener : listeners) {
 			intercomListener.onFightOccurring(opponent1, opponent2);
+		}
+	}
+
+	@Override
+	public void notifyItemCreated(Item item) {
+		for (IntercomListener intercomListener : listeners) {
+			intercomListener.onItemCreated(item);
 		}
 	}
 }

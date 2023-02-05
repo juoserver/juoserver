@@ -65,4 +65,5 @@ public interface Core {
 
 	void removeItemFromContainer(Item item);
 
+	Item createItem(int modelId);
 }
