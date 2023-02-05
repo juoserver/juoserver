@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Game controller. A different instance of this class will be associated
@@ -46,7 +47,11 @@ public class GameController extends AbstractProtocolController implements ModelO
 		this.commandHandler = commandHandler;
 		this.combatSystem = combatSystem;
 	}
-	
+
+	public void setSession(PlayerSession session) {
+		this.session = session;
+	}
+
 	// This message is sent in the second connection right after the new seed
 	public CharacterList handle(ServerLoginRequest request) throws IOException {
 		Account account = loginManager.getAuthorizedAccount(request.getAuthenticationKey());
@@ -132,7 +137,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 			session.move(request.getDirection(), request.isRunning());
 			
 			movementTracker.incrementExpectedSequence();
-			
+
 			return asList( new MovementAck(request.getSequence(), session.getMobile().getNotoriety()) );
 		} else {
 			LOGGER.warn("Movement request rejected - expected sequence: "
@@ -153,7 +158,16 @@ public class GameController extends AbstractProtocolController implements ModelO
 		// TODO: this handler is not actually needed (i.e., called) yet
 		return asList(new DrawGamePlayer(session.getMobile()), new CharacterDraw(session.getMobile()));
 	}
-	
+
+	@Override
+	public void mobileApproached(Mobile mobile) {
+		try {
+			clientHandler.sendToClient(new CharacterDraw(mobile), new ObjectRevision(mobile));
+		} catch (IOException e) {
+			throw new ProtocolException(e);
+		}
+	}
+
 	public void handle(UnicodeSpeechRequest request) {
 		if (commandHandler.isCommand(request)) {
 			commandHandler.execute(clientHandler, session, request);
@@ -232,9 +246,6 @@ public class GameController extends AbstractProtocolController implements ModelO
 	
 	public List<Message> handle(GeneralInformation info) {
 		Subcommand<GeneralInformation, SubcommandType> sc = info.getSubCommand();
-		if (sc != null) {
-			LOGGER.debug(String.valueOf(sc));
-		}
 		if (sc instanceof GeneralInformation.StatsLook) {
 			var serialId = ((GeneralInformation.StatsLook) sc).getSerialId();
 			var item = core.findItemByID(serialId);
@@ -324,15 +335,6 @@ public class GameController extends AbstractProtocolController implements ModelO
 	}
 
 	@Override
-	public void mobileApproached(Mobile mobile) {
-		try {
-			clientHandler.sendToClient(new CharacterDraw(mobile), new ObjectRevision(mobile));
-		} catch (IOException e) {
-			throw new ProtocolException(e);
-		}
-	}
-
-	@Override
 	public void mobileDroppedCloth(Mobile mobile, Item droppedCloth) {
 		try {
 			clientHandler.sendToClient(new DeleteItem(droppedCloth.getSerialId()));
@@ -341,7 +343,18 @@ public class GameController extends AbstractProtocolController implements ModelO
 			throw new ProtocolException(e);
 		}
 	}
-	
+
+	@Override
+	public void groundItemsCreated(Collection<Item> items) {
+		try {
+			for (Item item : items) {
+				clientHandler.sendToClient(new ObjectInfo(item));
+			}
+		} catch (IOException e) {
+			throw new IntercomException(e);
+		}
+	}
+
 	// ====================== COMBAT =========================
 	public List<Message> handle(WarMode warMode) {
 		session.toggleWarMode(warMode.isWar());
@@ -435,15 +448,6 @@ public class GameController extends AbstractProtocolController implements ModelO
 	}
 
 	@Override
-	public void groundItemCreated(Item item) {
-		try {
-			clientHandler.sendToClient(new ObjectInfo(item));
-		} catch (IOException e) {
-			throw new IntercomException(e);
-		}
-	}
-
-	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
@@ -461,7 +465,4 @@ public class GameController extends AbstractProtocolController implements ModelO
 		return controllerId;
 	}
 
-	public void setSession(PlayerSession session) {
-		this.session = session;
-	}
 }

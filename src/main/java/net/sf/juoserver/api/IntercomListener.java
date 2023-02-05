@@ -1,6 +1,8 @@
 package net.sf.juoserver.api;
 
 
+import java.util.Collection;
+
 /**
  * Definition of an actor interested in receiving
  * notifications about other mobiles from the other
@@ -18,6 +20,6 @@ public interface IntercomListener {
 	void onAttackFinished(Mobile attacker, Mobile attacked);
 	void onOtherDamaged(Mobile mobile, int damage);
 	void onFightOccurring(Mobile opponent1, Mobile opponent2);
-	void onGroundItemCreated(Item item);
+	void onGroundItemCreated(Collection<Item> items);
 
 }

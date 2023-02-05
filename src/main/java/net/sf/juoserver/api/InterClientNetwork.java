@@ -1,5 +1,7 @@
 package net.sf.juoserver.api;
 
+import java.util.Collection;
+
 public interface InterClientNetwork {
 	void notifyOtherMobileMovement(Mobile movingMobile);
 	void notifyEnteredRange(Mobile enteredMobile, JUoEntity targetMobile);
@@ -14,5 +16,5 @@ public interface InterClientNetwork {
 	void notifyFightOccurring(Mobile opponent1, Mobile opponent2);
 	void removeIntercomListener(IntercomListener listener);
 	void addIntercomListener(IntercomListener listener);
-	void notifyGroundItemCreated(Item item);
+	void notifyGroundItemsCreated(Collection<Item> items);
 }

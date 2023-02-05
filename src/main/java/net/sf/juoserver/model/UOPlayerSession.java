@@ -2,15 +2,13 @@ package net.sf.juoserver.model;
 
 import net.sf.juoserver.api.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class UOPlayerSession implements PlayerSession {
 	private final Core core;
 	private final Account account;
 	private final Set<Mobile> mobilesInRange = new HashSet<>();
+	private final Set<Item> itemsInRange = new HashSet<>();
 	private final ModelOutputPort serverResponseListener;
 	private final InterClientNetwork network;
 	
@@ -63,7 +61,13 @@ public class UOPlayerSession implements PlayerSession {
 		if (!onlyChangingDirection) {
 			mobile.moveForward();
 		}
-		
+
+		var items = core.findItems(mobile, direction, 10);
+		if (!items.isEmpty()) {
+			network.notifyGroundItemsCreated(items);
+		}
+
+
 		MapTile tile = core.getTile(mobile.getX(), mobile.getY());
 		mobile.setZ( tile.getZ() );
 		network.notifyOtherMobileMovement(mobile);
@@ -270,12 +274,12 @@ public class UOPlayerSession implements PlayerSession {
 	}
 
 	@Override
-	public void createGroundItem(Item item) {
-		network.notifyGroundItemCreated(item);
+	public void createGroundItems(Collection<Item> items) {
+		network.notifyGroundItemsCreated(items);
 	}
 
 	@Override
-	public void onGroundItemCreated(Item item) {
-		serverResponseListener.groundItemCreated(item);
+	public void onGroundItemCreated(Collection<Item> items) {
+		serverResponseListener.groundItemsCreated(items);
 	}
 }

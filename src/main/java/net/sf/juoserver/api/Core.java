@@ -1,5 +1,7 @@
 package net.sf.juoserver.api;
 
+import java.util.List;
+
 /**
  * The core main API.
  */
@@ -66,4 +68,6 @@ public interface Core {
 	void removeItemFromContainer(Item item);
 
 	Item createItem(int modelId);
+
+	List<Item> findItems(Point3D where, Direction direction, int distance);
 }

@@ -6,10 +6,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * The <b>Core</b> facade.
@@ -191,5 +190,16 @@ public final class UOCore implements Core {
 		var item = new UOItem(ITEMS_MAX_SERIAL_ID + itemSerial.getAndIncrement(), modelId);
 		itemsBySerialId.put(item.getSerialId(), item);
 		return item;
+	}
+
+	@Override
+	public List<Item> findItems(Point3D where, Direction direction, int distance) {
+		int pos = where.getY() - distance;
+		int startX = where.getX() - 30;
+		int endX = where.getX() + 30;
+
+		return itemsBySerialId.values().stream()
+				.filter(item->item.getX() > startX && item.getX() < endX && item.getY()==pos)
+				.collect(Collectors.toList());
 	}
 }

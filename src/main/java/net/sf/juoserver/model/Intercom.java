@@ -2,6 +2,7 @@ package net.sf.juoserver.model;
 
 import net.sf.juoserver.api.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -175,9 +176,9 @@ public final class Intercom implements InterClientNetwork {
 	}
 
 	@Override
-	public void notifyGroundItemCreated(Item item) {
+	public void notifyGroundItemsCreated(Collection<Item> items) {
 		for (IntercomListener intercomListener : listeners) {
-			intercomListener.onGroundItemCreated(item);
+			intercomListener.onGroundItemCreated(items);
 		}
 	}
 }

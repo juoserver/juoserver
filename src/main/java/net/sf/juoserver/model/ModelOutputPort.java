@@ -2,6 +2,8 @@ package net.sf.juoserver.model;
 
 import net.sf.juoserver.api.*;
 
+import java.util.Collection;
+
 /**
  * Model output boundary port. This interface is used by the model
  * to update the client about changes in the game.
@@ -13,7 +15,7 @@ public interface ModelOutputPort {
 	void containerChangedContents(Container updatedContainer);
 	void itemDragged(Item item, Mobile droppingMobile, int targetSerialId);
 	void itemChanged(Item item);
-	void groundItemCreated(Item item);
+	void groundItemsCreated(Collection<Item> items);
 	void mobileChangedClothes(Mobile mobile);
 	void mobileChangedWarMode(Mobile mobile);
 	void mobileAttacked(Mobile attacker);

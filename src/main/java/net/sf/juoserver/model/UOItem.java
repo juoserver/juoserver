@@ -127,7 +127,14 @@ public class UOItem implements Item {
 
 	@Override
 	public String toString() {
-		return "UOItem [serialId=" + serialId + ", modelId=" + modelId + "]";
+		return "UOItem{" +
+				"serialId=" + serialId +
+				", modelId=" + modelId +
+				", name='" + name + '\'' +
+				", x=" + x +
+				", y=" + y +
+				", z=" + z +
+				'}';
 	}
 
 	@Override

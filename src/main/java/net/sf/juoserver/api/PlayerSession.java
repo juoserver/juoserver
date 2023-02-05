@@ -1,5 +1,6 @@
 package net.sf.juoserver.api;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface PlayerSession extends IntercomListener {
@@ -15,5 +16,5 @@ public interface PlayerSession extends IntercomListener {
 	void attack(Mobile enemy);
 	void applyDamage(int damage);
 	void fightOccurring(Mobile opponent);
-	void createGroundItem(Item item);
+	void createGroundItems(Collection<Item> items);
 }
