@@ -9,6 +9,7 @@ import java.util.Collections;
 public class TestServerModule extends JUOServerModule {
 
     public TestServerModule() {
+        registerCommand(new Where());
         registerCommand(new AbstractCommand("command") {
             @Override
             public void execute(CommandContext context) {

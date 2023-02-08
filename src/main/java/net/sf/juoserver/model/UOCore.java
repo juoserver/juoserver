@@ -194,12 +194,92 @@ public final class UOCore implements Core {
 
 	@Override
 	public List<Item> findItems(Point3D where, Direction direction, int distance) {
-		int pos = where.getY() - distance;
-		int startX = where.getX() - 30;
-		int endX = where.getX() + 30;
+		if (Direction.East.equals(direction)) {
+			var pos3 = where.getX() + distance;
+			var startY = where.getY() - distance;
+			var finalY = where.getY() + distance;
+			return itemsBySerialId.values().stream()
+					.filter(item->item.getY() > startY && item.getY() < finalY && item.getX()==pos3)
+					.collect(Collectors.toList());
+		}
+		if (Direction.West.equals(direction)) {
+			var pos4 = where.getX() - distance;
+			var startY2 = where.getY() - distance;
+			var finalY2 = where.getY() + distance;
+			return itemsBySerialId.values().stream()
+					.filter(item->item.getY() > startY2 && item.getY() < finalY2 && item.getX()==pos4)
+					.collect(Collectors.toList());
+		}
+		if (Direction.North.equals(direction)) {
+			var pos = where.getY() - distance;
+			var startX = where.getX() - distance;
+			var finalX = where.getX() + distance;
+			return itemsBySerialId.values().stream()
+					.filter(item->item.getX() > startX && item.getX() < finalX && item.getY()==pos)
+					.collect(Collectors.toList());
+		}
+		if (Direction.South.equals(direction)) {
+			var pos2 = where.getY() + distance;
+			var startX2 = where.getX() - distance;
+			var finalX2 = where.getX() + distance;
+			return itemsBySerialId.values().stream()
+					.filter(item->item.getX() > startX2 && item.getX() < finalX2 && item.getY()==pos2)
+					.collect(Collectors.toList());
+		}
+		if (Direction.Southwest.equals(direction)) {
+			int posX = where.getX() - distance;
+			int startY = where.getY() - distance;
+			int finalY = where.getY() + distance;
 
-		return itemsBySerialId.values().stream()
-				.filter(item->item.getX() > startX && item.getX() < endX && item.getY()==pos)
-				.collect(Collectors.toList());
+			int posY = where.getY() + distance;
+			int startX = where.getX() - distance;
+			int finalX = where.getX() + distance;
+
+			return itemsBySerialId.values().stream()
+					.filter(item-> (item.getX() > startX && item.getX() < finalX && item.getY() == posY) || (item.getY() > startY && item.getY() < finalY && item.getX() == posX))
+					.collect(Collectors.toList());
+		}
+		if (Direction.Southeast.equals(direction)) {
+			int posX = where.getX() + distance;
+			int startY = where.getY() - distance;
+			int finalY = where.getY() + distance;
+
+			int posY = where.getY() + distance;
+			int startX = where.getX() - distance;
+			int finalX = where.getX() + distance;
+
+			return itemsBySerialId.values().stream()
+					.filter(item-> (item.getX() > startX && item.getX() < finalX && item.getY() == posY) || (item.getY() > startY && item.getY() < finalY && item.getX() == posX))
+					.collect(Collectors.toList());
+		}
+		if (Direction.Northwest.equals(direction)) {
+			int posX = where.getX() - distance;
+			int startY = where.getY() - distance;
+			int finalY = where.getY() + distance;
+
+			int posY = where.getY() - distance;
+			int startX = where.getX() - distance;
+			int finalX = where.getX() + distance;
+
+			return itemsBySerialId.values().stream()
+					.filter(item-> (item.getX() > startX && item.getX() < finalX && item.getY() == posY) || (item.getY() > startY && item.getY() < finalY && item.getX() == posX))
+					.collect(Collectors.toList());
+		}
+		if (Direction.Northeast.equals(direction)) {
+			int posX = where.getX() + distance;
+			int startY = where.getY() - distance;
+			int finalY = where.getY() + distance;
+
+			int posY = where.getY() - distance;
+			int startX = where.getX() - distance;
+			int finalX = where.getX() + distance;
+
+			return itemsBySerialId.values().stream()
+					.filter(item-> (item.getX() > startX && item.getX() < finalX && item.getY() == posY) || (item.getY() > startY && item.getY() < finalY && item.getX() == posX))
+					.collect(Collectors.toList());
+		}
+		return Collections.emptyList();
 	}
+
+
 }

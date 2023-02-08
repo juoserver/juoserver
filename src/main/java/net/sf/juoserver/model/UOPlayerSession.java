@@ -62,7 +62,7 @@ public class UOPlayerSession implements PlayerSession {
 			mobile.moveForward();
 		}
 
-		var items = core.findItems(mobile, direction, 10);
+		var items = core.findItems(mobile, direction, 20);
 		if (!items.isEmpty()) {
 			network.notifyGroundItemsCreated(items);
 		}
