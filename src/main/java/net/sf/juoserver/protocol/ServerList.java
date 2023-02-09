@@ -1,7 +1,7 @@
 package net.sf.juoserver.protocol;
 
 import net.sf.juoserver.model.ServerInfo;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;

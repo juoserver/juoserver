@@ -4,9 +4,12 @@ import net.sf.juoserver.api.Item;
 import net.sf.juoserver.api.ItemVisitor;
 import net.sf.juoserver.api.Point3D;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.Objects;
 
 public class UOItem implements Item {
+	private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 	private final int serialId;
 	private final int modelId;
 	private int hue;
@@ -39,6 +42,26 @@ public class UOItem implements Item {
 		this.name = name;
 		this.baseDamage = baseDamage;
 		this.amount = 1;
+	}
+
+	@Override
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		changeSupport.addPropertyChangeListener(listener);
+	}
+
+	@Override
+	public void addPropertyChangeListener(String property, PropertyChangeListener listener) {
+		changeSupport.addPropertyChangeListener(property, listener);
+	}
+
+	@Override
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		changeSupport.removePropertyChangeListener(listener);
+	}
+
+	@Override
+	public void removePropertyChangeListener(String property, PropertyChangeListener listener) {
+		changeSupport.removePropertyChangeListener(property, listener);
 	}
 
 	@Override
@@ -99,18 +122,17 @@ public class UOItem implements Item {
 
 	@Override
 	public Item setLocation(int x, int y, int z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		var oldLocation = new PointInSpace(this.x, this.y, this.z);
+		changeSupport.firePropertyChange("x", this.x, this.x = x);
+		changeSupport.firePropertyChange("y", this.y, this.y = y);
+		changeSupport.firePropertyChange("z", this.z, this.z = z);
+		changeSupport.firePropertyChange("location", oldLocation, new PointInSpace(this.x, this.y, this.z));
 		return this;
 	}
 
 	@Override
-	public Item setLocation(Point3D point3D) {
-		this.x = point3D.getX();
-		this.y = point3D.getY();
-		this.z = point3D.getZ();
-		return this;
+	public Item setLocation(Point3D newLocation) {
+		return setLocation(newLocation.getX(), newLocation.getY(), newLocation.getZ());
 	}
 
 	@Override

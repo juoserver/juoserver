@@ -3,13 +3,12 @@ package net.sf.juoserver.model;
 import net.sf.juoserver.api.Configuration;
 import net.sf.juoserver.api.DataManager;
 import net.sf.juoserver.api.FileReadersFactory;
+import net.sf.juoserver.model.core.UOCore;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

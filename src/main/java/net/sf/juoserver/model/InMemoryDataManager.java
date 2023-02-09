@@ -1,6 +1,7 @@
 package net.sf.juoserver.model;
 
 import net.sf.juoserver.api.*;
+import net.sf.juoserver.model.core.UOCore;
 
 import java.util.*;
 
@@ -58,11 +59,14 @@ public class InMemoryDataManager implements DataManager {
 
 	@Override
 	public List<Item> loadItems() {
-		return Collections.emptyList();
+		return List.of(new UOItem(UOCore.ITEMS_MAX_SERIAL_ID + 1, 0x226D, 0, "scroll", 0)
+				.setLocation(747, 2162,0),
+				new UOItem(UOCore.ITEMS_MAX_SERIAL_ID + 2, 0x226D, 0, "scroll", 0)
+						.setLocation(746, 2162,0));
 	}
 
 	@Override
 	public Integer getItemSerial() {
-		return 1;
+		return 3;
 	}
 }

@@ -1,6 +1,9 @@
 package net.sf.juoserver.api;
 
-public interface Item extends JUoEntity, Point3D {
+import java.beans.PropertyChangeListener;
+
+public interface Item extends JUoEntity, Point3D, PropertyChangeSupported {
+
 	void accept(ItemVisitor itemManager);
 
 	int getBaseDamage();

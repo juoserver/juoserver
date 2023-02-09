@@ -1,6 +1,6 @@
 package net.sf.juoserver.api;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * The core main API.
@@ -69,5 +69,12 @@ public interface Core {
 
 	Item createItem(int modelId);
 
-	List<Item> findItems(Point3D where, Direction direction, int distance);
+	/**
+	 * Find items in a specific direction of the location.
+	 * @param myLocation origin location
+	 * @param direction direction to look for items
+	 * @param distanceFromMe How far from the origin location will look for items
+	 * @return List of items
+	 */
+	Collection<Item> findItemsByDirection(Point2D myLocation, Direction direction, int distanceFromMe);
 }

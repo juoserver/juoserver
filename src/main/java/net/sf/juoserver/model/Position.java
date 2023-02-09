@@ -2,6 +2,8 @@ package net.sf.juoserver.model;
 
 import net.sf.juoserver.api.Point2D;
 
+import java.util.Objects;
+
 public class Position implements Point2D {
 	private int x;
 	private int y;
@@ -10,6 +12,11 @@ public class Position implements Point2D {
 		super();
 		this.x = x;
 		this.y = y;
+	}
+
+	public Position(Point2D point2D) {
+		this.x = point2D.getX();
+		this.y = point2D.getY();
 	}
 
 	@Override
@@ -23,27 +30,15 @@ public class Position implements Point2D {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + x;
-		result = prime * result + y;
-		return result;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Position position = (Position) o;
+		return x == position.x && y == position.y;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Position other = (Position) obj;
-		if (x != other.x)
-			return false;
-		if (y != other.y)
-			return false;
-		return true;
+	public int hashCode() {
+		return Objects.hash(x, y);
 	}
 }

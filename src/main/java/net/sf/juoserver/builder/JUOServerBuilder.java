@@ -4,7 +4,7 @@ import net.sf.juoserver.api.*;
 import net.sf.juoserver.configuration.ConfigurationFactory;
 import net.sf.juoserver.files.mondainslegacy.MondainsLegacyFileReadersFactory;
 import net.sf.juoserver.model.InMemoryDataManager;
-import net.sf.juoserver.model.UOCore;
+import net.sf.juoserver.model.core.UOCore;
 import net.sf.juoserver.networking.mina.MinaMultiplexingServerAdapter;
 import net.sf.juoserver.networking.threaded.ThreadedServerAdapter;
 import net.sf.juoserver.protocol.ControllerFactory;

@@ -1,6 +1,6 @@
 package net.sf.juoserver.protocol;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
