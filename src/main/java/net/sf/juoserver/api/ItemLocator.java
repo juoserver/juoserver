@@ -21,6 +21,13 @@ public interface ItemLocator extends PropertyChangeListener {
      * @param distance distance to look for items
      * @return Stream of items found
      */
-    Stream<Item> loadItemsByDirection(Point2D location, Direction direction, int distance);
+    Stream<Item> findItemsByDirection(Point2D location, Direction direction, int distance);
 
+    /**
+     * Find items in the area surrounding the informed location
+     * @param location Location
+     * @param distance Distance of the search
+     * @return Stream of items found
+     */
+    Stream<Item> findItemsInRegion(Point2D location, int distance);
 }

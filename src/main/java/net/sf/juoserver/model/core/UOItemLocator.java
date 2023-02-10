@@ -33,9 +33,11 @@ public class UOItemLocator implements ItemLocator {
     @Override
     public void init() {
         var initialInstant = Instant.now();
+
         var grouped = itemsBySerialId.values().parallelStream()
                 .collect(Collectors.groupingBy(item->new Position(item.getX(), item.getY())));
         this.itemsByLocation.putAll(grouped);
+
         var finalInstant = Instant.now();
         var numberOfItems = itemsBySerialId.keySet().size();
         LOGGER.info("{} items indexed in {} millis", numberOfItems, Duration.between(initialInstant, finalInstant).toMillis());
@@ -44,9 +46,9 @@ public class UOItemLocator implements ItemLocator {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("location".equals(evt.getPropertyName())) {
-            itemsByLocation.computeIfPresent(new Position((Point2D) evt.getOldValue()), (location,col)->{
-                col.remove((Item) evt.getSource());
-                return null;
+            itemsByLocation.computeIfPresent(new Position((Point2D) evt.getOldValue()), (location,items)->{
+                items.remove((Item) evt.getSource());
+                return items.isEmpty() ? null : items;
             });
             itemsByLocation.computeIfAbsent(new Position((Point2D) evt.getNewValue()), location->{
                 List<Item> items = new ArrayList<>();
@@ -57,7 +59,7 @@ public class UOItemLocator implements ItemLocator {
     }
 
     @Override
-    public Stream<Item> loadItemsByDirection(Point2D location, Direction direction, int distance) {
+    public Stream<Item> findItemsByDirection(Point2D location, Direction direction, int distance) {
         switch (direction) {
             case East: return filterItems(location.getY() - distance, location.getY() + distance, y->new Position(location.getX() + distance, y));
             case West: return filterItems(location.getY() - distance, location.getY() + distance, y->new Position(location.getX() - distance, y));
@@ -81,5 +83,10 @@ public class UOItemLocator implements ItemLocator {
                 .map(itemsByLocation::get)
                 .filter(Objects::nonNull)
                 .flatMap(List::stream);
+    }
+
+    @Override
+    public Stream<Item> findItemsInRegion(Point2D location, int distance) {
+        return null;
     }
 }

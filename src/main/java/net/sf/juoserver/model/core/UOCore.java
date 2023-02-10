@@ -210,7 +210,7 @@ public final class UOCore implements Core {
 
 	@Override
 	public Collection<Item> findItemsByDirection(Point2D myLocation, Direction direction, int distanceFromMe) {
-		return itemLocator.loadItemsByDirection(myLocation, direction, distanceFromMe)
+		return itemLocator.findItemsByDirection(myLocation, direction, distanceFromMe)
 				.collect(Collectors.toSet());
 	}
 
