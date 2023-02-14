@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 public class UOItemLocator implements ItemLocator {
     private static final Logger LOGGER = LoggerFactory.getLogger(UOItemLocator.class);
     private final Map<Integer, Item> itemsBySerialId;
-    private final Map<Point2D, List<Item>> itemsByLocation;
+    private final Map<Point2D, Set<Item>> itemsByLocation;
 
     public UOItemLocator(Map<Integer, Item> itemsBySerialId) {
         this.itemsBySerialId = itemsBySerialId;
@@ -35,7 +35,8 @@ public class UOItemLocator implements ItemLocator {
         var initialInstant = Instant.now();
 
         var grouped = itemsBySerialId.values().parallelStream()
-                .collect(Collectors.groupingBy(item->new Position(item.getX(), item.getY())));
+                .flatMap(item->Stream.of(new AbstractMap.SimpleEntry<>(new Position(item.getX(), item.getY()), item)))
+                .collect(Collectors.groupingBy(Map.Entry::getKey, Collectors.mapping(Map.Entry::getValue, Collectors.toSet())));
         this.itemsByLocation.putAll(grouped);
 
         var finalInstant = Instant.now();
@@ -51,7 +52,7 @@ public class UOItemLocator implements ItemLocator {
                 return items.isEmpty() ? null : items;
             });
             itemsByLocation.computeIfAbsent(new Position((Point2D) evt.getNewValue()), location->{
-                List<Item> items = new ArrayList<>();
+                Set<Item> items = new HashSet<>();
                 items.add((Item) evt.getSource());
                 return items;
             });
@@ -61,28 +62,43 @@ public class UOItemLocator implements ItemLocator {
     @Override
     public Stream<Item> findItemsByDirection(Point2D location, Direction direction, int distance) {
         switch (direction) {
-            case East: return filterItems(location.getY() - distance, location.getY() + distance, y->new Position(location.getX() + distance, y));
-            case West: return filterItems(location.getY() - distance, location.getY() + distance, y->new Position(location.getX() - distance, y));
-            case North: return filterItems(location.getX() - distance, location.getX() + distance, x->new Position(x, location.getY() - distance));
-            case South: return filterItems(location.getX() - distance, location.getX() + distance, x->new Position(x, location.getY() + distance));
+            case East: return filterItems(location.getY() - distance, location.getY() + distance, y->new Position(location.getX() + distance, y))
+                    .distinct();
+
+            case West: return filterItems(location.getY() - distance, location.getY() + distance, y->new Position(location.getX() - distance, y))
+                    .distinct();
+
+            case North: return filterItems(location.getX() - distance, location.getX() + distance, x->new Position(x, location.getY() - distance))
+                    .distinct();
+
+            case South: return filterItems(location.getX() - distance, location.getX() + distance, x->new Position(x, location.getY() + distance))
+                    .distinct();
+
             case Southwest: return Stream.concat(filterItems(location.getY() - distance, location.getY() + distance, y->new Position(location.getX() - distance, y)),
-                    filterItems(location.getX() - distance, location.getX() + distance, x->new Position(x, location.getY() + distance)));
+                    filterItems(location.getX() - distance, location.getX() + distance, x->new Position(x, location.getY() + distance)))
+                    .distinct();
+
             case Southeast: return Stream.concat(filterItems(location.getY() - distance, location.getY() + distance, y->new Position(location.getX() + distance, y)),
-                    filterItems(location.getX() - distance, location.getX() + distance, x->new Position(x, location.getY() + distance)));
+                    filterItems(location.getX() - distance, location.getX() + distance, x->new Position(x, location.getY() + distance)))
+                    .distinct();
+
             case Northwest: return Stream.concat(filterItems(location.getY() - distance, location.getY() + distance, y->new Position(location.getX() - distance, y)),
-                    filterItems(location.getX() - distance, location.getX() + distance, x->new Position(x, location.getY() - distance)));
+                    filterItems(location.getX() - distance, location.getX() + distance, x->new Position(x, location.getY() - distance)))
+                    .distinct();
+
             case Northeast: return Stream.concat(filterItems(location.getY() - distance, location.getY() + distance, y->new Position(location.getX() + distance, y)),
-                    filterItems(location.getX() - distance, location.getX() + distance, x->new Position(x, location.getY() - distance)));
+                    filterItems(location.getX() - distance, location.getX() + distance, x->new Position(x, location.getY() - distance)))
+                    .distinct();
             default: return Stream.empty();
         }
     }
 
     private Stream<Item> filterItems(int from, int to, IntFunction<Point2D> objFunction) {
-        return IntStream.range(from, to)
+        return IntStream.rangeClosed(from, to)
                 .mapToObj(objFunction)
                 .map(itemsByLocation::get)
                 .filter(Objects::nonNull)
-                .flatMap(List::stream);
+                .flatMap(Set::stream);
     }
 
     @Override

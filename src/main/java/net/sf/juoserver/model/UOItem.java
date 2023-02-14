@@ -8,7 +8,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Objects;
 
-public class UOItem implements Item {
+public class UOItem implements Item, Comparable<Item> {
 	private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 	private final int serialId;
 	private final int modelId;
@@ -172,4 +172,14 @@ public class UOItem implements Item {
 		return Objects.hash(serialId);
 	}
 
+	@Override
+	public int compareTo(Item other) {
+		if (this.serialId > other.getSerialId()) {
+			return 1;
+		}
+		if (serialId < other.getSerialId()) {
+			return -1;
+		}
+		return 0;
+	}
 }

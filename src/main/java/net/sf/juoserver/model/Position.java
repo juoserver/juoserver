@@ -41,4 +41,12 @@ public class Position implements Point2D {
 	public int hashCode() {
 		return Objects.hash(x, y);
 	}
+
+	@Override
+	public String toString() {
+		return "Position{" +
+				"x=" + x +
+				", y=" + y +
+				'}';
+	}
 }
