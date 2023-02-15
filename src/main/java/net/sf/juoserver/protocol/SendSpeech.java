@@ -1,6 +1,7 @@
 package net.sf.juoserver.protocol;
 
 import net.sf.juoserver.api.Item;
+import net.sf.juoserver.api.JUoEntity;
 import net.sf.juoserver.api.Mobile;
 import net.sf.juoserver.api.TextType;
 
@@ -23,6 +24,10 @@ public class SendSpeech extends AbstractMessage {
 
     public SendSpeech(Mobile mobile) {
         this(mobile.getSerialId(), mobile.getModelId(), TextType.NORMAL, 0, 0,  "", mobile.getName());
+    }
+
+    public SendSpeech(JUoEntity entity) {
+        this(entity.getSerialId(), entity.getModelId(), TextType.NORMAL, 0, 0,  "", entity.getName());
     }
 
     public SendSpeech(int serialId, int modelId, TextType textType, int textColor, int textFont, String name, String message) {

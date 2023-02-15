@@ -7,17 +7,15 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CommandHandlerImpl implements CommandHandler {
+public class CommandManagerImpl implements CommandManager {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommandHandlerImpl.class);
-    private final Core core;
-    private final InterClientNetwork network;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommandManagerImpl.class);
+    private final PlayerContext context;
     private final Map<String, Command> commands;
     private final String activationCharacter;
 
-    public CommandHandlerImpl(Core core, InterClientNetwork network, Collection<Command> commands, Configuration configuration) {
-        this.core = core;
-        this.network = network;
+    public CommandManagerImpl(PlayerContext context, Collection<Command> commands, Configuration configuration) {
+        this.context = context;
         this.commands = commands.stream()
                 .collect(Collectors.toMap(command->command.getName().toLowerCase(), e->e));
         this.activationCharacter = configuration.getCommand().getActivationChar();
@@ -29,11 +27,11 @@ public class CommandHandlerImpl implements CommandHandler {
     }
 
     @Override
-    public void execute(ProtocolIoPort protocolIoPort, PlayerSession session, UnicodeSpeechRequest request) {
+    public void execute(UnicodeSpeechRequest request) {
         StringTokenizer tokenizer = new StringTokenizer(request.getText().substring(1), " ");
         String commandName = tokenizer.nextToken().toLowerCase();
         if (commands.containsKey(commandName)) {
-            commands.get(commandName).execute(new CommandContext(core, network, session, protocolIoPort, getCommandArgs(tokenizer)));
+            commands.get(commandName).execute(getCommandArgs(tokenizer), context);
         } else {
             LOGGER.info("Unknown Command {}", commandName);
         }

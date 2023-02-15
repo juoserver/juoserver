@@ -103,6 +103,14 @@ public class UOItemLocator implements ItemLocator {
 
     @Override
     public Stream<Item> findItemsInRegion(Point2D location, int distance) {
-        return null;
+        var items = new HashSet<Item>();
+        var locX = location.getX();
+        var locY = location.getY();
+        for (int x=locX - distance; x<locX + distance; x++) {
+            for (int y=locY - distance; y< locY + distance; y++) {
+                items.addAll(itemsByLocation.getOrDefault(new Position(x, y), Collections.emptySet()));
+            }
+        }
+        return items.stream();
     }
 }

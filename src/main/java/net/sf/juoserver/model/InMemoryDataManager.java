@@ -13,6 +13,8 @@ public class InMemoryDataManager implements DataManager {
 
 	private static final int FIRST_SERIAL_ID = 1;
 
+	private int itemSerialId = 1;
+
 	@Override
 	public List<Mobile> loadMobiles() {
 		return Arrays.asList(
@@ -59,14 +61,29 @@ public class InMemoryDataManager implements DataManager {
 
 	@Override
 	public List<Item> loadItems() {
-		return List.of(new UOItem(UOCore.ITEMS_MAX_SERIAL_ID + 1, 0x226D, 0, "scroll", 0)
-				.setLocation(747, 2162,0),
-				new UOItem(UOCore.ITEMS_MAX_SERIAL_ID + 2, 0x226D, 0, "scroll", 0)
-						.setLocation(746, 2162,0));
+		return List.of(new UOItem(UOCore.ITEMS_MAX_SERIAL_ID + itemSerialId++, 0x1411)
+				.name("platemail legs")
+				.location(747, 2147,0),
+				new UOItem(UOCore.ITEMS_MAX_SERIAL_ID + itemSerialId++, 0x1530)
+						.name("cloak")
+						.location(743, 2147,0),
+				new UOItem(UOCore.ITEMS_MAX_SERIAL_ID + itemSerialId++, 0x14EC)
+						.name("map")
+						.location(753, 2145,3),
+				new UOItem(UOCore.ITEMS_MAX_SERIAL_ID + itemSerialId++, 0x117C)
+						.name("gravestone")
+						.location(748, 2142,0),
+				new UOItem(UOCore.ITEMS_MAX_SERIAL_ID + itemSerialId++, 0x0F36)
+						.name("sheaf of hay")
+						.location(742, 2164,0),
+				new UOItem(UOCore.ITEMS_MAX_SERIAL_ID + itemSerialId++, 0x156C)
+						.name("decorative shield")
+						.location(750, 2160,3)
+						.script((item, context)-> System.out.println(context.session())));
 	}
 
 	@Override
 	public Integer getItemSerial() {
-		return 3;
+		return itemSerialId;
 	}
 }

@@ -25,7 +25,7 @@ public class ObjectInfo extends AbstractMessage {
 		bb.putShort((short) getLength());
 		bb.putInt(item.getSerialId() | 0x80000000); // To make the amount be read
 		bb.putShort((short) (item.getModelId() & 0x3FFF));
-		bb.putShort((short) item.getAmount()); // Amount info or Graphic id for death
+		bb.putShort((short) item.amount()); // Amount info or Graphic id for death
 		bb.putShort((short) (item.getX() & 0x7FFF)); // Never sending direction info
 		bb.putShort((short) (item.getY() | 0x8000)); // Always sending hue info
 		bb.put((byte) item.getZ());

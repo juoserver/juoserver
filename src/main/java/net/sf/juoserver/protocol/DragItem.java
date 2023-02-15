@@ -30,7 +30,7 @@ public class DragItem extends AbstractMessage {
 		bb.putShort((short) item.getModelId());
 		bb.put((byte) 0);
 		bb.putShort((short) item.getHue()); // TODO: probably useless
-		bb.putShort((short) item.getAmount());
+		bb.putShort((short) item.amount());
 		bb.putInt(source.getSerialId());
 		bb.putShort((short) source.getX());
 		bb.putShort((short) source.getY());

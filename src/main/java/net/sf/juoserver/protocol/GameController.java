@@ -2,8 +2,9 @@ package net.sf.juoserver.protocol;
 
 import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.*;
-import net.sf.juoserver.protocol.GeneralInformation.SubcommandType;
 import net.sf.juoserver.protocol.SkillUpdate.SkillUpdateType;
+import net.sf.juoserver.protocol.generalinfo.GeneralInfoManagerImpl;
+import net.sf.juoserver.protocol.item.ItemManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
  * Game controller. A different instance of this class will be associated
  * to each client's session.
  */
-public class GameController extends AbstractProtocolController implements ModelOutputPort {
+public class GameController extends AbstractProtocolController implements ModelOutputPort, PlayerContext {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GameController.class);
 
@@ -25,31 +26,52 @@ public class GameController extends AbstractProtocolController implements ModelO
 	private final Core core;
 	private final ProtocolIoPort clientHandler;
 	private final ClientMovementTracker movementTracker;
-	private final ItemManager itemManager = new ItemManager();
-	private final LoginManager loginManager;
 	private final InterClientNetwork network;
-	private final CommandHandler commandHandler;
+	private final Configuration configuration;
+
+	private final ItemManager itemManager;
+	private final LoginManager loginManager;
+	private final CommandManager commandManager;
 	private final CombatSystem combatSystem;
 
 	private ClientVersion clientVersion;
 	private PlayerSession session;
 
-	public GameController(String clientName, ProtocolIoPort clientHandler, Core core,
+	public GameController(String clientName, ProtocolIoPort clientHandler, Core core, Configuration configuration,
 			ClientMovementTracker movementTracker, LoginManager loginManager, InterClientNetwork network,
-		  CommandHandler commandHandler, CombatSystem combatSystem) {
+		  List<Command> commands, CombatSystem combatSystem) {
 		super();
 		this.controllerId = clientName + CONTROLLER_ID_POSTFIX;
 		this.clientHandler = clientHandler;
 		this.core = core;
+		this.configuration = configuration;
 		this.movementTracker = movementTracker;
 		this.loginManager = loginManager;
 		this.network = network;
-		this.commandHandler = commandHandler;
 		this.combatSystem = combatSystem;
+		this.generalInfoManager = new GeneralInfoManagerImpl(core);
+		this.itemManager = new ItemManager(this);
+		this.commandManager = new CommandManagerImpl(this, commands, configuration);
 	}
 
 	public void setSession(PlayerSession session) {
 		this.session = session;
+	}
+
+	// Player Context Methods
+	@Override
+	public PlayerSession session() {
+		return session;
+	}
+
+	@Override
+	public Core core() {
+		return core;
+	}
+
+	@Override
+	public ProtocolIoPort protocolIoPort() {
+		return clientHandler;
 	}
 
 	// This message is sent in the second connection right after the new seed
@@ -112,6 +134,9 @@ public class GameController extends AbstractProtocolController implements ModelO
 				new CharacterWarmode((byte) 0),
 				new LoginComplete()
 		));
+		response.addAll(core.findItemsInRegion(mobile, 20)
+				.stream().map(ObjectInfo::new)
+				.collect(Collectors.toList()));
 		response.addAll( mobileObjectsRevisions( mobile ) );
 		return response;
 	}
@@ -169,8 +194,8 @@ public class GameController extends AbstractProtocolController implements ModelO
 	}
 
 	public void handle(UnicodeSpeechRequest request) {
-		if (commandHandler.isCommand(request)) {
-			commandHandler.execute(clientHandler, session, request);
+		if (commandManager.isCommand(request)) {
+			commandManager.execute(request);
 		} else {
 			session.speak(request.getMessageType(), request.getHue(),
 					request.getFont(), request.getLanguage(), request.getText());
@@ -243,22 +268,11 @@ public class GameController extends AbstractProtocolController implements ModelO
 		}
 		return Collections.emptyList();
 	}
-	
-	public List<Message> handle(GeneralInformation info) {
-		Subcommand<GeneralInformation, SubcommandType> sc = info.getSubCommand();
-		if (sc instanceof GeneralInformation.StatsLook) {
-			var serialId = ((GeneralInformation.StatsLook) sc).getSerialId();
-			var item = core.findItemByID(serialId);
-			if (item != null) {
-				return List.of(new SendSpeech(item));
-			}
-			var mobile = core.findMobileByID(serialId);
-			if (mobile != null) {
-				return List.of(new SendSpeech(mobile));
-			}
-			return Collections.emptyList();
-		}
-		return Collections.emptyList();
+
+	private final GeneralInfoManager generalInfoManager;
+
+	public List<Message> handle(GeneralInformation generalInformation) {
+		return generalInfoManager.handle(generalInformation);
 	}
 	
 	public void handle(SpyOnClient spyOnClient) {} // Ignore this message

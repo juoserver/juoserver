@@ -1,5 +1,7 @@
 package net.sf.juoserver.api;
 
+import net.sf.juoserver.model.UOItem;
+
 import java.util.Collection;
 
 /**
@@ -77,4 +79,6 @@ public interface Core {
 	 * @return List of items
 	 */
 	Collection<Item> findItemsByDirection(Point2D myLocation, Direction direction, int distanceFromMe);
+
+	Collection<Item> findItemsInRegion(Point2D location, int distance);
 }

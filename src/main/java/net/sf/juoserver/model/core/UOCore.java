@@ -7,7 +7,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -211,7 +213,12 @@ public final class UOCore implements Core {
 	@Override
 	public Collection<Item> findItemsByDirection(Point2D myLocation, Direction direction, int distanceFromMe) {
 		return itemLocator.findItemsByDirection(myLocation, direction, distanceFromMe)
-				.collect(Collectors.toSet());
+				.collect(Collectors.toList());
 	}
 
+	@Override
+	public Collection<Item> findItemsInRegion(Point2D location, int distance) {
+		return itemLocator.findItemsInRegion(location, distance)
+				.collect(Collectors.toList());
+	}
 }

@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Rule;
 
 import java.io.IOException;
+import java.util.Collections;
 
 public class AbstractGameControllerTest {
 	@Rule public final JUnitRuleMockery context = new JUnitRuleMockery();
@@ -26,9 +27,9 @@ public class AbstractGameControllerTest {
 	protected final LoginManager loginManager = context.mock(LoginManager.class);
 	protected final InterClientNetwork intercom = context.mock(InterClientNetwork.class);
 	protected final ProtocolIoPort clientHandler = context.mock(ProtocolIoPort.class);
-	protected final CommandHandler commandManager = context.mock(CommandHandler.class);
+	protected final CommandManager commandManager = context.mock(CommandManager.class);
 	protected final GameController gameController = 
-			new GameController("client", clientHandler, core, new CircularClientMovementTracker(), loginManager, intercom, commandManager, new CombatSystemImpl(new PhysicalDamageCalculatorImpl(null)));
+			new GameController("client", clientHandler, core, null, new CircularClientMovementTracker(),  loginManager, intercom, Collections.emptyList(), new CombatSystemImpl(new PhysicalDamageCalculatorImpl(null)));
 	
 	@Before
 	public final void createComponents() throws IOException {

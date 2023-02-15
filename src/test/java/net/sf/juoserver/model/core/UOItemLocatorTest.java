@@ -177,7 +177,7 @@ class UOItemLocatorTest {
     public void shouldFindItemsOnEstWhenLocationUpdated() {
         var item = new UOItem(1, 1);
         item.addPropertyChangeListener(itemLocator);
-        item.setLocation(110, 92, 0);
+        item.location(110, 92, 0);
 
         var items = itemLocator.findItemsByDirection(new Position(100, 100), Direction.East, 10);
         assertEquals(item, items.collect(Collectors.toList()).get(0));
@@ -188,7 +188,7 @@ class UOItemLocatorTest {
     public void shouldFindItemsOnWestWhenLocationUpdated() {
         var item = new UOItem(1, 1);
         item.addPropertyChangeListener(itemLocator);
-        item.setLocation(90, 92, 0);
+        item.location(90, 92, 0);
 
         var items = itemLocator.findItemsByDirection(new Position(100, 100), Direction.West, 10);
         assertEquals(item, items.collect(Collectors.toList()).get(0));
@@ -334,7 +334,7 @@ class UOItemLocatorTest {
 
     private Item givenItemWithoutListener(int x, int y) {
         var item = new UOItem(serialSequence.getAndIncrement(), 1)
-                .setLocation(x, y, 0);
+                .location(x, y, 0);
         itemsBySerialId.put(item.getSerialId(), item);
         return item;
     }
@@ -342,7 +342,7 @@ class UOItemLocatorTest {
     private Item givenItemWithListener(int x, int y) {
         var item = new UOItem(serialSequence.getAndIncrement(), 1);
         item.addPropertyChangeListener(itemLocator);
-        item.setLocation(x, y, 0);
+        item.location(x, y, 0);
         itemsBySerialId.put(item.getSerialId(), item);
         return item;
     }

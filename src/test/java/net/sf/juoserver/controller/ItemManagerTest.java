@@ -7,7 +7,7 @@ import net.sf.juoserver.model.UOContainer;
 import net.sf.juoserver.model.UOItem;
 import net.sf.juoserver.protocol.ContainerItems;
 import net.sf.juoserver.protocol.DrawContainer;
-import net.sf.juoserver.protocol.ItemManager;
+import net.sf.juoserver.protocol.item.ItemManager;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -20,7 +20,7 @@ public class ItemManagerTest {
 	public void openContainer() {
 		Item item = new UOItem(1, 2, 3);
 		Container cont = new UOContainer(42, 43, 44,"Backpack", 45, Arrays.asList(item), new HashMap<Item, Point2D>());
-		ItemManager im = new ItemManager();
+		ItemManager im = new ItemManager(null);
 		assertEquals(Arrays.asList(new DrawContainer(cont), new ContainerItems(cont)), im.use(cont));
 	}
 }

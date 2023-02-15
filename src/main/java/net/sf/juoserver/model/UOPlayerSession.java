@@ -144,7 +144,7 @@ public class UOPlayerSession implements PlayerSession {
 		}
 		
 		if (droppedOnTheGround) {
-			droppedItem.setLocation(targetPosition);
+			droppedItem.location(targetPosition);
 			network.notifyItemDropped(mobile, droppedItem, 0);
 		}
 	}

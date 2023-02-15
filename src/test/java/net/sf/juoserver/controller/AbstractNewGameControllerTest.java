@@ -11,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
+
 import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
@@ -22,20 +24,20 @@ public class AbstractNewGameControllerTest {
     @Mock
     protected Core core;
     @Mock
+    protected Configuration configuration;
+    @Mock
     protected LoginManager loginManager;
     @Mock
     protected InterClientNetwork intercom;
     @Mock
     protected ProtocolIoPort clientHandler;
     @Mock
-    protected CommandHandler commandManager;
-    @Mock
     protected CombatSystem combatSystem;
     protected GameController gameController;
 
     @BeforeEach
     public void configure() {
-        gameController = new GameController("client", clientHandler, core, new CircularClientMovementTracker(), loginManager, intercom, commandManager, combatSystem);
+        gameController = new GameController("client", clientHandler, core, configuration, new CircularClientMovementTracker(), loginManager, intercom, Collections.emptyList(), combatSystem);
         gameController.setSession(session);
 
         lenient().when(session.getMobile())

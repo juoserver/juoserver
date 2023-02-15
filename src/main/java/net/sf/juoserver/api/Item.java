@@ -1,27 +1,29 @@
 package net.sf.juoserver.api;
 
-import java.beans.PropertyChangeListener;
-
 public interface Item extends JUoEntity, Point3D, PropertyChangeSupported {
 
 	void accept(ItemVisitor itemManager);
 
-	int getBaseDamage();
+	int baseDamage();
 
-	int getAmount();
+	int amount();
 
 	/**
 	 * 1 - Amount of items to be created<br/>>
 	 * 2 - Graphic id for deaths when (modelId = 0x2006)
 	 * @param amount value
 	 */
-	Item setAmount(int amount);
+	Item amount(int amount);
 
-	Item setLocation(int x, int y, int z);
+	Item location(int x, int y, int z);
 
-	Item setLocation(Point3D point3D);
+	Item location(Point3D point3D);
 
-	Item setName(String name);
+	Item name(String name);
 
-	Item setHue(int hue);
+	Item hue(int hue);
+
+	Item script(EventHandler<Item> script);
+
+	EventHandler<Item> script();
 }

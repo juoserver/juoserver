@@ -1,6 +1,7 @@
 package net.sf.juoserver.model;
 
 import net.sf.juoserver.api.Item;
+import net.sf.juoserver.api.EventHandler;
 import net.sf.juoserver.api.ItemVisitor;
 import net.sf.juoserver.api.Point3D;
 
@@ -19,6 +20,7 @@ public class UOItem implements Item, Comparable<Item> {
 	private int x;
 	private int y;
 	private int z;
+	private EventHandler script;
 
 	public UOItem(int serialId, int modelId) {
 		this.serialId = serialId;
@@ -90,17 +92,17 @@ public class UOItem implements Item, Comparable<Item> {
 	}
 
 	@Override
-	public int getBaseDamage() {
+	public int baseDamage() {
 		return baseDamage;
 	}
 
 	@Override
-	public int getAmount() {
+	public int amount() {
 		return amount;
 	}
 
 	@Override
-	public UOItem setAmount(int amount) {
+	public UOItem amount(int amount) {
 		this.amount = amount;
 		return this;
 	}
@@ -121,7 +123,7 @@ public class UOItem implements Item, Comparable<Item> {
 	}
 
 	@Override
-	public Item setLocation(int x, int y, int z) {
+	public Item location(int x, int y, int z) {
 		var oldLocation = new PointInSpace(this.x, this.y, this.z);
 		changeSupport.firePropertyChange("x", this.x, this.x = x);
 		changeSupport.firePropertyChange("y", this.y, this.y = y);
@@ -131,20 +133,31 @@ public class UOItem implements Item, Comparable<Item> {
 	}
 
 	@Override
-	public Item setLocation(Point3D newLocation) {
-		return setLocation(newLocation.getX(), newLocation.getY(), newLocation.getZ());
+	public Item location(Point3D newLocation) {
+		return location(newLocation.getX(), newLocation.getY(), newLocation.getZ());
 	}
 
 	@Override
-	public Item setName(String name) {
+	public Item name(String name) {
 		this.name = name;
 		return this;
 	}
 
 	@Override
-	public Item setHue(int hue) {
+	public Item hue(int hue) {
 		this.hue = hue;
 		return this;
+	}
+
+	@Override
+	public Item script(EventHandler script) {
+		this.script = script;
+		return this;
+	}
+
+	@Override
+	public EventHandler script() {
+		return script;
 	}
 
 	@Override
