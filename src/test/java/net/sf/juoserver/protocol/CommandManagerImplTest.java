@@ -90,6 +90,6 @@ class CommandManagerImplTest {
         var commandConfig = mock(Configuration.CommandConfiguration.class);
         lenient().when(commandConfig.getActivationChar()).thenReturn(".");
         lenient().when(configuration.getCommand()).thenReturn(commandConfig);
-        return new CommandManagerImpl(context, Collections.singleton(command), configuration);
+        return new CommandManagerImpl(Collections.singleton(command), configuration);
     }
 }

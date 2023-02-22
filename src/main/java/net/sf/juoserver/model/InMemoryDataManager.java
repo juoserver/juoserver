@@ -79,7 +79,7 @@ public class InMemoryDataManager implements DataManager {
 				new UOItem(UOCore.ITEMS_MAX_SERIAL_ID + itemSerialId++, 0x156C)
 						.name("decorative shield")
 						.location(750, 2160,3)
-						.script((item, context)-> System.out.println(context.session())));
+						.script((item, context)-> System.out.println(context.session().getMobile().getName())));
 	}
 
 	@Override

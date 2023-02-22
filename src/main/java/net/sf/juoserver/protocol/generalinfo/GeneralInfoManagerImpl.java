@@ -1,8 +1,6 @@
 package net.sf.juoserver.protocol.generalinfo;
 
-import net.sf.juoserver.api.Core;
-import net.sf.juoserver.api.GeneralInfoManager;
-import net.sf.juoserver.api.Message;
+import net.sf.juoserver.api.*;
 import net.sf.juoserver.protocol.GeneralInformation;
 import net.sf.juoserver.protocol.SendSpeech;
 import net.sf.juoserver.protocol.Subcommand;
@@ -21,6 +19,7 @@ public class GeneralInfoManagerImpl implements GeneralInfoManager {
         LOGGER.info("Unhandled Subcommand {}", subcommand);
         return Collections.emptyList();
     };
+    private PlayerContext context;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public GeneralInfoManagerImpl(Core core) {
@@ -28,6 +27,11 @@ public class GeneralInfoManagerImpl implements GeneralInfoManager {
         handlers.put(GeneralInformation.SubcommandType.MouseHover, (SubCommandHandler) new MouseHoverHandler());
         handlers.put(GeneralInformation.SubcommandType.ScreenSize, (SubCommandHandler) new ScreenSizeHandler());
         handlers.put(GeneralInformation.SubcommandType.ClientLanguage, (SubCommandHandler) new ClientLanguageHandler());
+    }
+
+    @Override
+    public void setContext(PlayerContext context) {
+        this.context = context;
     }
 
     @Override
@@ -62,6 +66,9 @@ public class GeneralInfoManagerImpl implements GeneralInfoManager {
         }
     }
 
+    /**
+     * Handler for Stats Look, executed when an item, mobile, etc is clicked
+     */
     static class StatsLookHandler implements SubCommandHandler<GeneralInformation.StatsLook> {
 
         private final Core core;

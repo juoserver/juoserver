@@ -4,10 +4,12 @@ import net.sf.juoserver.TestingFactory;
 import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.UOAccount;
 import net.sf.juoserver.protocol.CircularClientMovementTracker;
+import net.sf.juoserver.protocol.CommandManagerImpl;
 import net.sf.juoserver.protocol.GameController;
 import net.sf.juoserver.protocol.ProtocolIoPort;
 import net.sf.juoserver.protocol.combat.CombatSystemImpl;
 import net.sf.juoserver.protocol.combat.PhysicalDamageCalculatorImpl;
+import net.sf.juoserver.protocol.item.ItemManager;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
@@ -29,7 +31,7 @@ public class AbstractGameControllerTest {
 	protected final ProtocolIoPort clientHandler = context.mock(ProtocolIoPort.class);
 	protected final CommandManager commandManager = context.mock(CommandManager.class);
 	protected final GameController gameController = 
-			new GameController("client", clientHandler, core, null, new CircularClientMovementTracker(),  loginManager, intercom, Collections.emptyList(), new CombatSystemImpl(new PhysicalDamageCalculatorImpl(null)));
+			new GameController("client", clientHandler, core, null, new CircularClientMovementTracker(),  loginManager, intercom, new ItemManager(), new CommandManagerImpl(null, null), new CombatSystemImpl(new PhysicalDamageCalculatorImpl(null)), null);
 	
 	@Before
 	public final void createComponents() throws IOException {

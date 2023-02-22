@@ -3,7 +3,6 @@ package net.sf.juoserver.protocol;
 import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.*;
 import net.sf.juoserver.protocol.SkillUpdate.SkillUpdateType;
-import net.sf.juoserver.protocol.generalinfo.GeneralInfoManagerImpl;
 import net.sf.juoserver.protocol.item.ItemManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
  * Game controller. A different instance of this class will be associated
  * to each client's session.
  */
-public class GameController extends AbstractProtocolController implements ModelOutputPort, PlayerContext {
+public class GameController extends AbstractProtocolController implements ModelOutputPort {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GameController.class);
 
@@ -24,14 +23,18 @@ public class GameController extends AbstractProtocolController implements ModelO
 	
 	private final String controllerId;
 	private final Core core;
+	private final Configuration configuration;
 	private final ProtocolIoPort clientHandler;
 	private final ClientMovementTracker movementTracker;
 	private final InterClientNetwork network;
-	private final Configuration configuration;
 
+	// Controller Managers
 	private final ItemManager itemManager;
 	private final LoginManager loginManager;
 	private final CommandManager commandManager;
+	private final GeneralInfoManager generalInfoManager;
+
+	// UO Systems
 	private final CombatSystem combatSystem;
 
 	private ClientVersion clientVersion;
@@ -39,7 +42,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 
 	public GameController(String clientName, ProtocolIoPort clientHandler, Core core, Configuration configuration,
 			ClientMovementTracker movementTracker, LoginManager loginManager, InterClientNetwork network,
-		  List<Command> commands, CombatSystem combatSystem) {
+		  ItemManager itemManager, CommandManager commandManager, CombatSystem combatSystem, GeneralInfoManager generalInfoManager) {
 		super();
 		this.controllerId = clientName + CONTROLLER_ID_POSTFIX;
 		this.clientHandler = clientHandler;
@@ -49,29 +52,13 @@ public class GameController extends AbstractProtocolController implements ModelO
 		this.loginManager = loginManager;
 		this.network = network;
 		this.combatSystem = combatSystem;
-		this.generalInfoManager = new GeneralInfoManagerImpl(core);
-		this.itemManager = new ItemManager(this);
-		this.commandManager = new CommandManagerImpl(this, commands, configuration);
+		this.itemManager = itemManager;
+		this.commandManager = commandManager;
+		this.generalInfoManager = generalInfoManager;
 	}
 
 	public void setSession(PlayerSession session) {
 		this.session = session;
-	}
-
-	// Player Context Methods
-	@Override
-	public PlayerSession session() {
-		return session;
-	}
-
-	@Override
-	public Core core() {
-		return core;
-	}
-
-	@Override
-	public ProtocolIoPort protocolIoPort() {
-		return clientHandler;
 	}
 
 	// This message is sent in the second connection right after the new seed
@@ -84,6 +71,12 @@ public class GameController extends AbstractProtocolController implements ModelO
 		
 		session = new UOPlayerSession(core, account, this, network);
 		network.addIntercomListener(session);
+
+		// Context Initialization
+		var context = new UOPlayerContext(session, core, clientHandler);
+		generalInfoManager.setContext(context);
+		itemManager.setContext(context);
+		commandManager.setContext(context);
 		
 		List<String> names = session.getCharacterNames();
 		List<PlayingCharacter> chars = new ArrayList<>();
@@ -268,8 +261,6 @@ public class GameController extends AbstractProtocolController implements ModelO
 		}
 		return Collections.emptyList();
 	}
-
-	private final GeneralInfoManager generalInfoManager;
 
 	public List<Message> handle(GeneralInformation generalInformation) {
 		return generalInfoManager.handle(generalInformation);

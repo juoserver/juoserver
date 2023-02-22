@@ -1,6 +1,9 @@
 package net.sf.juoserver.protocol;
 
-import net.sf.juoserver.api.*;
+import net.sf.juoserver.api.Command;
+import net.sf.juoserver.api.CommandManager;
+import net.sf.juoserver.api.Configuration;
+import net.sf.juoserver.api.PlayerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,15 +13,19 @@ import java.util.stream.Collectors;
 public class CommandManagerImpl implements CommandManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandManagerImpl.class);
-    private final PlayerContext context;
     private final Map<String, Command> commands;
     private final String activationCharacter;
+    private PlayerContext context;
 
-    public CommandManagerImpl(PlayerContext context, Collection<Command> commands, Configuration configuration) {
-        this.context = context;
+    public CommandManagerImpl(Collection<Command> commands, Configuration configuration) {
         this.commands = commands.stream()
                 .collect(Collectors.toMap(command->command.getName().toLowerCase(), e->e));
         this.activationCharacter = configuration.getCommand().getActivationChar();
+    }
+
+    @Override
+    public void setContext(PlayerContext context) {
+        this.context = context;
     }
 
     @Override

@@ -8,10 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemManager implements ItemVisitor {
-	private List<Message> messages = new ArrayList<>();
-	private final PlayerContext context;
+	private final List<Message> messages = new ArrayList<>();
+	private PlayerContext context;
 
-	public ItemManager(PlayerContext context) {
+	@Override
+	public void setContext(PlayerContext context) {
 		this.context = context;
 	}
 
