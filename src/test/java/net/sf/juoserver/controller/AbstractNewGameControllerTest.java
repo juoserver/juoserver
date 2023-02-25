@@ -18,7 +18,7 @@ import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
 public class AbstractNewGameControllerTest {
-    protected Mobile mobile = TestingFactory.createTestMobile(42, "asder");
+    protected Mobile mobile = TestingFactory.createTestMobile(1, "asder");
     protected Account account = UOAccount.createAccount(0, "user", "psw", mobile.getSerialId());
     @Mock PlayerSession session;
     @Mock Core core;

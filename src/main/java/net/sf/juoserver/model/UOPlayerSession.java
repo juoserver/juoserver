@@ -274,7 +274,7 @@ public class UOPlayerSession implements PlayerSession {
 	}
 
 	@Override
-	public void createGroundItems(Collection<Item> items) {
+	public void showGroundItems(Collection<Item> items) {
 		network.notifyGroundItemsCreated(items);
 	}
 

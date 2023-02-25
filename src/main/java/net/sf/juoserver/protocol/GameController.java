@@ -253,12 +253,12 @@ public class GameController extends AbstractProtocolController implements ModelO
 			return List.of(new Paperdoll(doubleClick.getObjectSerialId(),
 					mob.getName() + ", " + mob.getTitle(),
 					false, false));
-		} else {
-			Item item = core.findItemByID(doubleClick.getObjectSerialId());
-			if (item != null) {
-				return itemManager.use(item);
-			}
 		}
+		var item = core.findItemByID(doubleClick.getObjectSerialId());
+		if (item != null) {
+			return itemManager.use(item);
+		}
+		LOGGER.warn("SerialId {} not found!", doubleClick.getObjectSerialId());
 		return Collections.emptyList();
 	}
 

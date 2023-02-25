@@ -1,6 +1,5 @@
 package net.sf.juoserver.main.test;
 
-import net.sf.juoserver.api.CommandContext;
 import net.sf.juoserver.api.PlayerContext;
 import net.sf.juoserver.builder.JUOServerModule;
 import net.sf.juoserver.protocol.AbstractCommand;
@@ -28,7 +27,7 @@ public class TestServerModule extends JUOServerModule {
                 session.createGroundItem(item);*/
 
                 for (int x=-1; x<1; x++) {
-                    session.createGroundItems(Collections.singleton(core.createItem(0x0ED5)
+                    session.showGroundItems(Collections.singleton(core.createItem(0x0ED5)
                             .location(mobile.getX()+x, mobile.getY()-11, mobile.getZ())
                             .name("Test")));
                 }
