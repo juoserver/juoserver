@@ -1,11 +1,9 @@
 package net.sf.juoserver.model;
 
 import net.sf.juoserver.api.*;
+import net.sf.juoserver.model.core.UOCore;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryDataManager implements DataManager {
 	private static final int ACCOUNT_ID = 0;
@@ -14,6 +12,8 @@ public class InMemoryDataManager implements DataManager {
 	private static final int PLAYER2_SERIAL = 2;
 
 	private static final int FIRST_SERIAL_ID = 1;
+
+	private int itemSerialId = 1;
 
 	@Override
 	public List<Mobile> loadMobiles() {
@@ -57,5 +57,33 @@ public class InMemoryDataManager implements DataManager {
 	public List<Account> loadAccounts() {
 		return new ArrayList<Account>(Arrays.asList(UOAccount
 				.createAccount(ACCOUNT_ID, "admin", "admin", FIRST_SERIAL_ID), UOAccount.createAccount(PLAYER2_ID, "user", "user", PLAYER2_SERIAL)));
+	}
+
+	@Override
+	public List<Item> loadItems() {
+		return List.of(new UOItem(UOCore.ITEMS_MAX_SERIAL_ID + itemSerialId++, 0x1411)
+				.name("platemail legs")
+				.location(747, 2147,0),
+				new UOItem(UOCore.ITEMS_MAX_SERIAL_ID + itemSerialId++, 0x1530)
+						.name("cloak")
+						.location(743, 2147,0),
+				new UOItem(UOCore.ITEMS_MAX_SERIAL_ID + itemSerialId++, 0x14EC)
+						.name("map")
+						.location(753, 2145,3),
+				new UOItem(UOCore.ITEMS_MAX_SERIAL_ID + itemSerialId++, 0x117C)
+						.name("gravestone")
+						.location(748, 2142,0),
+				new UOItem(UOCore.ITEMS_MAX_SERIAL_ID + itemSerialId++, 0x0F36)
+						.name("sheaf of hay")
+						.location(742, 2164,0),
+				new UOItem(UOCore.ITEMS_MAX_SERIAL_ID + itemSerialId++, 0x156C)
+						.name("decorative shield")
+						.location(750, 2160,3)
+						.script((item, context)-> System.out.println(context.session().getMobile().getName())));
+	}
+
+	@Override
+	public Integer getItemSerial() {
+		return itemSerialId;
 	}
 }

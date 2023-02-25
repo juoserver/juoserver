@@ -1,14 +1,31 @@
 package net.sf.juoserver.model;
 
 import net.sf.juoserver.api.Item;
+import net.sf.juoserver.api.EventHandler;
 import net.sf.juoserver.api.ItemVisitor;
+import net.sf.juoserver.api.Point3D;
 
-public class UOItem implements Item {
-	private int serialId;
-	private int modelId;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.Objects;
+
+public class UOItem implements Item, Comparable<Item> {
+	private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
+	private final int serialId;
+	private final int modelId;
 	private int hue;
-	private String name;
+	private String name = "no name";
 	private int baseDamage;
+	private int amount;
+	private int x;
+	private int y;
+	private int z;
+	private EventHandler script;
+
+	public UOItem(int serialId, int modelId) {
+		this.serialId = serialId;
+		this.modelId = modelId;
+	}
 
 	public UOItem(int serialId, int modelId, int hue) {
 		super();
@@ -16,6 +33,7 @@ public class UOItem implements Item {
 		this.modelId = modelId;
 		this.hue = hue;
 		this.name = "Unknown";
+		this.amount = 1;
 	}
 
 	public UOItem(int serialId, int modelId, int hue, String name, int baseDamage) {
@@ -25,6 +43,32 @@ public class UOItem implements Item {
 		this.hue = hue;
 		this.name = name;
 		this.baseDamage = baseDamage;
+		this.amount = 1;
+	}
+
+	@Override
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		changeSupport.addPropertyChangeListener(listener);
+	}
+
+	@Override
+	public void addPropertyChangeListener(String property, PropertyChangeListener listener) {
+		changeSupport.addPropertyChangeListener(property, listener);
+	}
+
+	@Override
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		changeSupport.removePropertyChangeListener(listener);
+	}
+
+	@Override
+	public void removePropertyChangeListener(String property, PropertyChangeListener listener) {
+		changeSupport.removePropertyChangeListener(property, listener);
+	}
+
+	@Override
+	public void accept(ItemVisitor itemManager) {
+		itemManager.visit(this);
 	}
 
 	@Override
@@ -48,39 +92,107 @@ public class UOItem implements Item {
 	}
 
 	@Override
-	public int getBaseDamage() {
+	public int baseDamage() {
 		return baseDamage;
 	}
 
 	@Override
-	public final int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + serialId;
-		return result;
+	public int amount() {
+		return amount;
 	}
 
 	@Override
-	public final boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		UOItem other = (UOItem) obj;
-		if (serialId != other.serialId)
-			return false;
-		return true;
+	public UOItem amount(int amount) {
+		this.amount = amount;
+		return this;
+	}
+
+	@Override
+	public int getX() {
+		return x;
+	}
+
+	@Override
+	public int getY() {
+		return y;
+	}
+
+	@Override
+	public int getZ() {
+		return z;
+	}
+
+	@Override
+	public Item location(int x, int y, int z) {
+		var oldLocation = new PointInSpace(this.x, this.y, this.z);
+		changeSupport.firePropertyChange("x", this.x, this.x = x);
+		changeSupport.firePropertyChange("y", this.y, this.y = y);
+		changeSupport.firePropertyChange("z", this.z, this.z = z);
+		changeSupport.firePropertyChange("location", oldLocation, new PointInSpace(this.x, this.y, this.z));
+		return this;
+	}
+
+	@Override
+	public Item location(Point3D newLocation) {
+		return location(newLocation.getX(), newLocation.getY(), newLocation.getZ());
+	}
+
+	@Override
+	public Item name(String name) {
+		this.name = name;
+		return this;
+	}
+
+	@Override
+	public Item hue(int hue) {
+		this.hue = hue;
+		return this;
+	}
+
+	@Override
+	public Item script(EventHandler script) {
+		this.script = script;
+		return this;
+	}
+
+	@Override
+	public EventHandler script() {
+		return script;
 	}
 
 	@Override
 	public String toString() {
-		return "UOItem [serialId=" + serialId + ", modelId=" + modelId + "]";
+		return "UOItem{" +
+				"serialId=" + serialId +
+				", modelId=" + modelId +
+				", name='" + name + '\'' +
+				", x=" + x +
+				", y=" + y +
+				", z=" + z +
+				'}';
 	}
 
 	@Override
-	public void accept(ItemVisitor itemManager) {
-		itemManager.visit(this);
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		UOItem uoItem = (UOItem) o;
+		return serialId == uoItem.serialId;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(serialId);
+	}
+
+	@Override
+	public int compareTo(Item other) {
+		if (this.serialId > other.getSerialId()) {
+			return 1;
+		}
+		if (serialId < other.getSerialId()) {
+			return -1;
+		}
+		return 0;
 	}
 }

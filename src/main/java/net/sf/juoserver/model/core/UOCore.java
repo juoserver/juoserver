@@ -1,6 +1,7 @@
-package net.sf.juoserver.model;
+package net.sf.juoserver.model.core;
 
 import net.sf.juoserver.api.*;
+import net.sf.juoserver.model.UOItem;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,6 +10,8 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * The <b>Core</b> facade.
@@ -20,36 +23,44 @@ public final class UOCore implements Core {
 	//TODO: make this private
 	public static final int ITEMS_MAX_SERIAL_ID = MOBILES_MAX_SERIAL_ID + 1;
 	private static final int OBJECTS_MAX_SERIAL_ID = 0x7FFFFFFF;
-	
+
+
 	/**
 	 * Currently managed mobiles.
 	 */
-	private final Map<Integer, Mobile> mobilesBySerialId = new HashMap<Integer, Mobile>();
+	private final Map<Integer, Mobile> mobilesBySerialId = new HashMap<>();
 	
 	/**
 	 * Currently managed items.
 	 */
-	private final Map<Integer, Item> itemsBySerialId = new HashMap<Integer, Item>();
-	private final Map<Item, Container> containersByContainedItems = new HashMap<Item, Container>();
-	
+	private final Map<Integer, Item> itemsBySerialId = new HashMap<>();
+	private final Map<Item, Container> containersByContainedItems = new HashMap<>();
+	/**
+	 * Items serial
+	 */
+	private final AtomicInteger itemSerial = new AtomicInteger();
+	private final ItemLocator itemLocator;
+
+
 	/**
 	 * The accounts, by username.
 	 */
-	private final Map<String, Account> accounts = new HashMap<String, Account>();
+	private final Map<String, Account> accounts = new HashMap<>();
 	private final Configuration configuration;
 	private final FileReadersFactory fileReadersFactory;
 	private final DataManager dataManager;
-	
+
 	/**
 	 * Map reader.
 	 */
 	private MapFileReader mapReader;
-	
+
 	public UOCore(FileReadersFactory fileReadersFactory, DataManager dataManager, Configuration configuration) {
 		super();
 		this.configuration = configuration;
 		this.fileReadersFactory = fileReadersFactory;
 		this.dataManager = dataManager;
+		this.itemLocator = new UOItemLocator(itemsBySerialId);
 	}
 
 	@Override
@@ -71,7 +82,7 @@ public final class UOCore implements Core {
 
 	private void addItems(Point2D mob, Collection<? extends Item> items) {
 		for (Item it : items) {
-			itemsBySerialId.put(it.getSerialId(), it);
+			addItem(it);
 			if (it instanceof Container) {
 				Container container = (Container) it;
 				addItems(mob, container.getItems());
@@ -82,7 +93,18 @@ public final class UOCore implements Core {
 		}
 	}
 
+	private void addItem(Item item) {
+		itemsBySerialId.put(item.getSerialId(), item);
+		item.addPropertyChangeListener(itemLocator);
+	}
+
+	private void removeItem(Item item) {
+		item.removePropertyChangeListener(itemLocator);
+		itemsBySerialId.remove(item.getSerialId());
+	}
+
 	private void loadData() {
+
 		for (Mobile mobile : dataManager.loadMobiles()) {
 			mobilesBySerialId.put(mobile.getSerialId(), mobile);
 		}
@@ -94,6 +116,11 @@ public final class UOCore implements Core {
 		for (Mobile mob : mobilesBySerialId.values()) {
 			addItems(mob, mob.getItems().values());
 		}
+
+		addItems(null, dataManager.loadItems());
+		itemSerial.set(dataManager.getItemSerial());
+
+		itemLocator.init();
 	}
 	
 	/**
@@ -176,4 +203,22 @@ public final class UOCore implements Core {
 		containersByContainedItems.put(item, container);
 	}
 
+	@Override
+	public Item createItem(int modelId) {
+		var item = new UOItem(ITEMS_MAX_SERIAL_ID + itemSerial.getAndIncrement(), modelId);
+		addItem(item);
+		return item;
+	}
+
+	@Override
+	public Collection<Item> findItemsByDirection(Point2D myLocation, Direction direction, int distanceFromMe) {
+		return itemLocator.findItemsByDirection(myLocation, direction, distanceFromMe)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public Collection<Item> findItemsInRegion(Point2D location, int distance) {
+		return itemLocator.findItemsInRegion(location, distance)
+				.collect(Collectors.toList());
+	}
 }

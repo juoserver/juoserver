@@ -25,7 +25,7 @@ public class GeneralInformation extends AbstractMessage {
 		ScreenSize(5), ClientLanguage(0x0B), ClientType(0x0F),
 		Unhandled(0x24),
 		SetCursorHueSetMap(8), EnableMapDiff(0x12),
-		CloseStatusGump(0xc), Teste(16),
+		CloseStatusGump(0xc), MouseHover(0x10),
 		StatsLook(19);
 		private int code;
 		private SubcommandType(int subcmd) {
@@ -205,33 +205,48 @@ public class GeneralInformation extends AbstractMessage {
 		}
 	}
 
+	public static class MouseHover extends Subcommand<GeneralInformation, SubcommandType> {
+
+		private final int serialId;
+		public MouseHover(int serialId) {
+			super(SubcommandType.MouseHover);
+			this.serialId = serialId;
+		}
+
+		public int getSerialId() {
+			return serialId;
+		}
+	}
+
 	private Subcommand<GeneralInformation, SubcommandType> subCommand;
 	// ============== client ==============
 	public GeneralInformation(byte[] contents) {
 		super(CODE, MessagesUtils.getLengthFromSecondAndThirdByte(contents));
-		ByteBuffer bb = wrapContents(3, contents);
-		SubcommandType subcommandType = SubcommandType.valueOf(bb.getShort());
+		var buffer = wrapContents(3, contents);
+		var subcommandType = SubcommandType.valueOf(buffer.getShort());
 		switch (subcommandType) {
 		case ScreenSize:
-			bb.getShort(); // 0x0000, unknown
-			subCommand = new ScreenSize(bb.getShort(), bb.getShort());
+			buffer.getShort(); // 0x0000, unknown
+			subCommand = new ScreenSize(buffer.getShort(), buffer.getShort());
 			break;
 		case ClientLanguage:
 			subCommand = new ClientLanguage(MessagesUtils.getString(contents, 5, 8));
 			break;
 		case ClientType:
-			bb.get(); // 0x0A, unknown
-			subCommand = new ClientType(bb.getInt());
+			buffer.get(); // 0x0A, unknown
+			subCommand = new ClientType(buffer.getInt());
 			break;
 		case CloseStatusGump:
-			subCommand = new CloseStatusGump(bb.getInt());
+			subCommand = new CloseStatusGump(buffer.getInt());
 			break;
 		case Unhandled:
+			System.out.println("Unhandled");
 			break;
-		case Teste:
+		case MouseHover:
+			subCommand = new MouseHover(buffer.getInt());
 			break;
 		case StatsLook:
-			subCommand = new StatsLook(bb.getInt());
+			subCommand = new StatsLook(buffer.getInt());
 			break;
 		default:
 			throw new IllegalStateException("Unknown subcommand: " + subcommandType);

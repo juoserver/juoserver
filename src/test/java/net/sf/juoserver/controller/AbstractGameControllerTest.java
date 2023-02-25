@@ -4,16 +4,19 @@ import net.sf.juoserver.TestingFactory;
 import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.UOAccount;
 import net.sf.juoserver.protocol.CircularClientMovementTracker;
+import net.sf.juoserver.protocol.CommandManagerImpl;
 import net.sf.juoserver.protocol.GameController;
 import net.sf.juoserver.protocol.ProtocolIoPort;
 import net.sf.juoserver.protocol.combat.CombatSystemImpl;
 import net.sf.juoserver.protocol.combat.PhysicalDamageCalculatorImpl;
+import net.sf.juoserver.protocol.item.ItemManager;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
 import org.junit.Rule;
 
 import java.io.IOException;
+import java.util.Collections;
 
 public class AbstractGameControllerTest {
 	@Rule public final JUnitRuleMockery context = new JUnitRuleMockery();
@@ -26,9 +29,9 @@ public class AbstractGameControllerTest {
 	protected final LoginManager loginManager = context.mock(LoginManager.class);
 	protected final InterClientNetwork intercom = context.mock(InterClientNetwork.class);
 	protected final ProtocolIoPort clientHandler = context.mock(ProtocolIoPort.class);
-	protected final CommandHandler commandManager = context.mock(CommandHandler.class);
+	protected final CommandManager commandManager = context.mock(CommandManager.class);
 	protected final GameController gameController = 
-			new GameController("client", clientHandler, core, new CircularClientMovementTracker(), loginManager, intercom, commandManager, new CombatSystemImpl(new PhysicalDamageCalculatorImpl(null)));
+			new GameController("client", clientHandler, core, null, new CircularClientMovementTracker(),  loginManager, intercom, new ItemManager(), new CommandManagerImpl(null, null), new CombatSystemImpl(new PhysicalDamageCalculatorImpl(null)), null);
 	
 	@Before
 	public final void createComponents() throws IOException {

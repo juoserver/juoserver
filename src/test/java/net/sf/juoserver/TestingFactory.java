@@ -1,7 +1,11 @@
 package net.sf.juoserver;
 
 import net.sf.juoserver.api.*;
+import net.sf.juoserver.model.UOItem;
 import net.sf.juoserver.model.UOMobile;
+import net.sf.juoserver.protocol.AbstractMessage;
+
+import java.util.Objects;
 
 public class TestingFactory {
 	public static Mobile createTestMobile(int serialId, String name) {
@@ -11,6 +15,36 @@ public class TestingFactory {
 
 	public static Configuration createTestConfiguration() {
 		return new TestConfiguration();
+	}
+
+	public static Item createTestItem(int serialId, int modelId) {
+		return new UOItem(serialId, modelId);
+	}
+
+	public static Message createTestMessage(int serialId, int code) {
+		return new TestingMessage(code, 1 , serialId);
+	}
+}
+
+class TestingMessage extends AbstractMessage {
+	private final int internaSerialId;
+
+	public TestingMessage(int code, int length, int internaSerialId) {
+		super(code, length);
+		this.internaSerialId = internaSerialId;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(internaSerialId);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof TestingMessage) {
+			return Objects.equals(internaSerialId, ((TestingMessage) obj).internaSerialId);
+		}
+		return false;
 	}
 }
 

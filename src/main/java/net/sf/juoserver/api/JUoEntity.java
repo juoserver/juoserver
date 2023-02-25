@@ -8,4 +8,5 @@ public interface JUoEntity {
 	int getHue();
 
 	String getName();
+
 }

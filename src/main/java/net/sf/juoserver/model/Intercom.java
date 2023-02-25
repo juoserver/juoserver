@@ -2,6 +2,7 @@ package net.sf.juoserver.model;
 
 import net.sf.juoserver.api.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -14,7 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * according to the <b>observer</b> pattern.
  */
 public final class Intercom implements InterClientNetwork {
-	private List<IntercomListener> listeners = new CopyOnWriteArrayList<IntercomListener>();
+	private final List<IntercomListener> listeners = new CopyOnWriteArrayList<>();
 
 	@Override
 	public void addIntercomListener(IntercomListener listener) {
@@ -94,19 +95,11 @@ public final class Intercom implements InterClientNetwork {
 	 *            item
 	 * @param targetSerialId
 	 *            target serial ID
-	 * @param targetX
-	 *            target X
-	 * @param targetY
-	 *            target Y
-	 * @param targetZ
-	 *            target Z
 	 */
 	@Override
-	public void notifyItemDropped(Mobile droppingMobile, Item item,
-			int targetSerialId, int targetX, int targetY, int targetZ) {
+	public void notifyItemDropped(Mobile droppingMobile, Item item, int targetSerialId) {
 		for (IntercomListener l : listeners) {
-			l.onItemDropped(droppingMobile, item, targetSerialId, targetX,
-					targetY, targetZ);
+			l.onItemDropped(droppingMobile, item, targetSerialId);
 		}
 	}
 
@@ -179,6 +172,13 @@ public final class Intercom implements InterClientNetwork {
 	public void notifyFightOccurring(Mobile opponent1, Mobile opponent2) {
 		for (IntercomListener intercomListener : listeners) {
 			intercomListener.onFightOccurring(opponent1, opponent2);
+		}
+	}
+
+	@Override
+	public void notifyGroundItemsCreated(Collection<Item> items) {
+		for (IntercomListener intercomListener : listeners) {
+			intercomListener.onGroundItemCreated(items);
 		}
 	}
 }

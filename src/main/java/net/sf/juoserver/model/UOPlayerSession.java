@@ -2,15 +2,13 @@ package net.sf.juoserver.model;
 
 import net.sf.juoserver.api.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class UOPlayerSession implements PlayerSession {
 	private final Core core;
 	private final Account account;
-	private final Set<Mobile> mobilesInRange = new HashSet<Mobile>();
+	private final Set<Mobile> mobilesInRange = new HashSet<>();
+	private final Set<Item> itemsInRange = new HashSet<>();
 	private final ModelOutputPort serverResponseListener;
 	private final InterClientNetwork network;
 	
@@ -30,7 +28,7 @@ public class UOPlayerSession implements PlayerSession {
 
 	@Override
 	public List<String> getCharacterNames() {
-		List<String> names = new ArrayList<String>();
+		List<String> names = new ArrayList<>();
 		for (int serialId : account.getCharactersSerials()) {
 			Mobile mobile = core.findMobileByID(serialId);
 			names.add(mobile.getName());
@@ -63,7 +61,13 @@ public class UOPlayerSession implements PlayerSession {
 		if (!onlyChangingDirection) {
 			mobile.moveForward();
 		}
-		
+
+		var items = core.findItemsByDirection(mobile, direction, 20);
+		if (!items.isEmpty()) {
+			network.notifyGroundItemsCreated(items);
+		}
+
+
 		MapTile tile = core.getTile(mobile.getX(), mobile.getY());
 		mobile.setZ( tile.getZ() );
 		network.notifyOtherMobileMovement(mobile);
@@ -140,8 +144,8 @@ public class UOPlayerSession implements PlayerSession {
 		}
 		
 		if (droppedOnTheGround) {
-			network.notifyItemDropped(mobile, droppedItem, droppedOnTheGround? 0 : targetContainerSerial,
-					targetPosition.getX(), targetPosition.getY(), targetPosition.getZ());
+			droppedItem.location(targetPosition);
+			network.notifyItemDropped(mobile, droppedItem, 0);
 		}
 	}
 	
@@ -162,12 +166,11 @@ public class UOPlayerSession implements PlayerSession {
 	}
 
 	@Override
-	public void onItemDropped(Mobile droppingMobile, Item item,
-			int targetSerialId, int targetX, int targetY, int targetZ) {
+	public void onItemDropped(Mobile droppingMobile, Item item, int targetSerialId) {
 		if (!mobile.equals(droppingMobile)) {
-			serverResponseListener.itemDragged(item, 1, droppingMobile, targetSerialId, new PointInSpace(targetX, targetY, targetZ));
+			serverResponseListener.itemDragged(item, droppingMobile, targetSerialId);
 		}
-		serverResponseListener.itemChanged(item, new PointInSpace(targetX, targetY, targetZ));
+		serverResponseListener.itemChanged(item);
 	}
 
 	@Override
@@ -267,7 +270,16 @@ public class UOPlayerSession implements PlayerSession {
 
 	@Override
 	public void onFightOccurring(Mobile opponent1, Mobile opponent2) {
-
 		serverResponseListener.fightOccurring(opponent1, opponent2);
+	}
+
+	@Override
+	public void showGroundItems(Collection<Item> items) {
+		network.notifyGroundItemsCreated(items);
+	}
+
+	@Override
+	public void onGroundItemCreated(Collection<Item> items) {
+		serverResponseListener.groundItemsCreated(items);
 	}
 }
