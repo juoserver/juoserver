@@ -1,8 +1,9 @@
 package net.sf.juoserver.api;
 
-public interface Command {
+import java.util.List;
+
+public interface Command extends EventHandler<List<String>> {
 
     String getName();
-    void execute(CommandContext context);
 
 }

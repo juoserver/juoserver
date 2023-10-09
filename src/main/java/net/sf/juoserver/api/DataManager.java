@@ -6,4 +6,8 @@ public interface DataManager {
 	List<Mobile> loadMobiles();
 
 	List<Account> loadAccounts();
+
+	List<Item> loadItems();
+
+	Integer getItemSerial();
 }

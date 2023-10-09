@@ -6,36 +6,35 @@ import net.sf.juoserver.model.UOAccount;
 import net.sf.juoserver.protocol.CircularClientMovementTracker;
 import net.sf.juoserver.protocol.GameController;
 import net.sf.juoserver.protocol.ProtocolIoPort;
+import net.sf.juoserver.protocol.item.ItemManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
+
 import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
 public class AbstractNewGameControllerTest {
-    protected Mobile mobile = TestingFactory.createTestMobile(42, "asder");
+    protected Mobile mobile = TestingFactory.createTestMobile(1, "asder");
     protected Account account = UOAccount.createAccount(0, "user", "psw", mobile.getSerialId());
-    @Mock
-    protected PlayerSession session;
-    @Mock
-    protected Core core;
-    @Mock
-    protected LoginManager loginManager;
-    @Mock
-    protected InterClientNetwork intercom;
-    @Mock
-    protected ProtocolIoPort clientHandler;
-    @Mock
-    protected CommandHandler commandManager;
-    @Mock
-    protected CombatSystem combatSystem;
+    @Mock PlayerSession session;
+    @Mock Core core;
+    @Mock Configuration configuration;
+    @Mock LoginManager loginManager;
+    @Mock InterClientNetwork intercom;
+    @Mock ProtocolIoPort clientHandler;
+    @Mock ItemManager itemManager;
+    @Mock CommandManager commandManager;
+    @Mock CombatSystem combatSystem;
+    @Mock GeneralInfoManager generalInfoManager;
     protected GameController gameController;
 
     @BeforeEach
     public void configure() {
-        gameController = new GameController("client", clientHandler, core, new CircularClientMovementTracker(), loginManager, intercom, commandManager, combatSystem);
+        gameController = new GameController("client", clientHandler, core, configuration, new CircularClientMovementTracker(), loginManager, intercom, itemManager, commandManager, combatSystem, generalInfoManager);
         gameController.setSession(session);
 
         lenient().when(session.getMobile())

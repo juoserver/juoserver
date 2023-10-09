@@ -57,10 +57,10 @@ public class ItemComponentTest extends AbstractComponentTest {
 			oneOf(core).removeItemFromContainer(bottleWasInBackpack);
 			
 			oneOf(asderListener).containerChangedContents(backpack);
-			oneOf(asderListener).itemChanged(bottleWasInBackpack, new PointInSpace(10, 20, 30));
+			oneOf(asderListener).itemChanged(bottleWasInBackpack);
 			
-			oneOf(lollerListener).itemDragged(bottleWasInBackpack, 1, asder, 0, new PointInSpace(10, 20, 30));
-			oneOf(lollerListener).itemChanged(bottleWasInBackpack, new PointInSpace(10, 20, 30));
+			oneOf(lollerListener).itemDragged(bottleWasInBackpack, asder, 0);
+			oneOf(lollerListener).itemChanged(bottleWasInBackpack);
 		}});
 		
 		asderSession.dropItem(bottleWasInBackpack.getSerialId(), true, 0xFFFFFFFF, new PointInSpace(10, 20, 30));

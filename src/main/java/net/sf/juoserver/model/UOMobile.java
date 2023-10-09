@@ -339,7 +339,7 @@ public class UOMobile implements Mobile {
 	@Override
 	public int getWeaponBaseDamage() {
 		if (items.containsKey(Layer.FirstValid)) {
-			return items.get(Layer.FirstValid).getBaseDamage();
+			return items.get(Layer.FirstValid).baseDamage();
 		}
 		return 1;
 	}

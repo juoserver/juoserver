@@ -3,7 +3,7 @@ package net.sf.juoserver.protocol;
 import net.sf.juoserver.api.Message;
 import net.sf.juoserver.api.MessageDecoderProvider;
 import net.sf.juoserver.api.MessageReader;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
