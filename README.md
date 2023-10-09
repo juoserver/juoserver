@@ -4,3 +4,7 @@ This project was initially created on sourceforge, you can find the original pro
 
 Since the project is no longer under development in the original source. The idea here is to continue this development and bring the most recent plugins and patterns.
 
+Project ROADMAP
+| Feature  | Done  | 
+|---|----|
+| Description  |   | 
