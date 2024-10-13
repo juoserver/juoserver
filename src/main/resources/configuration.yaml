@@ -1,6 +1,6 @@
 
 packet:
-  logging: false
+  logging: true
 stats:
   maxHitPoints: 100
   maxStamina: 100
@@ -10,6 +10,9 @@ server:
   host: localhost
   port: 7775
 combat:
-  dexAttackDivisorModifier: 10
+  dexAttackDivisorModifier: 1
+  dexDefenseDivisorModifier: 1
+  strAttackDivisorModifier: 1
+  strDefenseDivisorModifier: 1
 command:
   activationChar: .

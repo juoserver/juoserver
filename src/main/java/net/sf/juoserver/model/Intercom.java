@@ -157,21 +157,9 @@ public final class Intercom implements InterClientNetwork {
 	}
 
 	@Override
-	public void notifyOtherDamaged(Mobile mobile, int damage) {
+	public void notifyOtherDamaged(Mobile mobile, int damage, Mobile opponent) {
 		for (IntercomListener intercomListener : listeners) {
-			intercomListener.onOtherDamaged(mobile, damage);
-		}
-	}
-
-	/**
-	 * Notify clients a fight occurring between to mobiles
-	 * @param opponent1 Opponent 1
-	 * @param opponent2 Oppoenet 2
-	 */
-	@Override
-	public void notifyFightOccurring(Mobile opponent1, Mobile opponent2) {
-		for (IntercomListener intercomListener : listeners) {
-			intercomListener.onFightOccurring(opponent1, opponent2);
+			intercomListener.onOtherDamaged(mobile, damage, opponent);
 		}
 	}
 

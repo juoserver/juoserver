@@ -4,6 +4,10 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HexFormat;
+import java.util.List;
 
 /**
  * First message ever sent by a client.
@@ -14,16 +18,34 @@ public class LoginSeed extends AbstractMessage {
 	private static final long serialVersionUID = 1L;
 	public static final int CODE = NO_CODE;
 	private InetAddress address;
-	
+	private int clientMajorVersion;
+	private int clientMinorVersion;
+	private int clientRevisionVersion;
+	private int clientPrototypeVersion;
+
 	private LoginSeed() {
 		super(CODE, 4);
 	}
 
 	public LoginSeed(byte[] contents) throws UnknownHostException {
-		this();
-		address = InetAddress.getByAddress(ArrayUtils.subarray(contents, 0, getLength()));
+		super(CODE, LoginSeed.getLength(contents));
+		if (getLength() == 21) {
+			address = InetAddress.getByAddress(ArrayUtils.subarray(contents, 1, 5));
+			var buffer = wrapContents(5, contents);
+			clientMajorVersion = buffer.getInt();
+			clientMinorVersion = buffer.getInt();
+			clientRevisionVersion = buffer.getInt();
+			clientPrototypeVersion = buffer.getInt();
+		} else {
+			address = InetAddress.getByAddress(ArrayUtils.subarray(contents, 0, 4));
+		}
 	}
-	
+
+	private static int getLength(byte[] contents) {
+		var code = HexFormat.of().formatHex(contents, 0,1);
+		return "EF".equalsIgnoreCase(code) ? 21 : 4;
+	}
+
 	public LoginSeed(InetAddress address) {
 		this();
 		this.address = address;
@@ -32,6 +54,23 @@ public class LoginSeed extends AbstractMessage {
 	public InetAddress getAddress() {
 		return address;
 	}
+
+	public int getClientMajorVersion() {
+		return clientMajorVersion;
+	}
+
+	public int getClientMinorVersion() {
+		return clientMinorVersion;
+	}
+
+	public int getClientRevisionVersion() {
+		return clientRevisionVersion;
+	}
+
+	public int getClientPrototypeVersion() {
+		return clientPrototypeVersion;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -55,8 +94,20 @@ public class LoginSeed extends AbstractMessage {
 			return false;
 		return true;
 	}
+
 	@Override
 	public String toString() {
-		return getName() + " [address=" + address + "]";
+		if (getLength() == 21) {
+			return "LoginSeed{" +
+					"address=" + address +
+					", clientMajorVersion=" + clientMajorVersion +
+					", clientMinorVersion=" + clientMinorVersion +
+					", clientRevisionVersion=" + clientRevisionVersion +
+					", clientPrototypeVersion=" + clientPrototypeVersion +
+					'}';
+		}
+		return "LoginSeed{" +
+				"address=" + address +
+				'}';
 	}
 }

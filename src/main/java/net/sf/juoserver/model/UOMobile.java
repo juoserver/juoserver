@@ -9,7 +9,7 @@ public class UOMobile implements Mobile {
 	/**
 	 * The body type.
 	 */
-	private int modelId = 0x190;
+	private int modelId = 0x3CA; // 0x190 human - 0x3CA ghost
 	private String name;
 	private int currentHitPoints;
 	private int maxHitPoints;
@@ -32,6 +32,8 @@ public class UOMobile implements Mobile {
 	private RaceFlag raceFlag;
 	
 	private String title = "The Great";
+
+	private boolean death;
 	
 	private Set<Skill> skills = new HashSet<Skill>( Arrays.asList(new Skill(Skills.Alchemy, 85, 80, 100, SkillLockFlag.Up),
 					new Skill(Skills.Magery, 95, 90, 100, SkillLockFlag.Up),
@@ -41,8 +43,8 @@ public class UOMobile implements Mobile {
 	
 	private Map<Layer, Item> items;
 	private int hue = 0x83EA;
-	private int x = 0x02E8;
-	private int y = 0x0877;
+	private int x = 6100;
+	private int y = 1586;
 	private int z = 5;
 	private Direction direction = Direction.Southeast;
 	private boolean running;
@@ -342,6 +344,24 @@ public class UOMobile implements Mobile {
 			return items.get(Layer.FirstValid).baseDamage();
 		}
 		return 1;
+	}
+
+	@Override
+	public Mobile location(int x, int y, int z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		return this;
+	}
+
+	@Override
+	public int distanceOf(Mobile mobile) {
+		return (int) Math.hypot(x - mobile.getX(), y - mobile.getY());
+	}
+
+	@Override
+	public void kill() {
+		this.death = true;
 	}
 
 	@Override

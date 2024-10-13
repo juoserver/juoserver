@@ -61,6 +61,14 @@ public class GameController extends AbstractProtocolController implements ModelO
 		this.session = session;
 	}
 
+	public void handle(BuffDebuff buffDebuff) {
+		System.out.println(buffDebuff);
+	}
+
+	public void handle(LoginSeed loginSeed) {
+		System.out.println(loginSeed);
+	}
+
 	// This message is sent in the second connection right after the new seed
 	public CharacterList handle(ServerLoginRequest request) throws IOException {
 		Account account = loginManager.getAuthorizedAccount(request.getAuthenticationKey());
@@ -123,13 +131,13 @@ public class GameController extends AbstractProtocolController implements ModelO
 				new CharacterDraw(mobile),
 				new OverallLightLevel(new UOProtocolLightLevel(lightLevel)),
 				new PersonalLightLevel(mobile.getSerialId(), new UOProtocolLightLevel(lightLevel)),
-				new ClientFeatures(ClientFeature.T2A, ClientFeature.UOR),
+				new ClientFeatures(ClientFeature.T2A),
 				new CharacterWarmode((byte) 0),
 				new LoginComplete()
 		));
 		response.addAll(core.findItemsInRegion(mobile, 20)
 				.stream().map(ObjectInfo::new)
-				.collect(Collectors.toList()));
+				.toList());
 		response.addAll( mobileObjectsRevisions( mobile ) );
 		return response;
 	}
@@ -422,19 +430,10 @@ public class GameController extends AbstractProtocolController implements ModelO
 	}
 
 	@Override
-	public void mobileDamaged(Mobile mobile, int damage) {
+	public void mobileDamaged(Mobile mobile, int damage, Mobile opponent) {
 		try {
-			clientHandler.sendToClient(new StatusBarInfo(mobile), new CharacterAnimation(mobile, AnimationRepeat.ONCE, AnimationType.GET_HIT, 10, AnimationDirection.BACKWARD));
-		} catch (IOException e) {
-			throw new IntercomException(e);
-		}
-	}
-
-	@Override
-	public void fightOccurring(Mobile opponent1, Mobile opponent2) {
-		try {
-			clientHandler.sendToClient(new CharacterAnimation(opponent1, AnimationRepeat.ONCE, AnimationType.ATTACK_WITH_SWORD_OVER_AND_SIDE, 10, AnimationDirection.FORWARD),
-					new CharacterAnimation(opponent2, AnimationRepeat.ONCE, AnimationType.CROSSBOW, 10, AnimationDirection.FORWARD));
+			clientHandler.sendToClient(new CharacterAnimation(opponent, AnimationRepeat.ONCE, AnimationType.ATTACK_WITH_SWORD_OVER_AND_SIDE, 100, AnimationDirection.FORWARD),
+					new StatusBarInfo(mobile), new CharacterAnimation(mobile, AnimationRepeat.ONCE, AnimationType.GET_HIT, 10, AnimationDirection.BACKWARD));
 		} catch (IOException e) {
 			throw new IntercomException(e);
 		}
@@ -450,6 +449,19 @@ public class GameController extends AbstractProtocolController implements ModelO
 	public List<Message> handle(RequestHelp requestHelp) {
 		System.out.println("User "+session.getMobile().getName()+" requested help");
 		return Collections.singletonList(new WarMode(CharacterStatus.WarMode));
+	}
+
+	// ======================= HANDLE DEATH =====================
+
+
+	@Override
+	public void mobiledKilled(Mobile mobile) {
+		try {
+			clientHandler.sendToClient(new DeathAnimation(mobile, 0x1FFD));
+		} catch (IOException exception) {
+			throw new IntercomException(exception);
+		}
+
 	}
 
 	@Override

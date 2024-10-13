@@ -23,6 +23,7 @@ public class UOProtocolMessageReader implements MessageReader {
 	 * sends - has been received by this reader.
 	 */
 	boolean seedSent;
+
 	
 	/**
 	 * Default constructor.

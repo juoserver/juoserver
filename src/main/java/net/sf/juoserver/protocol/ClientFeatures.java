@@ -11,7 +11,7 @@ public class ClientFeatures extends AbstractMessage {
 	
 	private ClientFeature[] features;
 	public ClientFeatures(ClientFeature... features) {
-		super(CODE, 3);
+		super(CODE, 5);
 		this.features = features;
 	}
 	public ClientFeature[] getFeatures() {
@@ -24,7 +24,7 @@ public class ClientFeatures extends AbstractMessage {
 		for (ClientFeature f : features) {
 			featurez |= f.getValue();
 		}
-		bb.putShort(featurez);
+		bb.putInt(featurez);
 		return bb;
 	}
 	@Override

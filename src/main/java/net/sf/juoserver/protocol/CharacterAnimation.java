@@ -73,4 +73,12 @@ public class CharacterAnimation extends AbstractMessage {
         CharacterAnimation that = (CharacterAnimation) o;
         return frameCount == that.frameCount && mobile.equals(that.mobile) && repeat == that.repeat && type == that.type && direction == that.direction;
     }
+
+    @Override
+    public String toString() {
+        return "CharacterAnimation{" +
+                "mobile=" + mobile +
+                ", type=" + type +
+                '}';
+    }
 }

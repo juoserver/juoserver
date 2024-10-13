@@ -40,7 +40,9 @@ class PhysicalDamageCalculatorImplTest {
     @DisplayName("Should calculate damage with similar modifiers")
     @Test
     public void shouldCalculateDamageWithSimilarModifiers() {
-        var damage = physicalDamageCalculator.calculate(givenAttacker(100, 100,100), givenAttacked(100,100,100));
+        var attacker =  givenAttacker(5, 10,10);
+        var attacked = givenAttacked(5,10,10);
+        var damage = physicalDamageCalculator.calculate(attacker, attacked);
         assertEquals(32, damage);
     }
 

@@ -20,6 +20,7 @@ public class PhysicalDamageCalculatorImpl implements PhysicalDamageCalculator {
     public int calculate(Mobile attacker, Mobile attacked) {
         var combatConfiguration = configuration.getCombat();
         var baseDamage = attacker.getWeaponBaseDamage();
+
         var armorRating = attacked.getArmorRating();
 
         // Strength Modifier
