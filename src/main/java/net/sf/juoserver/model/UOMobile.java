@@ -5,11 +5,13 @@ import net.sf.juoserver.api.*;
 import java.util.*;
 
 public class UOMobile implements Mobile {
+	public static final int DEATH_MODEL_ID = 403;
+	public static final int ALIVE_MODEL_ID = 0x190;
 	private int serialId;
 	/**
 	 * The body type.
 	 */
-	private int modelId = 0x3CA; // 0x190 human - 0x3CA ghost
+	private int modelId = ALIVE_MODEL_ID; // 0x190 human - 0x3CA ghost
 	private String name;
 	private int currentHitPoints;
 	private int maxHitPoints;
@@ -80,7 +82,11 @@ public class UOMobile implements Mobile {
 		
 		items = new HashMap<Layer, Item>();
 	}
-	
+
+	public UOMobile() {
+		this.items = new HashMap<>();
+	}
+
 	@Override
 	public int getModelId() {
 		return modelId;
@@ -362,6 +368,12 @@ public class UOMobile implements Mobile {
 	@Override
 	public void kill() {
 		this.death = true;
+		this.modelId = DEATH_MODEL_ID;
+	}
+
+	@Override
+	public void revive() {
+		this.modelId = ALIVE_MODEL_ID;
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import net.sf.juoserver.api.*;
 import net.sf.juoserver.builder.JUOServerModule;
 import net.sf.juoserver.protocol.*;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,7 +31,8 @@ public class TestServerModule extends JUOServerModule {
                    // session.showGroundItems(List.of(item));
                     //context.protocolIoPort().sendToClient(new CharacterAnimation(mobile, AnimationRepeat.ONCE, AnimationType.SALUTE, 300, AnimationDirection.FORWARD));
 
-                    context.protocolIoPort().sendToClient(new DeathScreen(DeathAction.SERVER_SENT));
+                    mobile.kill();
+                    context.protocolIoPort().sendToClient(new DeathScreen(DeathAction.SERVER_SENT), new CharacterDraw(mobile));
                     //context.protocolIoPort().sendToClient(new DeathAnimation(mobile, 8198));
                     context.protocolIoPort().sendToClient(new UnicodeSpeech(mobile, MessageType.System, 0x481, 0, "en_US", "opa neguinho"));
 
@@ -46,6 +48,19 @@ public class TestServerModule extends JUOServerModule {
                 }*/
             }
 
+        });
+
+        registerCommand(new AbstractCommand("res") {
+            @Override
+            public void execute(List<String> source, PlayerContext context) {
+                var mobile = context.session().getMobile();
+                mobile.revive();
+                try {
+                    context.protocolIoPort().sendToClient(new DeathScreen(DeathAction.RESURRECT), new CharacterDraw(mobile));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         });
     }
 }

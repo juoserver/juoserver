@@ -89,4 +89,8 @@ public interface Mobile extends JUoEntity, Point3D {
 
 	void kill();
 
+	void revive();
+
+
+
 }
