@@ -367,13 +367,24 @@ public class UOMobile implements Mobile {
 
 	@Override
 	public void kill() {
+		this.currentHitPoints = 0;
+		this.currentMana = 0;
+		this.currentStamina = 0;
 		this.death = true;
 		this.modelId = DEATH_MODEL_ID;
 	}
 
 	@Override
 	public void revive() {
+		this.currentHitPoints = 1;
+		this.currentMana = 1;
+		this.currentStamina = 1;
 		this.modelId = ALIVE_MODEL_ID;
+	}
+
+	@Override
+	public boolean isDeath() {
+		return death;
 	}
 
 	@Override

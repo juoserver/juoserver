@@ -91,6 +91,6 @@ public interface Mobile extends JUoEntity, Point3D {
 
 	void revive();
 
-
+	boolean isDeath();
 
 }

@@ -32,9 +32,9 @@ public class TestServerModule extends JUOServerModule {
                     //context.protocolIoPort().sendToClient(new CharacterAnimation(mobile, AnimationRepeat.ONCE, AnimationType.SALUTE, 300, AnimationDirection.FORWARD));
 
                     mobile.kill();
-                    context.protocolIoPort().sendToClient(new DeathScreen(DeathAction.SERVER_SENT), new CharacterDraw(mobile));
+                    context.protocolIoPort().sendToClient(new DeathScreen(DeathAction.SERVER_SENT), new CharacterDraw(mobile), new StatusBarInfo(mobile));
                     //context.protocolIoPort().sendToClient(new DeathAnimation(mobile, 8198));
-                    context.protocolIoPort().sendToClient(new UnicodeSpeech(mobile, MessageType.System, 0x481, 0, "en_US", "opa neguinho"));
+                    //context.protocolIoPort().sendToClient(new UnicodeSpeech(mobile, MessageType.System, 0x481, 0, "en_US", "opa neguinho"));
 
                 } catch (Exception exception) {
                     exception.printStackTrace();
@@ -56,7 +56,7 @@ public class TestServerModule extends JUOServerModule {
                 var mobile = context.session().getMobile();
                 mobile.revive();
                 try {
-                    context.protocolIoPort().sendToClient(new DeathScreen(DeathAction.RESURRECT), new CharacterDraw(mobile));
+                    context.protocolIoPort().sendToClient(new DeathScreen(DeathAction.RESURRECT), new CharacterDraw(mobile), new StatusBarInfo(mobile));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
