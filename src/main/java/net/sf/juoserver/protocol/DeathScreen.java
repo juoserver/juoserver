@@ -8,7 +8,7 @@ import java.util.Objects;
 public class DeathScreen extends AbstractMessage {
 
     protected static final int CODE = 0x2C;
-    private DeathAction action;
+    private final DeathAction action;
 
     public DeathScreen(DeathAction action) {
         super(DeathScreen.CODE, 2);
