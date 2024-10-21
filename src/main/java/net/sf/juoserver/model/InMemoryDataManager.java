@@ -8,8 +8,8 @@ import java.util.*;
 public class InMemoryDataManager implements DataManager {
 	private static final int ACCOUNT_ID = 0;
 
-	private static final int PLAYER2_ID = 1;
-	private static final int PLAYER2_SERIAL = 2;
+	private static final int PLAYER2_ID = 2;
+	private static final int PLAYER2_SERIAL = 3;
 
 	private static final int FIRST_SERIAL_ID = 1;
 

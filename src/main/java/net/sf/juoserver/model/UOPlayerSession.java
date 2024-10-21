@@ -131,7 +131,7 @@ public class UOPlayerSession implements PlayerSession {
 	@Override
 	public void dropItem(int itemSerial, boolean droppedOnTheGround,
 			int targetContainerSerial, Point3D targetPosition) {
-		Item droppedItem = core.findItemByID(itemSerial);
+		final Item droppedItem = core.findItemByID(itemSerial);
 		
 		if (mobile.removeItem(droppedItem)) {
 			network.notifyDroppedCloth(mobile, droppedItem);

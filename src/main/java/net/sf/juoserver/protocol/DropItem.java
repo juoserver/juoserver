@@ -6,7 +6,6 @@ import net.sf.juoserver.model.PointInSpace;
 import java.nio.ByteBuffer;
 
 public class DropItem extends AbstractMessage {
-	private static final long serialVersionUID = 1L;
 
 	protected static final int CODE = 0x08;
 	
@@ -29,7 +28,9 @@ public class DropItem extends AbstractMessage {
 	 * Z coordinate where the item is being dropped to.
 	 */
 	private int targetZ;
-	
+
+	private int backpackGridIndex;
+
 	/**
 	 * Container where the item it being dropped to.
 	 * <p/>
@@ -41,7 +42,7 @@ public class DropItem extends AbstractMessage {
 	private int targetContainerSerial;
 	
 	private DropItem() {
-		super(CODE, 14);
+		super(CODE, 15);
 	}
 	
 	public DropItem(int itemSerial, int targetX, int targetY, int targetZ,
@@ -61,6 +62,7 @@ public class DropItem extends AbstractMessage {
 		targetX = bb.getShort();
 		targetY = bb.getShort();
 		targetZ = bb.get();
+		backpackGridIndex = bb.get();
 		targetContainerSerial = bb.getInt();
 	}
 
@@ -80,6 +82,10 @@ public class DropItem extends AbstractMessage {
 		return targetZ;
 	}
 
+	public int getBackpackGridIndex() {
+		return backpackGridIndex;
+	}
+
 	public int getTargetContainerSerial() {
 		return targetContainerSerial;
 	}
@@ -87,7 +93,8 @@ public class DropItem extends AbstractMessage {
 	public boolean isDroppedOnTheGround() {
 		return targetContainerSerial == 0xFFFFFFFF;
 	}
-	
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
