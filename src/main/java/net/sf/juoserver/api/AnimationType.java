@@ -34,8 +34,8 @@ public enum AnimationType implements Coded {
     BLOCK_ON_GROUND_WITH_SHIELD(0x1e),
     SWING_GET_HIT_MIDDLE(0x1f),
     BOW_DEEP(0x20),
-    SALUTE(0x21),
-    SCRACTH_HEAD(0x22),
+    SALUTE(21),
+    DIE_HARD_BACK(0x22),
     ONE_FOOT_FORWARD_FOR_TWO_SECS(0x23),
     SAME(0x24);
 

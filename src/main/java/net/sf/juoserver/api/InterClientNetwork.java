@@ -12,9 +12,10 @@ public interface InterClientNetwork {
 	void notifyDroppedCloth(Mobile mobile, Item droppedCloth);
 	void notifyAttacked(Mobile attacker, Mobile attacked);
 	void notifyAttackFinished(Mobile attacker, Mobile attacked);
-	void notifyOtherDamaged(Mobile mobile, int damage);
-	void notifyFightOccurring(Mobile opponent1, Mobile opponent2);
+	void notifyOtherDamaged(Mobile mobile, int damage, Mobile opponent);
+	void notifyGroundItemsCreated(Collection<Item> items);
+	void notifyOtherKilled(Mobile mobile);
 	void removeIntercomListener(IntercomListener listener);
 	void addIntercomListener(IntercomListener listener);
-	void notifyGroundItemsCreated(Collection<Item> items);
+
 }

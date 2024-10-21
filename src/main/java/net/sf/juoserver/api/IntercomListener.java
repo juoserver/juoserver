@@ -18,8 +18,8 @@ public interface IntercomListener {
 	void onChangedWarMode(Mobile mobile);
 	void onAttacked(Mobile attacker, Mobile attacked);
 	void onAttackFinished(Mobile attacker, Mobile attacked);
-	void onOtherDamaged(Mobile mobile, int damage);
-	void onFightOccurring(Mobile opponent1, Mobile opponent2);
+	void onOtherDamaged(Mobile mobile, int damage, Mobile opponent);
 	void onGroundItemCreated(Collection<Item> items);
+	void onOtherKilled(Mobile mobile);
 
 }

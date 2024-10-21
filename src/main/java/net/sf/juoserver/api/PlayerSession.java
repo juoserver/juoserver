@@ -13,8 +13,7 @@ public interface PlayerSession extends IntercomListener {
 	void dropItem(int itemSerial, boolean droppedOnTheGround, int targetContainerSerial, Point3D targetPosition);
 	void wearItemOnMobile(Layer layer, int itemSerialId);
 	void toggleWarMode(boolean war);
-	void attack(Mobile enemy);
-	void applyDamage(int damage);
-	void fightOccurring(Mobile opponent);
+	void attack(Mobile opponent);
+	void applyDamage(int damage, Mobile opponent);
 	void showGroundItems(Collection<Item> items);
 }

@@ -5,14 +5,12 @@ import net.sf.juoserver.api.Mobile;
 import net.sf.juoserver.api.PhysicalDamageCalculator;
 import net.sf.juoserver.api.PlayerSession;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class CombatSystemImpl implements CombatSystem {
 
-    private final Map<KeyPair, ValuePair> combatSessions = Collections.synchronizedMap(new HashMap<>());
+    private final Map<KeyPair, SessionGroup> combatSessions = new HashMap<>();
     private final PhysicalDamageCalculator physicalDamageCalculator;
 
     public CombatSystemImpl(PhysicalDamageCalculator physicalDamageCalculator) {
@@ -21,15 +19,15 @@ public class CombatSystemImpl implements CombatSystem {
 
     @Override
     public void attackStarted(PlayerSession attackerSession, Mobile attacked) {
-        combatSessions.put(KeyPair.of(attackerSession.getMobile(), attacked), new ValuePair(attackerSession, null));
+        combatSessions.put(KeyPair.of(attackerSession.getMobile(), attacked), new SessionGroup(new CombatSession(System.nanoTime()), attackerSession, null));
     }
 
     @Override
     public void defenseStarted(PlayerSession attackedSession, Mobile attacker) {
         var keyPair = KeyPair.of(attacker, attackedSession.getMobile());
         if (combatSessions.containsKey(keyPair)) {
-            var attackerSession = combatSessions.get(keyPair).getAttackerSession();
-            combatSessions.replace(keyPair, ValuePair.of(attackerSession, attackedSession));
+            var sessionGroup = combatSessions.get(keyPair);
+            combatSessions.replace(keyPair, new SessionGroup(sessionGroup.combatSession(), sessionGroup.attackerSession(), attackedSession));
         }
     }
 
@@ -39,98 +37,40 @@ public class CombatSystemImpl implements CombatSystem {
     }
 
     @Override
-    public void execute() {
+    public void mobileKilled(Mobile mobile) {
+        var iterator = combatSessions.keySet().iterator();
+        while (iterator.hasNext()) {
+            var pair = iterator.next();
+            if (pair.attacker().equals(mobile) || pair.attacked().equals(mobile)) {
+                combatSessions.remove(pair);
+            }
+        }
+    }
+
+    @Override
+    public void execute(long uptime) {
         combatSessions.values().forEach(entry->{
-            var attackerSession = entry.getAttackerSession();
+            var combatSession = entry.combatSession();
+            var combatLoop = combatSession.getCombatLoop();
+
+            var attackerSession = entry.attackerSession();
             var attackerMobile = attackerSession.getMobile();
 
-            var attackedSession = entry.getAttackedSession();
+            var attackedSession = entry.attackedSession();
             var attackedMobile = attackedSession.getMobile();
 
-            if (getMobileDistance(attackerMobile, attackedMobile) <= 1) {
-                attackerSession.fightOccurring(attackedMobile);
-                attackerSession.applyDamage(physicalDamageCalculator.calculate(attackedMobile, attackerMobile));
-
-                attackedSession.fightOccurring(attackerSession.getMobile());
-                attackedSession.applyDamage(physicalDamageCalculator.calculate(attackerMobile, attackedMobile));
+            if (attackerMobile.distanceOf(attackedMobile) <= 1) {
+                if (combatLoop % 3 == 0) {
+                    final var attackerReceivedDamage = physicalDamageCalculator.calculate(attackedMobile, attackerMobile);
+                    final var attackedReceivedDamage = physicalDamageCalculator.calculate(attackerMobile, attackedMobile);
+                    attackerSession.applyDamage(attackerReceivedDamage, attackedMobile);
+                    attackedSession.applyDamage(attackedReceivedDamage, attackerMobile);
+                    combatSession.resetCombatLoop();
+                } else {
+                    combatSession.updateCombatLoop();
+                }
             }
         });
     }
 
-    public int getMobileDistance(Mobile attacker, Mobile attacked) {
-        return (int) Math.hypot(attacker.getX() - attacked.getX(), attacker.getY() - attacked.getY());
-    }
-
-    protected Map<KeyPair, ValuePair> getCombatSessions() {
-        return combatSessions;
-    }
-
-    protected static class KeyPair {
-        private final Mobile attacker;
-        private final Mobile attacked;
-
-        public static KeyPair of(Mobile attacker, Mobile attacked) {
-            return new KeyPair(attacker, attacked);
-        }
-        private KeyPair(Mobile attacker, Mobile attacked) {
-            this.attacker = attacker;
-            this.attacked = attacked;
-        }
-
-        public Mobile getAttacker() {
-            return attacker;
-        }
-
-        public Mobile getAttacked() {
-            return attacked;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            KeyPair keyPair = (KeyPair) o;
-            return attacker.equals(keyPair.attacker) && attacked.equals(keyPair.attacked);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(attacker, attacked);
-        }
-    }
-
-    protected static class ValuePair {
-        private final PlayerSession attackerSession;
-        private final PlayerSession attackedSession;
-
-        public static ValuePair of(PlayerSession attackerSession, PlayerSession attackedSession) {
-            return new ValuePair(attackerSession, attackedSession);
-        }
-
-        public ValuePair(PlayerSession attackerSession, PlayerSession attackedSession) {
-            this.attackerSession = attackerSession;
-            this.attackedSession = attackedSession;
-        }
-
-        public PlayerSession getAttackerSession() {
-            return attackerSession;
-        }
-
-        public PlayerSession getAttackedSession() {
-            return attackedSession;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            ValuePair valuePair = (ValuePair) o;
-            return attackerSession.equals(valuePair.attackerSession) && Objects.equals(attackedSession, valuePair.attackedSession);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(attackerSession, attackedSession);
-        }
-    }
 }

@@ -1,9 +1,6 @@
 package net.sf.juoserver.model.core;
 
-import net.sf.juoserver.api.Direction;
-import net.sf.juoserver.api.Item;
-import net.sf.juoserver.api.ItemLocator;
-import net.sf.juoserver.api.Point2D;
+import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.Position;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +17,12 @@ import java.util.stream.Stream;
 public class UOItemLocator implements ItemLocator {
     private static final Logger LOGGER = LoggerFactory.getLogger(UOItemLocator.class);
     private final Map<Integer, Item> itemsBySerialId;
+    private final Configuration configuration;
     private final Map<Point2D, Set<Item>> itemsByLocation;
 
-    public UOItemLocator(Map<Integer, Item> itemsBySerialId) {
+    public UOItemLocator(Map<Integer, Item> itemsBySerialId, Configuration configuration) {
         this.itemsBySerialId = itemsBySerialId;
+        this.configuration = configuration;
         this.itemsByLocation = new HashMap<>();
     }
 

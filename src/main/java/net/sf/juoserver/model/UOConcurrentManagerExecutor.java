@@ -9,9 +9,11 @@ import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class UOConcurrentManagerExecutor implements ConcurrentManagerExecutor {
     private static final Logger LOGGER = LoggerFactory.getLogger(UOConcurrentManagerExecutor.class);
+    private static final int INITIAL_DELAY = 500;
     private final Task[] tasks;
     private final ScheduledExecutorService executorService;
 
@@ -23,15 +25,15 @@ public class UOConcurrentManagerExecutor implements ConcurrentManagerExecutor {
     @Override
     public void start() {
         for (Task task : tasks) {
+            final var uptime = new AtomicLong(INITIAL_DELAY);
             executorService.scheduleWithFixedDelay(()->{
                 try {
-                    task.manager.execute();
+                    task.manager.execute(uptime.getAndAdd(task.delay));
                 } catch (RuntimeException exception) {
-                    LOGGER.error("Error executing tasl {}", task, exception);
+                    LOGGER.error("Error executing task {}", task, exception);
                 }
-            }, 500, task.delay, TimeUnit.MILLISECONDS);
+            }, INITIAL_DELAY, task.delay, TimeUnit.MILLISECONDS);
         }
-
     }
 
     public static class Task {

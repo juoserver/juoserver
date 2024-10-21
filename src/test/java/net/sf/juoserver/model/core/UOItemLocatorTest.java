@@ -1,5 +1,6 @@
 package net.sf.juoserver.model.core;
 
+import net.sf.juoserver.api.Configuration;
 import net.sf.juoserver.api.Direction;
 import net.sf.juoserver.api.Item;
 import net.sf.juoserver.api.Point2D;
@@ -8,6 +9,9 @@ import net.sf.juoserver.model.UOItem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -21,17 +25,20 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 class UOItemLocatorTest {
 
     private AtomicInteger serialSequence;
     private UOItemLocator itemLocator;
     private Map<Integer, Item> itemsBySerialId;
+    @Mock
+    private Configuration configuration;
 
     @BeforeEach
     public void setUp() {
         serialSequence = new AtomicInteger(1);
         itemsBySerialId = new HashMap<>();
-        itemLocator = new UOItemLocator(itemsBySerialId);
+        itemLocator = new UOItemLocator(itemsBySerialId, configuration);
     }
 
     @DisplayName("Should find items on east when initialized")

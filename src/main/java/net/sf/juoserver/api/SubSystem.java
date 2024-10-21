@@ -2,6 +2,6 @@ package net.sf.juoserver.api;
 
 public interface SubSystem {
 
-    void execute();
+    void execute(long uptime);
 
 }

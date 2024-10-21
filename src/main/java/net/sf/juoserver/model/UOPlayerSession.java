@@ -216,8 +216,8 @@ public class UOPlayerSession implements PlayerSession {
 	}
 
 	@Override
-	public void attack(Mobile attacked) {
-		network.notifyAttacked(mobile, attacked);
+	public void attack(Mobile opponent) {
+		network.notifyAttacked(mobile, opponent);
 	}
 	
 	@Override
@@ -250,27 +250,31 @@ public class UOPlayerSession implements PlayerSession {
 	}
 
 	@Override
-	public void applyDamage(int damage) {
-		mobile.setCurrentHitPoints( mobile.getCurrentHitPoints() - damage );
-		serverResponseListener.mobileDamaged(mobile, damage);
+	public void applyDamage(int damage, Mobile opponent) {
+		mobile.setCurrentHitPoints( Math.max(mobile.getCurrentHitPoints() - damage, 0) );
+		if (mobile.getCurrentHitPoints() == 0) {
+			mobile.kill();
 
-		network.notifyOtherDamaged(mobile, damage);
+			// Clear combat
+			attacking = null;
+			attackingMe.clear();
+
+			serverResponseListener.mobiledKilled(mobile);
+			network.notifyOtherKilled(mobile);
+		} else {
+			serverResponseListener.mobileDamaged(mobile, damage, opponent);
+			network.notifyOtherDamaged(mobile, damage, opponent);
+		}
 	}
 
 	@Override
-	public void onOtherDamaged(Mobile mobile, int damage) {
-		serverResponseListener.mobileDamaged(mobile, damage);
+	public void onOtherDamaged(Mobile mobile, int damage, Mobile opponent) {
+		serverResponseListener.mobileDamaged(mobile, damage, opponent);
 	}
 
 	@Override
-	public void fightOccurring(Mobile opponent) {
-		// TODO calculate stamina consumption
-		network.notifyFightOccurring(mobile, opponent);
-	}
-
-	@Override
-	public void onFightOccurring(Mobile opponent1, Mobile opponent2) {
-		serverResponseListener.fightOccurring(opponent1, opponent2);
+	public void onOtherKilled(Mobile mobile) {
+		serverResponseListener.mobiledKilled(mobile);
 	}
 
 	@Override

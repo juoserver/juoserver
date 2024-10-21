@@ -60,7 +60,7 @@ public final class UOCore implements Core {
 		this.configuration = configuration;
 		this.fileReadersFactory = fileReadersFactory;
 		this.dataManager = dataManager;
-		this.itemLocator = new UOItemLocator(itemsBySerialId);
+		this.itemLocator = new UOItemLocator(itemsBySerialId, configuration);
 	}
 
 	@Override

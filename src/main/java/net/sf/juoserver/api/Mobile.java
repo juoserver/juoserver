@@ -6,6 +6,8 @@ import java.util.Set;
 public interface Mobile extends JUoEntity, Point3D {
 	void setZ(int z);
 
+	Mobile location(int x, int y, int z);
+
 	Direction getDirection();
 
 	void setDirection(Direction direction);
@@ -82,4 +84,13 @@ public interface Mobile extends JUoEntity, Point3D {
 	void setCharacterStatus(CharacterStatus characterStatus);
 
 	int getWeaponBaseDamage();
+
+	int distanceOf(Mobile mobile);
+
+	void kill();
+
+	void revive();
+
+	boolean isDeath();
+
 }
