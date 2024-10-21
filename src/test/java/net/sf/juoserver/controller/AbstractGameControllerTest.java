@@ -30,6 +30,7 @@ public class AbstractGameControllerTest {
 	protected final InterClientNetwork intercom = context.mock(InterClientNetwork.class);
 	protected final ProtocolIoPort clientHandler = context.mock(ProtocolIoPort.class);
 	protected final CommandManager commandManager = context.mock(CommandManager.class);
+
 	protected final GameController gameController = 
 			new GameController("client", clientHandler, core, null, new CircularClientMovementTracker(),  loginManager, intercom, new ItemManager(), new CommandManagerImpl(null, null), new CombatSystemImpl(new PhysicalDamageCalculatorImpl(null)), null);
 	

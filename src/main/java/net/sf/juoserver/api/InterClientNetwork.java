@@ -13,7 +13,9 @@ public interface InterClientNetwork {
 	void notifyAttacked(Mobile attacker, Mobile attacked);
 	void notifyAttackFinished(Mobile attacker, Mobile attacked);
 	void notifyOtherDamaged(Mobile mobile, int damage, Mobile opponent);
+	void notifyGroundItemsCreated(Collection<Item> items);
+	void notifyOtherKilled(Mobile mobile);
 	void removeIntercomListener(IntercomListener listener);
 	void addIntercomListener(IntercomListener listener);
-	void notifyGroundItemsCreated(Collection<Item> items);
+
 }

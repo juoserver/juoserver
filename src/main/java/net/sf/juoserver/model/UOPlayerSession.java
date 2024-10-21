@@ -254,7 +254,13 @@ public class UOPlayerSession implements PlayerSession {
 		mobile.setCurrentHitPoints( Math.max(mobile.getCurrentHitPoints() - damage, 0) );
 		if (mobile.getCurrentHitPoints() == 0) {
 			mobile.kill();
+
+			// Clear combat
+			attacking = null;
+			attackingMe.clear();
+
 			serverResponseListener.mobiledKilled(mobile);
+			network.notifyOtherKilled(mobile);
 		} else {
 			serverResponseListener.mobileDamaged(mobile, damage, opponent);
 			network.notifyOtherDamaged(mobile, damage, opponent);
@@ -264,6 +270,11 @@ public class UOPlayerSession implements PlayerSession {
 	@Override
 	public void onOtherDamaged(Mobile mobile, int damage, Mobile opponent) {
 		serverResponseListener.mobileDamaged(mobile, damage, opponent);
+	}
+
+	@Override
+	public void onOtherKilled(Mobile mobile) {
+		serverResponseListener.mobiledKilled(mobile);
 	}
 
 	@Override

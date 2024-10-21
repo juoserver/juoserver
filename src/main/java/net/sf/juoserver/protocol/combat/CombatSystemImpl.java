@@ -37,6 +37,17 @@ public class CombatSystemImpl implements CombatSystem {
     }
 
     @Override
+    public void mobileKilled(Mobile mobile) {
+        var iterator = combatSessions.keySet().iterator();
+        while (iterator.hasNext()) {
+            var pair = iterator.next();
+            if (pair.attacker().equals(mobile) || pair.attacked().equals(mobile)) {
+                combatSessions.remove(pair);
+            }
+        }
+    }
+
+    @Override
     public void execute(long uptime) {
         combatSessions.values().forEach(entry->{
             var combatSession = entry.combatSession();
@@ -60,10 +71,6 @@ public class CombatSystemImpl implements CombatSystem {
                 }
             }
         });
-    }
-
-    protected Map<KeyPair, SessionGroup> getCombatSessions() {
-        return combatSessions;
     }
 
 }

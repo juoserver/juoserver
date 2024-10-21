@@ -371,6 +371,7 @@ public class UOMobile implements Mobile {
 		this.currentMana = 0;
 		this.currentStamina = 0;
 		this.death = true;
+		this.characterStatus = CharacterStatus.Normal;
 		this.modelId = DEATH_MODEL_ID;
 	}
 

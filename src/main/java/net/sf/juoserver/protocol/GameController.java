@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Game controller. A different instance of this class will be associated
@@ -457,11 +456,18 @@ public class GameController extends AbstractProtocolController implements ModelO
 	@Override
 	public void mobiledKilled(Mobile mobile) {
 		try {
-			clientHandler.sendToClient(new DeathAnimation(mobile, 0x1FFD));
+			if (session.getMobile().equals(mobile)) {
+				combatSystem.mobileKilled(mobile);
+			}
+
+			clientHandler.sendToClient(new DeathAnimation(mobile, 0x1FFD),
+					new CharacterDraw(mobile),
+					new StatusBarInfo(mobile),
+					new AttackSucceed(0));
+
 		} catch (IOException exception) {
 			throw new IntercomException(exception);
 		}
-
 	}
 
 	@Override

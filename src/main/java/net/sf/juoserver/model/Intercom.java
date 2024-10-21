@@ -5,6 +5,7 @@ import net.sf.juoserver.api.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 
 /**
  * This class acts as a <b>mediator</b> between clients, providing the
@@ -167,6 +168,17 @@ public final class Intercom implements InterClientNetwork {
 	public void notifyGroundItemsCreated(Collection<Item> items) {
 		for (IntercomListener intercomListener : listeners) {
 			intercomListener.onGroundItemCreated(items);
+		}
+	}
+
+	@Override
+	public void notifyOtherKilled(Mobile mobile) {
+		iterateListeners(listener->listener.onOtherKilled(mobile));
+	}
+
+	private void iterateListeners(Consumer<IntercomListener> consumer) {
+		for (IntercomListener intercomListener : listeners) {
+			consumer.accept(intercomListener);
 		}
 	}
 }
