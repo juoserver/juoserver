@@ -11,16 +11,18 @@ import java.util.Map;
 
 public class ContainerItems extends AbstractMessage {
 	private static final long serialVersionUID = 1L;
-	private static final int CODE = 0x3C;
-	private int containerSerialId;
-	private List<? extends Item> items;
-	private Map<Item, Point2D> itemsPositions;
+	public static final int CODE = 0x3C;
+	private final int containerSerialId;
+	private final List<? extends Item> items;
+	private final Map<Item, Point2D> itemsPositions;
+	private final int backpackGridIndex;
 
 	public ContainerItems(Container cont) {
 		super(CODE, getLength(cont));
 		containerSerialId = cont.getSerialId();
 		items = new ArrayList<Item>(cont.getItems());
 		itemsPositions = cont.getItemsPositions();
+		backpackGridIndex = 0;
 	}
 
 	private static int getLength(Container cont) {
@@ -39,7 +41,7 @@ public class ContainerItems extends AbstractMessage {
 			bb.putShort((short) 1); //TODO: amount
 			bb.putShort((short) itemsPositions.get(item).getX());
 			bb.putShort((short) itemsPositions.get(item).getY());
-			bb.put((byte)0);
+			bb.put((byte) backpackGridIndex);
 			bb.putInt(containerSerialId);
 			bb.putShort((short) item.getHue());
 		}
