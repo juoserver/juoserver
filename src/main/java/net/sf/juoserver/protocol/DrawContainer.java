@@ -6,12 +6,12 @@ import java.nio.ByteBuffer;
 
 public class DrawContainer extends AbstractMessage {
 	private static final long serialVersionUID = 1L;
-	private static final int CODE = 0x24;
+	public static final int CODE = 0x24;
 	private int containerSerialId;
 	private int containerGumpId;
 
 	public DrawContainer(Container cont) {
-		super(CODE, 7);
+		super(CODE, 9);
 		this.containerSerialId = cont.getSerialId();
 		this.containerGumpId = cont.getGumpId();
 	}
@@ -21,6 +21,7 @@ public class DrawContainer extends AbstractMessage {
 		ByteBuffer bb = super.encode();
 		bb.putInt(containerSerialId);
 		bb.putShort((short) containerGumpId);
+		bb.putShort((short)0x7D);
 		return bb;
 	}
 

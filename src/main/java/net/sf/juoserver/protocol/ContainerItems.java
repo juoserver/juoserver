@@ -24,7 +24,7 @@ public class ContainerItems extends AbstractMessage {
 	}
 
 	private static int getLength(Container cont) {
-		return 5 + cont.getItems().size() * (4 + 2 + 1 + 2 + 2 + 2 + 4 + 2);
+		return 5 + cont.getItems().size() * (4 + 2 + 1 + 2 + 2 + 2 + 1 + 4 + 2);
 	}
 	
 	@Override
@@ -39,7 +39,7 @@ public class ContainerItems extends AbstractMessage {
 			bb.putShort((short) 1); //TODO: amount
 			bb.putShort((short) itemsPositions.get(item).getX());
 			bb.putShort((short) itemsPositions.get(item).getY());
-			
+			bb.put((byte)0);
 			bb.putInt(containerSerialId);
 			bb.putShort((short) item.getHue());
 		}
@@ -79,5 +79,13 @@ public class ContainerItems extends AbstractMessage {
 		} else if (!itemsPositions.equals(other.itemsPositions))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "ContainerItems{" +
+				"containerSerialId=" + containerSerialId +
+				", items=" + items +
+				'}';
 	}
 }

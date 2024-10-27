@@ -1,10 +1,12 @@
 package net.sf.juoserver;
 
 import net.sf.juoserver.api.*;
+import net.sf.juoserver.model.UOContainer;
 import net.sf.juoserver.model.UOItem;
 import net.sf.juoserver.model.UOMobile;
 import net.sf.juoserver.protocol.AbstractMessage;
 
+import java.util.Collections;
 import java.util.Objects;
 
 public class TestingFactory {
@@ -19,6 +21,10 @@ public class TestingFactory {
 
 	public static Item createTestItem(int serialId, int modelId) {
 		return new UOItem(serialId, modelId);
+	}
+
+	public static Container createTestContainer(int serialId, int modelId) {
+		return new UOContainer(serialId, modelId, 0, "container", 1, Collections.emptyList(), Collections.emptyMap());
 	}
 
 	public static Message createTestMessage(int serialId, int code) {
