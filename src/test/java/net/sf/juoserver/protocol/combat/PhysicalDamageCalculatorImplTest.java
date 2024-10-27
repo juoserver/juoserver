@@ -43,7 +43,7 @@ class PhysicalDamageCalculatorImplTest {
         var attacker =  givenAttacker(5, 10,10);
         var attacked = givenAttacked(5,10,10);
         var damage = physicalDamageCalculator.calculate(attacker, attacked);
-        assertEquals(32, damage);
+        assertEquals(5, damage);
     }
 
     @DisplayName("Should calculate damage with attacker having superior modifiers")

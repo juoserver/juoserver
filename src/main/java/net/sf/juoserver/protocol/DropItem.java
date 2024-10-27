@@ -29,6 +29,8 @@ public class DropItem extends AbstractMessage {
 	 * Z coordinate where the item is being dropped to.
 	 */
 	private int targetZ;
+
+	private int backpackGridIndex;
 	
 	/**
 	 * Container where the item it being dropped to.
@@ -41,7 +43,7 @@ public class DropItem extends AbstractMessage {
 	private int targetContainerSerial;
 	
 	private DropItem() {
-		super(CODE, 14);
+		super(CODE, 15);
 	}
 	
 	public DropItem(int itemSerial, int targetX, int targetY, int targetZ,
@@ -61,6 +63,7 @@ public class DropItem extends AbstractMessage {
 		targetX = bb.getShort();
 		targetY = bb.getShort();
 		targetZ = bb.get();
+		backpackGridIndex = bb.get();
 		targetContainerSerial = bb.getInt();
 	}
 
@@ -87,7 +90,11 @@ public class DropItem extends AbstractMessage {
 	public boolean isDroppedOnTheGround() {
 		return targetContainerSerial == 0xFFFFFFFF;
 	}
-	
+
+	public int getBackpackGridIndex() {
+		return backpackGridIndex;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
