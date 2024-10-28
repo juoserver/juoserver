@@ -20,10 +20,10 @@ public class InMemoryDataManager implements DataManager {
 		return Arrays.asList(
 				dressUp(new UOMobile(FIRST_SERIAL_ID, "Loller", 90,
 				100, false, StatusFlag.UOML, SexRace.MaleHuman, 30, 42, 63, 7,
-				12, 16, 22, 1000, 5, 5, 50, RaceFlag.Human)),
+				12, 16, 22, 1000, 5, 5, 50, RaceFlag.Human, new PointInSpace(6100, 1586,5))),
 				dressUp(new UOMobile(PLAYER2_SERIAL,
 				"Asder", 80, 100, false, StatusFlag.UOML, SexRace.MaleHuman, 10,
-				10, 10, 10, 10, 10, 10, 1000, 5, 5, 50, RaceFlag.Human)));
+				10, 10, 10, 10, 10, 10, 1000, 5, 5, 50, RaceFlag.Human, new PointInSpace(6100, 1586,5))));
 	}
 
 	private Mobile dressUp(Mobile mobile) {

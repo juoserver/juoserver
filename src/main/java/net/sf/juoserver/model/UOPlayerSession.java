@@ -26,6 +26,10 @@ public class UOPlayerSession implements PlayerSession {
 		this.network = network;
 	}
 
+	public Set<Mobile> getMobilesInRange() {
+		return mobilesInRange;
+	}
+
 	@Override
 	public List<String> getCharacterNames() {
 		List<String> names = new ArrayList<>();
@@ -67,7 +71,6 @@ public class UOPlayerSession implements PlayerSession {
 			network.notifyGroundItemsCreated(items);
 		}
 
-
 		MapTile tile = core.getTile(mobile.getX(), mobile.getY());
 		mobile.setZ( tile.getZ() );
 		network.notifyOtherMobileMovement(mobile);
@@ -79,19 +82,26 @@ public class UOPlayerSession implements PlayerSession {
 
 	@Override
 	public void onOtherMobileMovement(Mobile moving) {
-		if (moving.equals( mobile )) {
-			// TODO: ignore also if mobile has not LOS towards otherMobile
-			return; // Ignore self-notifying messages
+		int los = 24;
+
+		int distance = (int) Math.hypot(mobile.getX() - moving.getX(), mobile.getY() - moving.getY());
+
+		boolean outOfSight = distance > los;
+
+		if (moving.equals( mobile ) || (outOfSight && !mobilesInRange.contains(moving))) {
+			return;
 		}
-		
+
 		// If the moving mobile is within range, draw it
 		if (!mobilesInRange.contains( moving )) {
-			// TODO: do not enter here without LOS or if they're too far?
-			// TODO: remove mobiles from range too
 			onEnteredRange(moving, mobile);
-			
 			// Instruct the moving mobile's client to do the same
 			network.notifyEnteredRange(mobile, moving);
+		} else if (outOfSight) {
+			// Moving just got out of mobile sight
+			onOutOfRange(moving, mobile);
+			// notify the moving mobile
+			network.notifyOutOfRange(mobile, moving);
 		}
 		
 		// Always send an update
@@ -106,6 +116,15 @@ public class UOPlayerSession implements PlayerSession {
 		
 		mobilesInRange.add( entered );
 		serverResponseListener.mobileApproached(entered);
+	}
+
+	@Override
+	public void onOutOfRange(Mobile exited, JUoEntity target) {
+		if (!target.equals(mobile)) {
+			return;
+		}
+		mobilesInRange.remove(exited);
+		serverResponseListener.mobileGotAway(exited);
 	}
 
 	@Override
