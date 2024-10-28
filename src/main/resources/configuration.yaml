@@ -1,6 +1,6 @@
 
 packet:
-  logging: true
+  logging: false
 stats:
   maxHitPoints: 100
   maxStamina: 100

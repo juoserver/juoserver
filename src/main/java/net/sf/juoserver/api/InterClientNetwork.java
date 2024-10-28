@@ -5,6 +5,7 @@ import java.util.Collection;
 public interface InterClientNetwork {
 	void notifyOtherMobileMovement(Mobile movingMobile);
 	void notifyEnteredRange(Mobile enteredMobile, JUoEntity targetMobile);
+	void notifyOutOfRange(Mobile leavedMobile, JUoEntity targetMobile);
 	void notifyMobileSpeech(Mobile speaker, MessageType type, int hue, int font, String language, String text);
 	void notifyChangedClothes(Mobile wearingMobile);
 	void notifyItemDropped(Mobile droppingMobile, Item item, int targetSerialId);

@@ -193,6 +193,15 @@ public class GameController extends AbstractProtocolController implements ModelO
 		}
 	}
 
+	@Override
+	public void mobileGotAway(Mobile mobile) {
+		try {
+			clientHandler.sendToClient(new DeleteItem(mobile.getSerialId()));
+		} catch (IOException e) {
+			throw new ProtocolException(e);
+		}
+	}
+
 	public void handle(UnicodeSpeechRequest request) {
 		if (commandManager.isCommand(request)) {
 			commandManager.execute(request);

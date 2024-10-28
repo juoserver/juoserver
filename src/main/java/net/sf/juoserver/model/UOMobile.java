@@ -45,9 +45,9 @@ public class UOMobile implements Mobile {
 	
 	private Map<Layer, Item> items;
 	private int hue = 0x83EA;
-	private int x = 6100;
-	private int y = 1586;
-	private int z = 5;
+	private int x;
+	private int y;
+	private int z;
 	private Direction direction = Direction.Southeast;
 	private boolean running;
 	private Notoriety notoriety = Notoriety.Innocent;
@@ -58,7 +58,7 @@ public class UOMobile implements Mobile {
 			SexRace sexRace, int strength, int dexterity, int intelligence,
 			int currentStamina, int maxStamina, int currentMana, int maxMana,
 			int goldInPack, int armorRating, int weight, int maxWeight,
-			RaceFlag raceFlag) {
+			RaceFlag raceFlag, Point3D position) {
 		super();
 		this.serialId = playerSerial;
 		this.name = playerName;
@@ -79,6 +79,9 @@ public class UOMobile implements Mobile {
 		this.weight = weight;
 		this.maxWeight = maxWeight;
 		this.raceFlag = raceFlag;
+		this.x = position.getX();
+		this.y = position.getY();
+		this.z = position.getZ();
 		
 		items = new HashMap<Layer, Item>();
 	}

@@ -61,6 +61,13 @@ public final class Intercom implements InterClientNetwork {
 		}
 	}
 
+	@Override
+	public void notifyOutOfRange(Mobile leavedMobile, JUoEntity targetMobile) {
+		for (IntercomListener listener : listeners) {
+			listener.onOutOfRange(leavedMobile, targetMobile);
+		}
+	}
+
 	/**
 	 * Notifies listeners about a mobile's speech.
 	 * 

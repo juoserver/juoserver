@@ -14,6 +14,7 @@ import java.util.Collection;
 public interface ModelOutputPort {
 	void mobileChanged(Mobile mobile);
 	void mobileApproached(Mobile entered);
+	void mobileGotAway(Mobile mobile);
 	void mobileSpoke(Mobile speaker, MessageType type, int hue, int font, String language, String text);
 	void containerChangedContents(Container updatedContainer);
 	void itemDragged(Item item, Mobile droppingMobile, int targetSerialId);

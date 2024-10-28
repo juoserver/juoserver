@@ -11,6 +11,7 @@ import java.util.Collection;
 public interface IntercomListener {
 	void onOtherMobileMovement(Mobile movingMobile);
 	void onEnteredRange(Mobile entered, JUoEntity target);
+	void onOutOfRange(Mobile exited, JUoEntity target);
 	void onOtherMobileSpeech(Mobile speaker, MessageType type, int hue, int font, String language, String text);
 	void onChangedClothes(Mobile wearingMobile);
 	void onDroppedCloth(Mobile mobile, Item droppedCloth);
