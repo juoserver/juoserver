@@ -291,6 +291,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 		if (mobile != null) {
 			return new ClilocMessage(mobile);
 		} else {
+			System.out.println("id "+lookRequest.getSerialId());
 			Item item = core.findItemByID( lookRequest.getSerialId() );
 			return new SendSpeech(item);
 			// TODO: handle items' stacks too

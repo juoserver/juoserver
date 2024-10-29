@@ -1,6 +1,7 @@
 package net.sf.juoserver.api;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface InterClientNetwork {
 	void notifyOtherMobileMovement(Mobile movingMobile);

@@ -81,4 +81,8 @@ public interface Core {
 	Collection<Item> findItemsByDirection(Point2D myLocation, Direction direction, int distanceFromMe);
 
 	Collection<Item> findItemsInRegion(Point2D location, int distance);
+
+	Mobile createNpc(Point3D location);
+
+	Collection<Mobile> findMobilesInRange(Point2D location, int distance);
 }

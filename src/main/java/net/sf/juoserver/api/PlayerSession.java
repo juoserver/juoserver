@@ -16,4 +16,5 @@ public interface PlayerSession extends IntercomListener {
 	void attack(Mobile opponent);
 	void applyDamage(int damage, Mobile opponent);
 	void showGroundItems(Collection<Item> items);
+	Collection<Mobile> getMobilesInRange();
 }

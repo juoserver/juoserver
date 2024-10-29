@@ -2,6 +2,9 @@ package net.sf.juoserver.model.core;
 
 import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.UOItem;
+import net.sf.juoserver.model.UOMobile;
+import net.sf.juoserver.model.UONpc;
+import net.sf.juoserver.protocol.MobileUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -219,6 +222,21 @@ public final class UOCore implements Core {
 	@Override
 	public Collection<Item> findItemsInRegion(Point2D location, int distance) {
 		return itemLocator.findItemsInRegion(location, distance)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public Mobile createNpc(Point3D location) {
+		var npc = new UONpc(itemSerial.getAndIncrement(), "Balrog", location);
+		mobilesBySerialId.put(npc.getSerialId(), npc);
+		return npc;
+	}
+
+	@Override
+	public Collection<Mobile> findMobilesInRange(Point2D location, int distance) {
+		return mobilesBySerialId.values()
+				.stream()
+				.filter(mobile-> MobileUtils.getDistance(location, mobile) < distance)
 				.collect(Collectors.toList());
 	}
 }

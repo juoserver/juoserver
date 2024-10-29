@@ -5,415 +5,432 @@ import net.sf.juoserver.api.*;
 import java.util.*;
 
 public class UOMobile implements Mobile {
-	public static final int DEATH_MODEL_ID = 403;
-	public static final int ALIVE_MODEL_ID = 0x190;
-	private int serialId;
-	/**
-	 * The body type.
-	 */
-	private int modelId = ALIVE_MODEL_ID; // 0x190 human - 0x3CA ghost
-	private String name;
-	private int currentHitPoints;
-	private int maxHitPoints;
-	private boolean nameChangeFlag;
-	private StatusFlag statusFlag;
-	private SexRace sexRace;
-	private int strength;
-	private int dexterity;
-	private int intelligence;
-	private int currentStamina;
-	private int maxStamina;
-	private int currentMana;
-	private int maxMana;
-	private int goldInPack;
-	private int armorRating;
-	private int weight;
-	
-	// statusFlag >= StatusFlag.UOML
-	private int maxWeight;
-	private RaceFlag raceFlag;
-	
-	private String title = "The Great";
+    public static final int DEATH_MODEL_ID = 403;
+    public static final int ALIVE_MODEL_ID = 0x190;
+    private int serialId;
+    /**
+     * The body type.
+     */
+    private int modelId = ALIVE_MODEL_ID; // 0x190 human - 0x3CA ghost
+    private String name;
+    private int currentHitPoints;
+    private int maxHitPoints;
+    private boolean nameChangeFlag;
+    private StatusFlag statusFlag;
+    private SexRace sexRace;
+    private int strength;
+    private int dexterity;
+    private int intelligence;
+    private int currentStamina;
+    private int maxStamina;
+    private int currentMana;
+    private int maxMana;
+    private int goldInPack;
+    private int armorRating;
+    private int weight;
 
-	private boolean death;
-	
-	private Set<Skill> skills = new HashSet<Skill>( Arrays.asList(new Skill(Skills.Alchemy, 85, 80, 100, SkillLockFlag.Up),
-					new Skill(Skills.Magery, 95, 90, 100, SkillLockFlag.Up),
-					new Skill(Skills.Inscription, 95, 90, 100, SkillLockFlag.Up),
-					new Skill(Skills.EvaluateIntelligence, 100, 100, 100, SkillLockFlag.Down),
-					new Skill(Skills.ItemIdentify, 75, 70, 100, SkillLockFlag.Locked)) );
-	
-	private Map<Layer, Item> items;
-	private int hue = 0x83EA;
-	private int x;
-	private int y;
-	private int z;
-	private Direction direction = Direction.Southeast;
-	private boolean running;
-	private Notoriety notoriety = Notoriety.Innocent;
-	private CharacterStatus characterStatus = CharacterStatus.Normal;
-	
-	public UOMobile(int playerSerial, String playerName, int currentHitPoints,
-			int maxHitPoints, boolean nameChangeFlag, StatusFlag statusFlag,
-			SexRace sexRace, int strength, int dexterity, int intelligence,
-			int currentStamina, int maxStamina, int currentMana, int maxMana,
-			int goldInPack, int armorRating, int weight, int maxWeight,
-			RaceFlag raceFlag, Point3D position) {
-		super();
-		this.serialId = playerSerial;
-		this.name = playerName;
-		this.currentHitPoints = currentHitPoints;
-		this.maxHitPoints = maxHitPoints;
-		this.nameChangeFlag = nameChangeFlag;
-		this.statusFlag = statusFlag;
-		this.sexRace = sexRace;
-		this.strength = strength;
-		this.dexterity = dexterity;
-		this.intelligence = intelligence;
-		this.currentStamina = currentStamina;
-		this.maxStamina = maxStamina;
-		this.currentMana = currentMana;
-		this.maxMana = maxMana;
-		this.goldInPack = goldInPack;
-		this.armorRating = armorRating;
-		this.weight = weight;
-		this.maxWeight = maxWeight;
-		this.raceFlag = raceFlag;
-		this.x = position.getX();
-		this.y = position.getY();
-		this.z = position.getZ();
-		
-		items = new HashMap<Layer, Item>();
-	}
+    // statusFlag >= StatusFlag.UOML
+    private int maxWeight;
+    private RaceFlag raceFlag;
 
-	public UOMobile() {
-		this.items = new HashMap<>();
-	}
+    private String title = "The Great";
 
-	@Override
-	public int getModelId() {
-		return modelId;
-	}
-	
-	@Override
-	public int getSerialId() {
-		return serialId;
-	}
-	
-	@Override
-	public int getX() {
-		return x;
-	}
+    private boolean death;
 
-	@Override
-	public int getY() {
-		return y;
-	}
-	
-	@Override
-	public int getZ() {
-		return z;
-	}
+    private Set<Skill> skills = new HashSet<Skill>(Arrays.asList(new Skill(Skills.Alchemy, 85, 80, 100, SkillLockFlag.Up),
+            new Skill(Skills.Magery, 95, 90, 100, SkillLockFlag.Up),
+            new Skill(Skills.Inscription, 95, 90, 100, SkillLockFlag.Up),
+            new Skill(Skills.EvaluateIntelligence, 100, 100, 100, SkillLockFlag.Down),
+            new Skill(Skills.ItemIdentify, 75, 70, 100, SkillLockFlag.Locked)));
 
-	@Override
-	public void setZ(int z) {
-		this.z = z;
-	}
+    private Map<Layer, Item> items;
+    private int hue = 0x83EA;
+    private int x;
+    private int y;
+    private int z;
+    private Direction direction = Direction.Southeast;
+    private boolean running;
+    private Notoriety notoriety = Notoriety.Innocent;
+    private CharacterStatus characterStatus = CharacterStatus.Normal;
 
-	@Override
-	public Direction getDirection() {
-		return direction;
-	}
+    public UOMobile(int playerSerial, String playerName, int currentHitPoints,
+                    int maxHitPoints, boolean nameChangeFlag, StatusFlag statusFlag,
+                    SexRace sexRace, int strength, int dexterity, int intelligence,
+                    int currentStamina, int maxStamina, int currentMana, int maxMana,
+                    int goldInPack, int armorRating, int weight, int maxWeight,
+                    RaceFlag raceFlag, Point3D position) {
+        super();
+        this.serialId = playerSerial;
+        this.name = playerName;
+        this.currentHitPoints = currentHitPoints;
+        this.maxHitPoints = maxHitPoints;
+        this.nameChangeFlag = nameChangeFlag;
+        this.statusFlag = statusFlag;
+        this.sexRace = sexRace;
+        this.strength = strength;
+        this.dexterity = dexterity;
+        this.intelligence = intelligence;
+        this.currentStamina = currentStamina;
+        this.maxStamina = maxStamina;
+        this.currentMana = currentMana;
+        this.maxMana = maxMana;
+        this.goldInPack = goldInPack;
+        this.armorRating = armorRating;
+        this.weight = weight;
+        this.maxWeight = maxWeight;
+        this.raceFlag = raceFlag;
+        this.x = position.getX();
+        this.y = position.getY();
+        this.z = position.getZ();
 
-	@Override
-	public void setDirection(Direction direction) {
-		this.direction = direction;
-	}
-	
-	@Override
-	public boolean isRunning() {
-		return running;
-	}
+        items = new HashMap<Layer, Item>();
+    }
 
-	@Override
-	public void setRunning(boolean running) {
-		this.running = running;
-	}
+    public UOMobile(int playerSerial, int modelId, String playerName, int currentHitPoints,
+                    int maxHitPoints, boolean nameChangeFlag, StatusFlag statusFlag,
+                    SexRace sexRace, int strength, int dexterity, int intelligence,
+                    int currentStamina, int maxStamina, int currentMana, int maxMana,
+                    int goldInPack, int armorRating, int weight, int maxWeight,
+                    RaceFlag raceFlag, Point3D position, Notoriety notoriety) {
+        this(playerSerial, playerName, currentHitPoints,
+                maxHitPoints, nameChangeFlag, statusFlag,
+                sexRace, strength, dexterity, intelligence,
+                currentStamina, maxStamina, currentMana, maxMana,
+                goldInPack, armorRating, weight, maxWeight,
+                raceFlag, position);
+        this.modelId = modelId;
+        this.notoriety = notoriety;
+    }
 
-	@Override
-	public String getName() {
-		return name;
-	}
+    public UOMobile() {
+        this.items = new HashMap<>();
+    }
 
-	@Override
-	public int getCurrentHitPoints() {
-		return currentHitPoints;
-	}
+    @Override
+    public int getModelId() {
+        return modelId;
+    }
 
-	@Override
-	public void setCurrentHitPoints(int currentHitPoints) {
-		this.currentHitPoints = currentHitPoints;
-	}
+    @Override
+    public int getSerialId() {
+        return serialId;
+    }
 
-	@Override
-	public int getMaxHitPoints() {
-		return maxHitPoints;
-	}
+    @Override
+    public int getX() {
+        return x;
+    }
 
-	@Override
-	public boolean isNameChangeFlag() {
-		return nameChangeFlag;
-	}
+    @Override
+    public int getY() {
+        return y;
+    }
 
-	@Override
-	public StatusFlag getStatusFlag() {
-		return statusFlag;
-	}
+    @Override
+    public int getZ() {
+        return z;
+    }
 
-	@Override
-	public SexRace getSexRace() {
-		return sexRace;
-	}
+    @Override
+    public void setZ(int z) {
+        this.z = z;
+    }
 
-	@Override
-	public int getStrength() {
-		return strength;
-	}
+    @Override
+    public Direction getDirection() {
+        return direction;
+    }
 
-	@Override
-	public int getDexterity() {
-		return dexterity;
-	}
+    @Override
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
 
-	@Override
-	public int getIntelligence() {
-		return intelligence;
-	}
+    @Override
+    public boolean isRunning() {
+        return running;
+    }
 
-	@Override
-	public int getCurrentStamina() {
-		return currentStamina;
-	}
+    @Override
+    public void setRunning(boolean running) {
+        this.running = running;
+    }
 
-	@Override
-	public int getMaxStamina() {
-		return maxStamina;
-	}
+    @Override
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	public int getCurrentMana() {
-		return currentMana;
-	}
+    @Override
+    public int getCurrentHitPoints() {
+        return currentHitPoints;
+    }
 
-	@Override
-	public int getMaxMana() {
-		return maxMana;
-	}
+    @Override
+    public void setCurrentHitPoints(int currentHitPoints) {
+        this.currentHitPoints = currentHitPoints;
+    }
 
-	@Override
-	public int getGoldInPack() {
-		return goldInPack;
-	}
+    @Override
+    public int getMaxHitPoints() {
+        return maxHitPoints;
+    }
 
-	@Override
-	public int getArmorRating() {
-		return armorRating;
-	}
+    @Override
+    public boolean isNameChangeFlag() {
+        return nameChangeFlag;
+    }
 
-	@Override
-	public int getWeight() {
-		return weight;
-	}
+    @Override
+    public StatusFlag getStatusFlag() {
+        return statusFlag;
+    }
 
-	@Override
-	public int getMaxWeight() {
-		return maxWeight;
-	}
+    @Override
+    public SexRace getSexRace() {
+        return sexRace;
+    }
 
-	@Override
-	public RaceFlag getRaceFlag() {
-		return raceFlag;
-	}
+    @Override
+    public int getStrength() {
+        return strength;
+    }
 
-	@Override
-	public String getTitle() {
-		return title;
-	}
+    @Override
+    public int getDexterity() {
+        return dexterity;
+    }
 
-	@Override
-	public Set<Skill> getSkills() {
-		return skills;
-	}
+    @Override
+    public int getIntelligence() {
+        return intelligence;
+    }
 
-	@Override
-	public Map<Layer, Item> getItems() {
-		return items;
-	}
+    @Override
+    public int getCurrentStamina() {
+        return currentStamina;
+    }
 
-	@Override
-	public int getHue() {
-		return hue;
-	}
+    @Override
+    public int getMaxStamina() {
+        return maxStamina;
+    }
 
-	@Override
-	public Notoriety getNotoriety() {
-		return notoriety;
-	}
+    @Override
+    public int getCurrentMana() {
+        return currentMana;
+    }
 
-	@Override
-	public CharacterStatus getCharacterStatus() {
-		return characterStatus;
-	}
+    @Override
+    public int getMaxMana() {
+        return maxMana;
+    }
 
-	/**
-	 * Updates this mobile's position according to their {@link #direction}.
-	 */
-	@Override
-	public void moveForward() {
-		switch (direction) {
-		case North:
-			--y;
-			break;
-		case Northeast:
-			++x;
-			--y;
-			break;
-		case East:
-			++x;
-			break;
-		case Southeast:
-			++x;
-			++y;
-			break;
-		case South:
-			++y;
-			break;
-		case Southwest:
-			--x;
-			++y;
-			break;
-		case West:
-			--x;
-			break;
-		case Northwest:
-			--x;
-			--y;
-			break;
-		}
-	}
+    @Override
+    public int getGoldInPack() {
+        return goldInPack;
+    }
 
-	@Override
-	public String getPrefixNameSuffix() {
-		return " \t" + getName() + "\t ";
-	}
-	
-	@Override
-	public byte getDirectionWithRunningInfo() {
-		return (byte) (direction.getCode() | (isRunning()? 0x80 : 0));
-	}
+    @Override
+    public int getArmorRating() {
+        return armorRating;
+    }
 
-	@Override
-	public void setItemOnLayer(Layer layer, Item item) {
-		items.put(layer, item);
-	}
-	
-	@Override
-	public Item getItemByLayer(Layer layer) {
-		return items.get(layer);
-	}
+    @Override
+    public int getWeight() {
+        return weight;
+    }
 
-	@Override
-	public boolean removeItem(Item item) {
-		return items.remove(getLayer(item)) != null;
-	}
+    @Override
+    public int getMaxWeight() {
+        return maxWeight;
+    }
 
-	@Override
-	public Layer getLayer(Item item) {
-		for (Layer layer : Collections.unmodifiableSet(items.keySet())) {
-			if (getItemByLayer(layer).equals(item)) {
-				return layer;
-			}
-		}
-		return null;
-	}
+    @Override
+    public RaceFlag getRaceFlag() {
+        return raceFlag;
+    }
 
-	@Override
-	public void emptyLayer(Layer layer) {
-		removeItem(getItemByLayer(layer));
-	}
-	
-	@Override
-	public void setCharacterStatus(CharacterStatus characterStatus) {
-		this.characterStatus = characterStatus;		
-	}
+    @Override
+    public String getTitle() {
+        return title;
+    }
 
-	@Override
-	public int getWeaponBaseDamage() {
-		if (items.containsKey(Layer.FirstValid)) {
-			return items.get(Layer.FirstValid).baseDamage();
-		}
-		return 1;
-	}
+    @Override
+    public Set<Skill> getSkills() {
+        return skills;
+    }
 
-	@Override
-	public Mobile location(int x, int y, int z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		return this;
-	}
+    @Override
+    public Map<Layer, Item> getItems() {
+        return items;
+    }
 
-	@Override
-	public int distanceOf(Mobile mobile) {
-		return (int) Math.hypot(x - mobile.getX(), y - mobile.getY());
-	}
+    @Override
+    public int getHue() {
+        return hue;
+    }
 
-	@Override
-	public void kill() {
-		this.currentHitPoints = 0;
-		this.currentMana = 0;
-		this.currentStamina = 0;
-		this.death = true;
-		this.characterStatus = CharacterStatus.Normal;
-		this.modelId = DEATH_MODEL_ID;
-	}
+    @Override
+    public Notoriety getNotoriety() {
+        return notoriety;
+    }
 
-	@Override
-	public void revive() {
-		this.currentHitPoints = 1;
-		this.currentMana = 1;
-		this.currentStamina = 1;
-		this.modelId = ALIVE_MODEL_ID;
-	}
+    @Override
+    public CharacterStatus getCharacterStatus() {
+        return characterStatus;
+    }
 
-	@Override
-	public boolean isDeath() {
-		return death;
-	}
+    /**
+     * Updates this mobile's position according to their {@link #direction}.
+     */
+    @Override
+    public void moveForward() {
+        switch (direction) {
+            case North:
+                --y;
+                break;
+            case Northeast:
+                ++x;
+                --y;
+                break;
+            case East:
+                ++x;
+                break;
+            case Southeast:
+                ++x;
+                ++y;
+                break;
+            case South:
+                ++y;
+                break;
+            case Southwest:
+                --x;
+                ++y;
+                break;
+            case West:
+                --x;
+                break;
+            case Northwest:
+                --x;
+                --y;
+                break;
+        }
+    }
 
-	@Override
-	public final int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + serialId;
-		return result;
-	}
+    @Override
+    public String getPrefixNameSuffix() {
+        return " \t" + getName() + "\t ";
+    }
 
-	@Override
-	public final boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		UOMobile other = (UOMobile) obj;
-		if (serialId != other.serialId)
-			return false;
-		return true;
-	}
-	@Override
-	public String toString() {
-		return name;
-	}
+    @Override
+    public byte getDirectionWithRunningInfo() {
+        return (byte) (direction.getCode() | (isRunning() ? 0x80 : 0));
+    }
+
+    @Override
+    public void setItemOnLayer(Layer layer, Item item) {
+        items.put(layer, item);
+    }
+
+    @Override
+    public Item getItemByLayer(Layer layer) {
+        return items.get(layer);
+    }
+
+    @Override
+    public boolean removeItem(Item item) {
+        return items.remove(getLayer(item)) != null;
+    }
+
+    @Override
+    public Layer getLayer(Item item) {
+        for (Layer layer : Collections.unmodifiableSet(items.keySet())) {
+            if (getItemByLayer(layer).equals(item)) {
+                return layer;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void emptyLayer(Layer layer) {
+        removeItem(getItemByLayer(layer));
+    }
+
+    @Override
+    public void setCharacterStatus(CharacterStatus characterStatus) {
+        this.characterStatus = characterStatus;
+    }
+
+    @Override
+    public int getWeaponBaseDamage() {
+        if (items.containsKey(Layer.FirstValid)) {
+            return items.get(Layer.FirstValid).baseDamage();
+        }
+        return 1;
+    }
+
+    @Override
+    public Mobile location(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        return this;
+    }
+
+    @Override
+    public int distanceOf(Mobile mobile) {
+        return (int) Math.hypot(x - mobile.getX(), y - mobile.getY());
+    }
+
+    @Override
+    public void kill() {
+        this.currentHitPoints = 0;
+        this.currentMana = 0;
+        this.currentStamina = 0;
+        this.death = true;
+        this.characterStatus = CharacterStatus.Normal;
+        this.modelId = DEATH_MODEL_ID;
+    }
+
+    @Override
+    public void revive() {
+        this.currentHitPoints = 1;
+        this.currentMana = 1;
+        this.currentStamina = 1;
+        this.modelId = ALIVE_MODEL_ID;
+    }
+
+    @Override
+    public boolean isDeath() {
+        return death;
+    }
+
+    @Override
+    public final int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + serialId;
+        return result;
+    }
+
+    @Override
+    public final boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        UOMobile other = (UOMobile) obj;
+        if (serialId != other.serialId)
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
