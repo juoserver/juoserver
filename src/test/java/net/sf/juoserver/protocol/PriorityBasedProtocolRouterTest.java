@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Collections;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -26,7 +25,7 @@ public class PriorityBasedProtocolRouterTest {
 	private final AuthenticationController auth = new AuthenticationController(clientHandler,
 			TestingFactory.createTestConfiguration(), loginManager);
 	private final GameController game = new GameController("client", clientHandler, context.mock(Core.class), context.mock(Configuration.class),
-			context.mock(ClientMovementTracker.class), loginManager, network, new ItemManager(), new CommandManagerImpl(null, null), new CombatSystemImpl(new PhysicalDamageCalculatorImpl(null)), null);
+			context.mock(ClientMovementTracker.class), loginManager, network, context.mock(NpcSystem.class), new ItemManager(),new CommandManagerImpl(null, null), new CombatSystemImpl(new PhysicalDamageCalculatorImpl(null)), null);
 	
 	@Test
 	public void authenticationIsTheOnlyControllerInterestedInFirstConnectionMessages() throws UnknownHostException {

@@ -1,14 +1,11 @@
 package net.sf.juoserver.protocol.combat;
 
-import net.sf.juoserver.api.CombatSystem;
-import net.sf.juoserver.api.Mobile;
-import net.sf.juoserver.api.PhysicalDamageCalculator;
-import net.sf.juoserver.api.PlayerSession;
+import net.sf.juoserver.api.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CombatSystemImpl implements CombatSystem {
+public class CombatSystemImpl implements CombatSystem, SubSystem {
 
     private final Map<KeyPair, SessionGroup> combatSessions = new HashMap<>();
     private final PhysicalDamageCalculator physicalDamageCalculator;

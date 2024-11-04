@@ -84,5 +84,5 @@ public interface Core {
 
 	Mobile createNpc(Point3D location);
 
-	Collection<Mobile> findMobilesInRange(Point2D location, int distance);
+	Collection<Mobile> findNpcInRange(Point2D location, int distance);
 }

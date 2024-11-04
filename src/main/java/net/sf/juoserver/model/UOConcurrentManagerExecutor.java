@@ -19,7 +19,7 @@ public class UOConcurrentManagerExecutor implements ConcurrentManagerExecutor {
 
     public UOConcurrentManagerExecutor(Task... tasks) {
         this.tasks = tasks;
-        this.executorService = Executors.newSingleThreadScheduledExecutor();
+        this.executorService = Executors.newScheduledThreadPool(2);
     }
 
     @Override

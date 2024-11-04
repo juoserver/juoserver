@@ -1,6 +1,6 @@
 package net.sf.juoserver.api;
 
-public interface CombatSystem extends SubSystem {
+public interface CombatSystem {
 
     void attackStarted(PlayerSession attackerSession, Mobile attacked);
 

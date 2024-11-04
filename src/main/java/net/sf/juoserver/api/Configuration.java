@@ -7,12 +7,17 @@ package net.sf.juoserver.api;
 public interface Configuration {
 	String getSkillsIdxPath();
 	String getMulPath();
+	ClientConfiguration getClient();
 	StatsConfiguration getStats();
 	CombatConfiguration getCombat();
 	ServerConfiguration getServer();
 	FilesConfiguration getFiles();
 	CommandConfiguration getCommand();
 	PacketConfiguration getPacket();
+
+	interface ClientConfiguration {
+		int getLos();
+	}
 
 	interface FilesConfiguration {
 		String getMulPath();

@@ -4,17 +4,15 @@ import net.sf.juoserver.api.*;
 import net.sf.juoserver.configuration.ConfigurationFactory;
 import net.sf.juoserver.files.mondainslegacy.MondainsLegacyFileReadersFactory;
 import net.sf.juoserver.model.InMemoryDataManager;
+import net.sf.juoserver.model.Intercom;
 import net.sf.juoserver.model.UOConcurrentManagerExecutor;
-import net.sf.juoserver.model.UOConcurrentManagerExecutor.Task;
+import net.sf.juoserver.model.npc.DefaultNpcSystem;
 import net.sf.juoserver.model.core.UOCore;
 import net.sf.juoserver.networking.mina.MinaMultiplexingServerAdapter;
 import net.sf.juoserver.networking.threaded.ThreadedServerAdapter;
-import net.sf.juoserver.protocol.CommandManagerImpl;
 import net.sf.juoserver.protocol.ControllerFactory;
 import net.sf.juoserver.protocol.combat.CombatSystemImpl;
 import net.sf.juoserver.protocol.combat.PhysicalDamageCalculatorImpl;
-import net.sf.juoserver.protocol.generalinfo.GeneralInfoManagerImpl;
-import net.sf.juoserver.protocol.item.ItemManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,8 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static net.sf.juoserver.model.UOConcurrentManagerExecutor.Task.from;
@@ -66,8 +62,11 @@ public final class JUOServerBuilder {
 
         var core = new UOCore(new MondainsLegacyFileReadersFactory(), dataManager, configuration);
         var combatSystem = new CombatSystemImpl(new PhysicalDamageCalculatorImpl(configuration));
-        var server = getServer(new ControllerFactory(core, configuration, commands, combatSystem));
-        var executorService = new UOConcurrentManagerExecutor(from(combatSystem, 500));
+        var network = new Intercom();
+        var npcSystem = new DefaultNpcSystem(core, network, configuration);
+
+        var server = getServer(new ControllerFactory(core, configuration, commands, combatSystem, network, npcSystem));
+        var executorService = new UOConcurrentManagerExecutor(from(combatSystem, 500), from(npcSystem, 1));
         LOGGER.info("Server managers successfully created");
 
         return () -> {

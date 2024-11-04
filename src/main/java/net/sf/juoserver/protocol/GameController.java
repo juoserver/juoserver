@@ -27,20 +27,22 @@ public class GameController extends AbstractProtocolController implements ModelO
 	private final ClientMovementTracker movementTracker;
 	private final InterClientNetwork network;
 
+
 	// Controller Managers
 	private final ItemManager itemManager;
 	private final LoginManager loginManager;
 	private final CommandManager commandManager;
 	private final GeneralInfoManager generalInfoManager;
 
-	// UO Systems
+	// Server Systems
+	private final NpcSystem npcSystem;
 	private final CombatSystem combatSystem;
 
 	private ClientVersion clientVersion;
 	private PlayerSession session;
 
 	public GameController(String clientName, ProtocolIoPort clientHandler, Core core, Configuration configuration,
-			ClientMovementTracker movementTracker, LoginManager loginManager, InterClientNetwork network,
+			ClientMovementTracker movementTracker, LoginManager loginManager, InterClientNetwork network, NpcSystem npcSystem,
 		  ItemManager itemManager, CommandManager commandManager, CombatSystem combatSystem, GeneralInfoManager generalInfoManager) {
 		super();
 		this.controllerId = clientName + CONTROLLER_ID_POSTFIX;
@@ -50,6 +52,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 		this.movementTracker = movementTracker;
 		this.loginManager = loginManager;
 		this.network = network;
+		this.npcSystem = npcSystem;
 		this.combatSystem = combatSystem;
 		this.itemManager = itemManager;
 		this.commandManager = commandManager;
@@ -160,7 +163,9 @@ public class GameController extends AbstractProtocolController implements ModelO
 	public List<Message> handle(MoveRequest request) {
 		if (movementTracker.getExpectedSequence() == request.getSequence()) {
 			session.move(request.getDirection(), request.isRunning());
-			
+
+			npcSystem.mobileMoved(session.getMobile());
+
 			movementTracker.incrementExpectedSequence();
 
 			return asList( new MovementAck(request.getSequence(), session.getMobile().getNotoriety()) );

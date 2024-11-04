@@ -233,10 +233,10 @@ public final class UOCore implements Core {
 	}
 
 	@Override
-	public Collection<Mobile> findMobilesInRange(Point2D location, int distance) {
+	public Collection<Mobile> findNpcInRange(Point2D location, int distance) {
 		return mobilesBySerialId.values()
 				.stream()
-				.filter(mobile-> MobileUtils.getDistance(location, mobile) < distance)
+				.filter(mobile-> mobile.isNpc() && MobileUtils.getDistance(location, mobile) < distance)
 				.collect(Collectors.toList());
 	}
 }

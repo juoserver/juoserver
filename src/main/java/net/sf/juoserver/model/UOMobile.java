@@ -52,6 +52,7 @@ public class UOMobile implements Mobile {
     private boolean running;
     private Notoriety notoriety = Notoriety.Innocent;
     private CharacterStatus characterStatus = CharacterStatus.Normal;
+    private boolean npc;
 
     public UOMobile(int playerSerial, String playerName, int currentHitPoints,
                     int maxHitPoints, boolean nameChangeFlag, StatusFlag statusFlag,
@@ -91,7 +92,7 @@ public class UOMobile implements Mobile {
                     SexRace sexRace, int strength, int dexterity, int intelligence,
                     int currentStamina, int maxStamina, int currentMana, int maxMana,
                     int goldInPack, int armorRating, int weight, int maxWeight,
-                    RaceFlag raceFlag, Point3D position, Notoriety notoriety) {
+                    RaceFlag raceFlag, Point3D position, Notoriety notoriety, boolean npc) {
         this(playerSerial, playerName, currentHitPoints,
                 maxHitPoints, nameChangeFlag, statusFlag,
                 sexRace, strength, dexterity, intelligence,
@@ -100,6 +101,7 @@ public class UOMobile implements Mobile {
                 raceFlag, position);
         this.modelId = modelId;
         this.notoriety = notoriety;
+        this.npc = npc;
     }
 
     public UOMobile() {
@@ -405,6 +407,11 @@ public class UOMobile implements Mobile {
     @Override
     public boolean isDeath() {
         return death;
+    }
+
+    @Override
+    public boolean isNpc() {
+        return npc;
     }
 
     @Override

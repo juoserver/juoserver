@@ -93,4 +93,5 @@ public interface Mobile extends JUoEntity, Point3D {
 
 	boolean isDeath();
 
+	boolean isNpc();
 }

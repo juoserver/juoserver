@@ -16,7 +16,6 @@ import org.junit.Before;
 import org.junit.Rule;
 
 import java.io.IOException;
-import java.util.Collections;
 
 public class AbstractGameControllerTest {
 	@Rule public final JUnitRuleMockery context = new JUnitRuleMockery();
@@ -32,7 +31,7 @@ public class AbstractGameControllerTest {
 	protected final CommandManager commandManager = context.mock(CommandManager.class);
 
 	protected final GameController gameController = 
-			new GameController("client", clientHandler, core, null, new CircularClientMovementTracker(),  loginManager, intercom, new ItemManager(), new CommandManagerImpl(null, null), new CombatSystemImpl(new PhysicalDamageCalculatorImpl(null)), null);
+			new GameController("client", clientHandler, core, null, new CircularClientMovementTracker(),  loginManager, intercom, context.mock(NpcSystem.class),new ItemManager(), new CommandManagerImpl(null, null), new CombatSystemImpl(new PhysicalDamageCalculatorImpl(null)), null);
 	
 	@Before
 	public final void createComponents() throws IOException {
