@@ -6,7 +6,7 @@ import net.sf.juoserver.files.mondainslegacy.MondainsLegacyFileReadersFactory;
 import net.sf.juoserver.model.InMemoryDataManager;
 import net.sf.juoserver.model.Intercom;
 import net.sf.juoserver.model.UOConcurrentManagerExecutor;
-import net.sf.juoserver.model.npc.DefaultNpcSystem;
+import net.sf.juoserver.model.npc.UONpcSystem;
 import net.sf.juoserver.model.core.UOCore;
 import net.sf.juoserver.networking.mina.MinaMultiplexingServerAdapter;
 import net.sf.juoserver.networking.threaded.ThreadedServerAdapter;
@@ -63,7 +63,8 @@ public final class JUOServerBuilder {
         var core = new UOCore(new MondainsLegacyFileReadersFactory(), dataManager, configuration);
         var combatSystem = new CombatSystemImpl(new PhysicalDamageCalculatorImpl(configuration));
         var network = new Intercom();
-        var npcSystem = new DefaultNpcSystem(core, network, configuration);
+        var npcSystem = new UONpcSystem(core, network, configuration);
+        core.addMobileListener(npcSystem);
 
         var server = getServer(new ControllerFactory(core, configuration, commands, combatSystem, network, npcSystem));
         var executorService = new UOConcurrentManagerExecutor(from(combatSystem, 500), from(npcSystem, 1));

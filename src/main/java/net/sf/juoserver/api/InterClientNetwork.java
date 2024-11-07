@@ -1,7 +1,6 @@
 package net.sf.juoserver.api;
 
 import java.util.Collection;
-import java.util.List;
 
 public interface InterClientNetwork {
 	void notifyOtherMobileMovement(Mobile movingMobile);
@@ -14,7 +13,7 @@ public interface InterClientNetwork {
 	void notifyDroppedCloth(Mobile mobile, Item droppedCloth);
 	void notifyAttacked(Mobile attacker, Mobile attacked);
 	void notifyAttackFinished(Mobile attacker, Mobile attacked);
-	void notifyOtherDamaged(Mobile mobile, int damage, Mobile opponent);
+	void notifyOtherDamaged(Mobile mobile, int damage);
 	void notifyGroundItemsCreated(Collection<Item> items);
 	void notifyOtherKilled(Mobile mobile);
 	void removeIntercomListener(IntercomListener listener);

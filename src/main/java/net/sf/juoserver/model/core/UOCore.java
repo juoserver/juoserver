@@ -2,19 +2,18 @@ package net.sf.juoserver.model.core;
 
 import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.UOItem;
-import net.sf.juoserver.model.UOMobile;
 import net.sf.juoserver.model.UONpc;
+import net.sf.juoserver.model.ai.WalkScript;
 import net.sf.juoserver.protocol.MobileUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * The <b>Core</b> facade.
@@ -57,6 +56,13 @@ public final class UOCore implements Core {
 	 * Map reader.
 	 */
 	private MapFileReader mapReader;
+
+	private final AtomicInteger atomicCursor = new AtomicInteger(1);
+
+	/**
+	 * Listener
+	 */
+	private final List<MobileListener> mobileListeners = new ArrayList<>();
 
 	public UOCore(FileReadersFactory fileReadersFactory, DataManager dataManager, Configuration configuration) {
 		super();
@@ -106,10 +112,17 @@ public final class UOCore implements Core {
 		itemsBySerialId.remove(item.getSerialId());
 	}
 
+	private void addMobile(Mobile mobile) {
+		this.mobilesBySerialId.put(mobile.getSerialId(), mobile);
+		for (MobileListener listener : mobileListeners) {
+			listener.onMobileCreated(mobile);
+		}
+	}
+
 	private void loadData() {
 
 		for (Mobile mobile : dataManager.loadMobiles()) {
-			mobilesBySerialId.put(mobile.getSerialId(), mobile);
+			addMobile(mobile);
 		}
 		
 		for (Account account : dataManager.loadAccounts()) {
@@ -148,7 +161,15 @@ public final class UOCore implements Core {
 		}
 		return mobilesBySerialId.get(serialID);
 	}
-	
+
+	@Override
+	public void removeMobile(Mobile mobile) {
+		mobilesBySerialId.remove(mobile.getSerialId());
+		for (MobileListener listener : mobileListeners) {
+			listener.onMobileRemoved(mobile);
+		}
+	}
+
 	@Override
 	public Item findItemByID(int serialID) {
 		if (!isItem(serialID)) {
@@ -226,17 +247,46 @@ public final class UOCore implements Core {
 	}
 
 	@Override
-	public Mobile createNpc(Point3D location) {
-		var npc = new UONpc(itemSerial.getAndIncrement(), "Balrog", location);
-		mobilesBySerialId.put(npc.getSerialId(), npc);
+	public Npc createNpc(Point3D location) {
+		var npc = new UONpc(itemSerial.getAndIncrement(), "Balrog", location, new WalkScript());
+		addMobile(npc);
 		return npc;
 	}
 
 	@Override
-	public Collection<Mobile> findNpcInRange(Point2D location, int distance) {
+	public Collection<Mobile> findNpcInRange(Point2D location) {
 		return mobilesBySerialId.values()
 				.stream()
-				.filter(mobile-> mobile.isNpc() && MobileUtils.getDistance(location, mobile) < distance)
+				.filter(mobile-> mobile.isNpc() && MobileUtils.getDistance(location, mobile) < configuration.getClient().getLos())
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public Stream<Mobile> findMobilesInRange(Point2D location) {
+		return mobilesBySerialId.values().stream()
+				.filter(mobile-> MobileUtils.getDistance(location, mobile) < configuration.getClient().getLos());
+	}
+
+	@Override
+	public Stream<Npc> getAllNpcs() {
+		return mobilesBySerialId.values()
+				.stream()
+				.filter(Mobile::isNpc)
+				.map(mobile -> (Npc) mobile);
+	}
+
+	@Override
+	public int getNextCursorId() {
+		return atomicCursor.getAndIncrement();
+	}
+
+	@Override
+	public void addMobileListener(MobileListener listener) {
+		this.mobileListeners.add(listener);
+	}
+
+	@Override
+	public void removeMobileCreationListener(MobileListener listener) {
+		this.mobileListeners.remove(listener);
 	}
 }

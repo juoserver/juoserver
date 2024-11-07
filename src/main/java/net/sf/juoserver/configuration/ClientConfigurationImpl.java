@@ -2,7 +2,7 @@ package net.sf.juoserver.configuration;
 
 import net.sf.juoserver.api.Configuration;
 
-public class ClientConfigurationImpl implements Configuration.ClientConfiguration {
+class ClientConfigurationImpl implements Configuration.ClientConfiguration {
 
     private int los;
 

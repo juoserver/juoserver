@@ -27,7 +27,6 @@ public class GameController extends AbstractProtocolController implements ModelO
 	private final ClientMovementTracker movementTracker;
 	private final InterClientNetwork network;
 
-
 	// Controller Managers
 	private final ItemManager itemManager;
 	private final LoginManager loginManager;
@@ -164,8 +163,6 @@ public class GameController extends AbstractProtocolController implements ModelO
 		if (movementTracker.getExpectedSequence() == request.getSequence()) {
 			session.move(request.getDirection(), request.isRunning());
 
-			npcSystem.mobileMoved(session.getMobile());
-
 			movementTracker.incrementExpectedSequence();
 
 			return asList( new MovementAck(request.getSequence(), session.getMobile().getNotoriety()) );
@@ -201,7 +198,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 	@Override
 	public void mobileGotAway(Mobile mobile) {
 		try {
-			clientHandler.sendToClient(new DeleteItem(mobile.getSerialId()));
+			clientHandler.sendToClient(new DeleteObject(mobile.getSerialId()));
 		} catch (IOException e) {
 			throw new ProtocolException(e);
 		}
@@ -236,13 +233,16 @@ public class GameController extends AbstractProtocolController implements ModelO
 	public List<Message> handle(MegaClilocRequest mcr) {
 		List<Message> msgs = new ArrayList<>();
 		for (int querySerial : mcr.getQuerySerials()) {
+
 			// TODO: distinguish between items and mobiles as in handle(LookRequest)
 			Mobile mobile = core.findMobileByID( querySerial );
 			if (mobile != null) {
 				msgs.add(MegaClilocResponse.createMobileMegaClilocResponse(mobile));
 			} else {
 				Item item = core.findItemByID( querySerial );
-				msgs.add(MegaClilocResponse.createItemMegaClilocResponse(item));
+				if (item != null) {
+					msgs.add(MegaClilocResponse.createItemMegaClilocResponse(item));
+				}
 			}
 		}
 		return msgs;
@@ -364,7 +364,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 	@Override
 	public void mobileDroppedCloth(Mobile mobile, Item droppedCloth) {
 		try {
-			clientHandler.sendToClient(new DeleteItem(droppedCloth.getSerialId()));
+			clientHandler.sendToClient(new DeleteObject(droppedCloth.getSerialId()));
 			// TODO: send sound (0x54) too - e.g., 54 01 00 57 00 00 0F 41  01 C8 00 00
 		} catch (IOException e) {
 			throw new ProtocolException(e);
@@ -444,10 +444,10 @@ public class GameController extends AbstractProtocolController implements ModelO
 	}
 
 	@Override
-	public void mobileDamaged(Mobile mobile, int damage, Mobile opponent) {
+	public void mobileDamaged(Mobile mobile, int damage) {
 		try {
-			clientHandler.sendToClient(new CharacterAnimation(opponent, AnimationRepeat.ONCE, AnimationType.ATTACK_WITH_SWORD_OVER_AND_SIDE, 100, AnimationDirection.FORWARD),
-					new StatusBarInfo(mobile), new CharacterAnimation(mobile, AnimationRepeat.ONCE, AnimationType.GET_HIT, 10, AnimationDirection.BACKWARD));
+			//new CharacterAnimation(opponent, AnimationRepeat.ONCE, AnimationType.ATTACK_WITH_SWORD_OVER_AND_SIDE, 100, AnimationDirection.FORWARD)
+			clientHandler.sendToClient(new StatusBarInfo(mobile), new CharacterAnimation(mobile, AnimationRepeat.ONCE, AnimationType.GET_HIT, 10, AnimationDirection.BACKWARD));
 		} catch (IOException e) {
 			throw new IntercomException(e);
 		}
@@ -475,11 +475,46 @@ public class GameController extends AbstractProtocolController implements ModelO
 				combatSystem.mobileKilled(mobile);
 			}
 
-			clientHandler.sendToClient(new DeathAnimation(mobile, 0x1FFD),
-					new CharacterDraw(mobile),
-					new StatusBarInfo(mobile),
-					new AttackSucceed(0));
+			if (mobile.isNpc()) {
+				clientHandler.sendToClient(new DeathAnimation(mobile, 0x1FFD),new DeleteObject(mobile));
+			} else {
+				clientHandler.sendToClient(new DeathAnimation(mobile, 0x1FFD),
+						new CharacterDraw(mobile),
+						new StatusBarInfo(mobile),
+						new AttackSucceed(0));
+			}
+		} catch (IOException exception) {
+			throw new IntercomException(exception);
+		}
+	}
 
+	// ======================= HANDLE CURSOR =====================
+
+	@Override
+	public void sendCursor(int cursorId, CursorType type, CursorTarget target) {
+		try {
+			clientHandler.sendToClient(new Cursor(target, cursorId, type));
+		} catch (IOException exception) {
+			throw new IntercomException(exception);
+		}
+	}
+
+	public void handle(Cursor cursor) {
+		session.selectCursor(cursor);
+	}
+
+
+	// ======================= HANDLE NPC =====================
+
+	@Override
+	public void npcOnRange(Collection<Mobile> npcs) {
+		var messages = new ArrayList<>();
+		for (Mobile npc : npcs) {
+			messages.add(new CharacterDraw(npc));
+			messages.add(new ObjectRevision(npc));
+		}
+		try {
+			clientHandler.sendToClient(messages.toArray(new Message[]{}));
 		} catch (IOException exception) {
 			throw new IntercomException(exception);
 		}

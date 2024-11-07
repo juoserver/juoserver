@@ -3,6 +3,7 @@ package net.sf.juoserver.api;
 import net.sf.juoserver.model.UOItem;
 
 import java.util.Collection;
+import java.util.stream.Stream;
 
 /**
  * The core main API.
@@ -33,6 +34,8 @@ public interface Core {
 	 * or <tt>null</tt> if there is no such {@link Mobile}
 	 */
 	Mobile findMobileByID(int serialID);
+
+	void removeMobile(Mobile mobile);
 
 	/**
 	 * Retrieves an {@link UOItem} by its serial ID.
@@ -82,7 +85,21 @@ public interface Core {
 
 	Collection<Item> findItemsInRegion(Point2D location, int distance);
 
-	Mobile createNpc(Point3D location);
+	Npc createNpc(Point3D location);
 
-	Collection<Mobile> findNpcInRange(Point2D location, int distance);
+	Collection<Mobile> findNpcInRange(Point2D location);
+
+	Stream<Mobile> findMobilesInRange(Point2D location);
+
+	Stream<Npc> getAllNpcs();
+
+	/**
+	 * Global counter for cursors
+	 * @return auto incremented id
+	 */
+	int getNextCursorId();
+
+	void addMobileListener(MobileListener listener);
+
+	void removeMobileCreationListener(MobileListener listener);
 }

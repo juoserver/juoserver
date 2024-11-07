@@ -19,7 +19,7 @@ public interface IntercomListener {
 	void onChangedWarMode(Mobile mobile);
 	void onAttacked(Mobile attacker, Mobile attacked);
 	void onAttackFinished(Mobile attacker, Mobile attacked);
-	void onOtherDamaged(Mobile mobile, int damage, Mobile opponent);
+	void onOtherDamaged(Mobile mobile, int damage);
 	void onGroundItemCreated(Collection<Item> items);
 	void onOtherKilled(Mobile mobile);
 

@@ -1,9 +1,6 @@
 package net.sf.juoserver.model;
 
-import net.sf.juoserver.api.Container;
-import net.sf.juoserver.api.Item;
-import net.sf.juoserver.api.MessageType;
-import net.sf.juoserver.api.Mobile;
+import net.sf.juoserver.api.*;
 
 import java.util.Collection;
 
@@ -25,7 +22,8 @@ public interface ModelOutputPort {
 	void mobileAttacked(Mobile attacker);
 	void mobileAttackFinished(Mobile enemy);
 	void mobileDroppedCloth(Mobile mobile, Item droppedCloth);
-	void mobileDamaged(Mobile mobile, int damage, Mobile opponent);
+	void mobileDamaged(Mobile mobile, int damage);
 	void mobiledKilled(Mobile mobile);
-
+	void npcOnRange(Collection<Mobile> npcs);
+	void sendCursor(int cursorId, CursorType type, CursorTarget target);
 }

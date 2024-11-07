@@ -14,6 +14,7 @@ public class TestServerModule extends JUOServerModule {
         registerCommand(new Where());
         registerCommand(new Move());
         registerCommand(new CreateNPC());
+        registerCommand(new KIll());
         registerCommand(new AbstractCommand("death") {
             @Override
             public void execute(List<String> source, PlayerContext context) {

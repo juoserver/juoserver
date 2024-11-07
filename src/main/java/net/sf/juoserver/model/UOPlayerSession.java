@@ -1,8 +1,10 @@
 package net.sf.juoserver.model;
 
 import net.sf.juoserver.api.*;
+import net.sf.juoserver.protocol.Cursor;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class UOPlayerSession implements PlayerSession {
 	public static final int LINE_OF_SIGHT = 24;
@@ -23,6 +25,8 @@ public class UOPlayerSession implements PlayerSession {
 	
 	protected Mobile attacking;
 	protected final Set<Mobile> attackingMe = new HashSet<>();
+
+	private final Map<Integer, CompletableFuture<Cursor>> sessionCursors = new HashMap<>();
 	
 	public UOPlayerSession(Core core, Account account, ModelOutputPort listener,
 			InterClientNetwork network) {
@@ -77,6 +81,11 @@ public class UOPlayerSession implements PlayerSession {
 		var items = core.findItemsByDirection(mobile, direction, 20);
 		if (!items.isEmpty()) {
 			network.notifyGroundItemsCreated(items);
+		}
+
+		var npcs = core.findNpcInRange(mobile);
+		if (!npcs.isEmpty()) {
+			listener.npcOnRange(npcs);
 		}
 
 		MapTile tile = core.getTile(mobile.getX(), mobile.getY());
@@ -291,14 +300,26 @@ public class UOPlayerSession implements PlayerSession {
 			listener.mobiledKilled(mobile);
 			network.notifyOtherKilled(mobile);
 		} else {
-			listener.mobileDamaged(mobile, damage, opponent);
-			network.notifyOtherDamaged(mobile, damage, opponent);
+			listener.mobileDamaged(mobile, damage);
+			network.notifyOtherDamaged(mobile, damage);
 		}
 	}
 
 	@Override
-	public void onOtherDamaged(Mobile mobile, int damage, Mobile opponent) {
-		listener.mobileDamaged(mobile, damage, opponent);
+	public void applyDamageTo(Mobile opponent, int damage) {
+		opponent.setCurrentHitPoints( Math.max(opponent.getCurrentHitPoints() - damage, 0) );
+		if (opponent.getCurrentHitPoints() == 0) {
+			opponent.kill();
+			core.removeMobile(opponent);
+			network.notifyOtherKilled(opponent);
+		} else {
+			network.notifyOtherDamaged(opponent, damage);
+		}
+	}
+
+	@Override
+	public void onOtherDamaged(Mobile mobile, int damage) {
+		listener.mobileDamaged(mobile, damage);
 	}
 
 	@Override
@@ -316,5 +337,20 @@ public class UOPlayerSession implements PlayerSession {
 		listener.groundItemsCreated(items);
 	}
 
+	@Override
+	public CompletableFuture<Cursor> sendCursor(CursorType type, CursorTarget target) {
+		final int cursorId = core.getNextCursorId();
+		var future = new CompletableFuture<Cursor>();
+		sessionCursors.put(cursorId, future);
+		listener.sendCursor(cursorId, type, target);
+		return future;
+	}
 
+	@Override
+	public void selectCursor(Cursor cursor) {
+		final int cursorId = cursor.getCursorId();
+		var future = sessionCursors.get(cursorId);
+		sessionCursors.remove(cursorId);
+		future.complete(cursor);
+	}
 }
