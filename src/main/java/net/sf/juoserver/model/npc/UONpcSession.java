@@ -3,26 +3,37 @@ package net.sf.juoserver.model.npc;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import net.sf.juoserver.api.Direction;
-import net.sf.juoserver.api.InterClientNetwork;
-import net.sf.juoserver.api.Npc;
-import net.sf.juoserver.api.NpcSession;
+import net.sf.juoserver.api.*;
+
+import java.util.stream.Stream;
 
 @Getter
 @Setter
 @RequiredArgsConstructor
 class UONpcSession implements NpcSession {
 
-    private final Npc npc;
+    private final NpcMobile mobile;
     private final InterClientNetwork network;
-    private boolean active;
+    private final Core core;
+    private NpcContext context;
+
+    @Override
+    public Stream<Mobile> findMobilesInRange(boolean includeNpc) {
+        return core.findMobilesInRange(mobile);
+    }
 
     @Override
     public void move(Direction direction, boolean running) {
-        npc.setDirection(direction);
-        npc.setRunning(false);
-        npc.moveForward();
+        mobile.setDirection(direction);
+        mobile.setRunning(running);
+        mobile.moveForward();
 
-        network.notifyOtherMobileMovement(npc);
+        network.notifyOtherMobileMovement(mobile);
+    }
+
+    @Override
+    public void moveTowards(Point2D location) {
+        var direction = NextStepPathfinding.findNextStep(this.mobile, location);
+        move(direction,false);
     }
 }

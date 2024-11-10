@@ -1,6 +1,6 @@
 package net.sf.juoserver.api;
 
-public interface Npc extends Mobile {
+public interface NpcMobile extends Mobile {
 
     AIScript getAIScript();
 

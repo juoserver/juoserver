@@ -85,13 +85,13 @@ public interface Core {
 
 	Collection<Item> findItemsInRegion(Point2D location, int distance);
 
-	Npc createNpc(Point3D location);
+	NpcMobile createNpc(Point3D location);
 
 	Collection<Mobile> findNpcInRange(Point2D location);
 
 	Stream<Mobile> findMobilesInRange(Point2D location);
 
-	Stream<Npc> getAllNpcs();
+	Stream<NpcMobile> getAllNpcs();
 
 	/**
 	 * Global counter for cursors

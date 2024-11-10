@@ -2,7 +2,7 @@ package net.sf.juoserver.model.core;
 
 import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.UOItem;
-import net.sf.juoserver.model.UONpc;
+import net.sf.juoserver.model.UONpcMobile;
 import net.sf.juoserver.model.ai.WalkScript;
 import net.sf.juoserver.protocol.MobileUtils;
 
@@ -247,8 +247,8 @@ public final class UOCore implements Core {
 	}
 
 	@Override
-	public Npc createNpc(Point3D location) {
-		var npc = new UONpc(itemSerial.getAndIncrement(), "Balrog", location, new WalkScript());
+	public NpcMobile createNpc(Point3D location) {
+		var npc = new UONpcMobile(itemSerial.getAndIncrement(), "Balrog", location, new WalkScript());
 		addMobile(npc);
 		return npc;
 	}
@@ -268,11 +268,11 @@ public final class UOCore implements Core {
 	}
 
 	@Override
-	public Stream<Npc> getAllNpcs() {
+	public Stream<NpcMobile> getAllNpcs() {
 		return mobilesBySerialId.values()
 				.stream()
 				.filter(Mobile::isNpc)
-				.map(mobile -> (Npc) mobile);
+				.map(mobile -> (NpcMobile) mobile);
 	}
 
 	@Override
