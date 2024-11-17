@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 @Getter
 @Setter
 @RequiredArgsConstructor
-class UONpcSession implements NpcSession {
+class UONpcSession implements ContextBasedNpcSession {
 
     private final NpcMobile mobile;
     private final InterClientNetwork network;

@@ -15,11 +15,11 @@ public class WalkScript implements AIScript {
 
     @Override
     public void execute(NpcContext context, NpcSession session) {
+
         //session.move(Direction.North, false);
         var mobile = session.getMobile();
         var enemy = session.findMobilesInRange(false)
                 .filter(mobile1 -> {
-                    System.out.println(mobile1.getName());
                     return true;
                 })
                 .findFirst()

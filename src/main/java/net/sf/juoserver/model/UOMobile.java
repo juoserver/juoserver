@@ -54,14 +54,14 @@ public class UOMobile implements Mobile {
     private CharacterStatus characterStatus = CharacterStatus.Normal;
     private boolean npc;
 
-    public UOMobile(int playerSerial, String playerName, int currentHitPoints,
+    public UOMobile(int serialId, String playerName, int currentHitPoints,
                     int maxHitPoints, boolean nameChangeFlag, StatusFlag statusFlag,
                     SexRace sexRace, int strength, int dexterity, int intelligence,
                     int currentStamina, int maxStamina, int currentMana, int maxMana,
                     int goldInPack, int armorRating, int weight, int maxWeight,
                     RaceFlag raceFlag, Point3D position) {
         super();
-        this.serialId = playerSerial;
+        this.serialId = serialId;
         this.name = playerName;
         this.currentHitPoints = currentHitPoints;
         this.maxHitPoints = maxHitPoints;
@@ -104,6 +104,10 @@ public class UOMobile implements Mobile {
         this.npc = npc;
     }
 
+    public UOMobile(boolean npc) {
+        this();
+        this.npc = npc;
+    }
     public UOMobile() {
         this.items = new HashMap<>();
     }
@@ -113,9 +117,17 @@ public class UOMobile implements Mobile {
         return modelId;
     }
 
+    public void setModelId(int modelId) {
+        this.modelId = modelId;
+    }
+
     @Override
     public int getSerialId() {
         return serialId;
+    }
+
+    public void setSerialId(int serialId) {
+        this.serialId = serialId;
     }
 
     @Override
@@ -136,6 +148,13 @@ public class UOMobile implements Mobile {
     @Override
     public void setZ(int z) {
         this.z = z;
+    }
+
+    @Override
+    public void setLocation(Point3D location) {
+        this.x = location.getX();
+        this.y = location.getY();
+        this.z = location.getZ();
     }
 
     @Override
@@ -163,6 +182,10 @@ public class UOMobile implements Mobile {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public int getCurrentHitPoints() {
         return currentHitPoints;
@@ -178,6 +201,10 @@ public class UOMobile implements Mobile {
         return maxHitPoints;
     }
 
+    public void setMaxHitPoints(int maxHitPoints) {
+        this.maxHitPoints = maxHitPoints;
+    }
+
     @Override
     public boolean isNameChangeFlag() {
         return nameChangeFlag;
@@ -188,9 +215,17 @@ public class UOMobile implements Mobile {
         return statusFlag;
     }
 
+    public void setStatusFlag(StatusFlag statusFlag) {
+        this.statusFlag = statusFlag;
+    }
+
     @Override
     public SexRace getSexRace() {
         return sexRace;
+    }
+
+    public void setSexRace(SexRace sexRace) {
+        this.sexRace = sexRace;
     }
 
     @Override
@@ -198,14 +233,26 @@ public class UOMobile implements Mobile {
         return strength;
     }
 
+    public void setStrength(int strength) {
+        this.strength = strength;
+    }
+
     @Override
     public int getDexterity() {
         return dexterity;
     }
 
+    public void setDexterity(int dexterity) {
+        this.dexterity = dexterity;
+    }
+
     @Override
     public int getIntelligence() {
         return intelligence;
+    }
+
+    public void setIntelligence(int intelligence) {
+        this.intelligence = intelligence;
     }
 
     @Override
@@ -218,6 +265,10 @@ public class UOMobile implements Mobile {
         return maxStamina;
     }
 
+    public void setMaxStamina(int maxStamina) {
+        this.maxStamina = maxStamina;
+    }
+
     @Override
     public int getCurrentMana() {
         return currentMana;
@@ -226,6 +277,10 @@ public class UOMobile implements Mobile {
     @Override
     public int getMaxMana() {
         return maxMana;
+    }
+
+    public void setMaxMana(int maxMana) {
+        this.maxMana = maxMana;
     }
 
     @Override
@@ -253,6 +308,10 @@ public class UOMobile implements Mobile {
         return raceFlag;
     }
 
+    public void setRaceFlag(RaceFlag raceFlag) {
+        this.raceFlag = raceFlag;
+    }
+
     @Override
     public String getTitle() {
         return title;
@@ -271,6 +330,10 @@ public class UOMobile implements Mobile {
     @Override
     public int getHue() {
         return hue;
+    }
+
+    public void setHue(int hue) {
+        this.hue = hue;
     }
 
     @Override

@@ -4,4 +4,5 @@ public interface NpcMobile extends Mobile {
 
     AIScript getAIScript();
 
+    int getTemplateId();
 }

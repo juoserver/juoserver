@@ -3,7 +3,6 @@ package net.sf.juoserver.model.core;
 import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.UOItem;
 import net.sf.juoserver.model.UONpcMobile;
-import net.sf.juoserver.model.ai.WalkScript;
 import net.sf.juoserver.protocol.MobileUtils;
 
 import java.io.File;
@@ -58,17 +57,22 @@ public final class UOCore implements Core {
 	private MapFileReader mapReader;
 
 	private final AtomicInteger atomicCursor = new AtomicInteger(1);
+	/**
+	 * Config Reader
+	 */
+	private ConfigFileReader configFileReader;
 
 	/**
 	 * Listener
 	 */
 	private final List<MobileListener> mobileListeners = new ArrayList<>();
 
-	public UOCore(FileReadersFactory fileReadersFactory, DataManager dataManager, Configuration configuration) {
+	public UOCore(FileReadersFactory fileReadersFactory, DataManager dataManager, Configuration configuration, ConfigFileReader configFileReader) {
 		super();
 		this.configuration = configuration;
 		this.fileReadersFactory = fileReadersFactory;
 		this.dataManager = dataManager;
+		this.configFileReader = configFileReader;
 		this.itemLocator = new UOItemLocator(itemsBySerialId, configuration);
 	}
 
@@ -247,10 +251,19 @@ public final class UOCore implements Core {
 	}
 
 	@Override
-	public NpcMobile createNpc(Point3D location) {
-		var npc = new UONpcMobile(itemSerial.getAndIncrement(), "Balrog", location, new WalkScript());
-		addMobile(npc);
-		return npc;
+	public NpcMobile createNpcAtLocation(int templateId, Point3D location) {
+		var mobile = (UONpcMobile) configFileReader.loadNpcs()
+				.stream()
+				.filter(npc->npc.getTemplateId() == templateId)
+				.findFirst()
+				.orElseThrow();
+		mobile.setSerialId(itemSerial.getAndIncrement());
+		mobile.setLocation(location);
+		mobile.setStatusFlag(StatusFlag.UOML);
+		mobile.setRaceFlag(RaceFlag.Human);
+		mobile.setSexRace(SexRace.MaleHuman);
+		addMobile(mobile);
+		return mobile;
 	}
 
 	@Override

@@ -6,7 +6,10 @@ import net.sf.juoserver.api.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.locks.ReentrantLock;
+
+import static java.util.Objects.requireNonNull;
 
 @Slf4j
 public class UONpcSystem implements NpcSystem, SubSystem, MobileListener {
@@ -14,37 +17,36 @@ public class UONpcSystem implements NpcSystem, SubSystem, MobileListener {
     private final Core core;
     private final InterClientNetwork network;
     private final Configuration configuration;
-    private final Map<NpcMobile, UONpcSession> npcSessionMap = new HashMap<>();
+    private final NpcSessionCycle sessionCycle;
+    private final ExecutorService executorService;
+    private final Map<NpcMobile, ContextBasedNpcSession> npcSessionMap = new HashMap<>();
 
-    public UONpcSystem(Core core, InterClientNetwork network, Configuration configuration) {
-        this.core = core;
+    public UONpcSystem(Core core, InterClientNetwork network, Configuration configuration, NpcSessionCycle sessionCycle, ExecutorService executorService) {
+        this.core = requireNonNull(core, "Core must not be null");
+        this.core.addMobileListener(this);
         this.network = network;
         this.configuration = configuration;
+        this.sessionCycle = sessionCycle;
+        this.executorService = executorService;
     }
 
     @Override
     public void execute(long uptime) {
         final var lock = new ReentrantLock();
-        for (UONpcSession session : npcSessionMap.values()) {
+        for (ContextBasedNpcSession session : npcSessionMap.values()) {
             if (lock.tryLock()) {
                 try {
                     var npc = session.getMobile();
                     var aiScript = npc.getAIScript();
 
                     if (aiScript.isActive(session) && session.getContext() == null) {
-                        session.setContext(new ActiveNpcContext());
-                        CompletableFuture.runAsync(()->{
-                            while (aiScript.isActive(session) && !npc.isDeath()) {
-                                aiScript.execute(session.getContext(), session);
-                                try {
-                                    Thread.sleep(400); // TODO delay based on mobile status
-                                } catch (InterruptedException e) {
-                                    throw new RuntimeException(e);
-                                }
-                            }
-                        }).whenComplete((a,e)-> {
-                            if (e != null) {
-                                log.error("Error to handle {} AI", npc, e);
+                        session.setContext(new UONpcContext());
+
+                        var future = CompletableFuture.runAsync(()-> sessionCycle.execute(aiScript, session), executorService);
+
+                        future.whenComplete((a, throwable)-> {
+                            if (throwable != null) {
+                                log.error("Error to handle {} AI", npc, throwable);
                             }
                             session.setContext(null);
                         });

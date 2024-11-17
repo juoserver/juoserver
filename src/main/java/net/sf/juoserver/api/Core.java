@@ -85,7 +85,13 @@ public interface Core {
 
 	Collection<Item> findItemsInRegion(Point2D location, int distance);
 
-	NpcMobile createNpc(Point3D location);
+	/**
+	 * Create a new npc based on npcs.yaml
+	 * @param templateId Id of the npc definition
+	 * @param location Location where npc must appear
+	 * @return Instance of NPC
+	 */
+	NpcMobile createNpcAtLocation(int templateId, Point3D location);
 
 	Collection<Mobile> findNpcInRange(Point2D location);
 

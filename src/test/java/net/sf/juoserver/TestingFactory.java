@@ -1,15 +1,11 @@
 package net.sf.juoserver;
 
 import net.sf.juoserver.api.*;
-import net.sf.juoserver.model.PointInSpace;
-import net.sf.juoserver.model.UOContainer;
-import net.sf.juoserver.model.UOItem;
-import net.sf.juoserver.model.UOMobile;
+import net.sf.juoserver.model.*;
+import net.sf.juoserver.model.ai.WalkScript;
 import net.sf.juoserver.protocol.AbstractMessage;
 
-import javax.swing.text.Position;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -22,6 +18,14 @@ public class TestingFactory {
 	public static Mobile createTestMobile(int serialId, String name, Point3D position) {
 		return new UOMobile(serialId, name, 0, 0, false, StatusFlag.AOS, SexRace.FemaleElf, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, RaceFlag.Elf, position);
+	}
+
+	public static NpcMobile createTestNpcMobile(int serialId) {
+		return new UONpcMobile(serialId, "Balrog", new PointInSpace(1,1,1), new WalkScript());
+	}
+
+	public static NpcMobile createTestNpcMobile(int serialId, AIScript aiScript) {
+		return new UONpcMobile(serialId, "Balrog", new PointInSpace(1,1,1), aiScript);
 	}
 
 	public static Configuration createTestConfiguration() {
@@ -105,6 +109,11 @@ class TestConfiguration implements Configuration {
 
 	@Override
 	public PacketConfiguration getPacket() {
+		return null;
+	}
+
+	@Override
+	public ClientConfiguration getClient() {
 		return null;
 	}
 }
