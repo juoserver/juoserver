@@ -13,7 +13,7 @@ public class AttackComponentTest extends AbstractComponentTest {
 	@Test
 	public void testAttack() {
 		context.checking(new Expectations() {{
-			oneOf(lollerListener).mobileAttacked(asder);						
+			oneOf(lollerListener).mobileAttack(asder);
 		}});
 		asderSession.attack(loller);
 		assertEquals(new HashSet<>(asList(asder)), lollerSession.attackingMe);
@@ -23,7 +23,7 @@ public class AttackComponentTest extends AbstractComponentTest {
 	@Test
 	public void testAttackFinished() {
 		context.checking(new Expectations(){{
-			oneOf(lollerListener).mobileAttacked(asder);			
+			oneOf(lollerListener).mobileAttack(asder);
 			oneOf(asderListener).mobileChangedWarMode(asder);
 			oneOf(lollerListener).mobileChangedWarMode(asder);			
 			oneOf(asderListener).mobileAttackFinished(loller);
@@ -38,8 +38,8 @@ public class AttackComponentTest extends AbstractComponentTest {
 	@Test
 	public void testBidirectionalAttack() {
 		context.checking(new Expectations(){{
-			oneOf(lollerListener).mobileAttacked(asder);
-			oneOf(asderListener).mobileAttacked(loller);			
+			oneOf(lollerListener).mobileAttack(asder);
+			oneOf(asderListener).mobileAttack(loller);
 		}});
 		asderSession.attack(loller);
 		lollerSession.attack(asder);
@@ -52,8 +52,8 @@ public class AttackComponentTest extends AbstractComponentTest {
 	@Test
 	public void testEndOfAnAttackBidirectional() {
 		context.checking(new Expectations(){{
-			oneOf(lollerListener).mobileAttacked(asder);
-			oneOf(asderListener).mobileAttacked(loller);	
+			oneOf(lollerListener).mobileAttack(asder);
+			oneOf(asderListener).mobileAttack(loller);
 			
 			oneOf(asderListener).mobileChangedWarMode(asder);
 			oneOf(lollerListener).mobileChangedWarMode(asder);
@@ -70,8 +70,8 @@ public class AttackComponentTest extends AbstractComponentTest {
 	@Test
 	public void testEndOfBidirectionalAttack() {
 		context.checking(new Expectations(){{
-			oneOf(lollerListener).mobileAttacked(asder);
-			oneOf(asderListener).mobileAttacked(loller);	
+			oneOf(lollerListener).mobileAttack(asder);
+			oneOf(asderListener).mobileAttack(loller);
 			
 			oneOf(asderListener).mobileChangedWarMode(asder);
 			oneOf(lollerListener).mobileChangedWarMode(asder);

@@ -17,16 +17,14 @@ public class Damage extends AbstractMessage {
 		super(CODE, 7);		
 	}	
 
-	public Damage(int serialId, int damageDealt) {
+	public Damage(int serialId, int damage) {
 		this();
 		this.serialId = serialId;
-		this.damageDealt = damageDealt;
+		this.damageDealt = damage;
 	}
 
-	public Damage(Mobile mobile, int damageDealt) {
-		this();
-		this.serialId = mobile.getSerialId();
-		this.damageDealt = damageDealt;
+	public Damage(Mobile mobile, int damage) {
+		this(mobile.getSerialId(), damage);
 	}
 	
 	@Override

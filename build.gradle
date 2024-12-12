@@ -4,8 +4,8 @@ plugins {
 
 group 'net.sf.juoserver'
 version '0.0.1'
-sourceCompatibility = 17
-targetCompatibility = 17
+sourceCompatibility = JavaVersion.VERSION_21
+targetCompatibility = JavaVersion.VERSION_21
 
 repositories {
     mavenCentral()
@@ -20,14 +20,26 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.apache.mina:mina-core:2.2.1'
 
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.jmock:jmock-junit4:2.12.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
-    testImplementation 'org.mockito:mockito-core:4.11.0'
-    testImplementation 'org.mockito:mockito-junit-jupiter:4.11.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.14.2'
+    testImplementation 'org.mockito:mockito-core:5.14.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0' // Use the latest version
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0' // Required for running tests
     testImplementation 'uk.org.webcompere:system-stubs-jupiter:2.0.2'
+
 }
 
-test {
+tasks.test {
     useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed" // Ensure failed tests are logged
+        exceptionFormat "full" // Show full stack trace
+        showExceptions true // Ensure exceptions are displayed
+        showCauses true
+        showStackTraces true
+    }
 }

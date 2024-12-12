@@ -4,7 +4,6 @@ import net.sf.juoserver.TestingFactory;
 import net.sf.juoserver.api.*;
 import net.sf.juoserver.model.UOAccount;
 import net.sf.juoserver.protocol.CircularClientMovementTracker;
-import net.sf.juoserver.protocol.CommandManagerImpl;
 import net.sf.juoserver.protocol.GameController;
 import net.sf.juoserver.protocol.ProtocolIoPort;
 import net.sf.juoserver.protocol.item.ItemManager;
@@ -38,12 +37,14 @@ public class MockitoAbstractGameControllerTest {
     protected CommandManager commandManager;
     @Mock
     protected CombatSystem combatSystem;
+    @Mock
+    protected NpcSystem npcSystem;
 
     protected GameController gameController;
 
     @BeforeEach
     public final void createComponents() throws IOException {
-        this.gameController = new GameController("client", clientHandler, core, null, new CircularClientMovementTracker(),  loginManager, intercom, new ItemManager(), commandManager, combatSystem, null);
+        this.gameController = new GameController("client", clientHandler, core, null, new CircularClientMovementTracker(),  loginManager, intercom, npcSystem, new ItemManager(), commandManager, combatSystem, null);
         gameController.setSession(session);
 
         lenient().when(session.getMobile())

@@ -3,6 +3,7 @@ package net.sf.juoserver.api;
 import net.sf.juoserver.model.UOItem;
 
 import java.util.Collection;
+import java.util.stream.Stream;
 
 /**
  * The core main API.
@@ -33,6 +34,8 @@ public interface Core {
 	 * or <tt>null</tt> if there is no such {@link Mobile}
 	 */
 	Mobile findMobileByID(int serialID);
+
+	void removeMobile(Mobile mobile);
 
 	/**
 	 * Retrieves an {@link UOItem} by its serial ID.
@@ -81,4 +84,28 @@ public interface Core {
 	Collection<Item> findItemsByDirection(Point2D myLocation, Direction direction, int distanceFromMe);
 
 	Collection<Item> findItemsInRegion(Point2D location, int distance);
+
+	/**
+	 * Create a new npc based on npcs.yaml
+	 * @param templateId Id of the npc definition
+	 * @param location Location where npc must appear
+	 * @return Instance of NPC
+	 */
+	NpcMobile createNpcAtLocation(int templateId, Point3D location);
+
+	Collection<Mobile> findNpcInRange(Point2D location);
+
+	Stream<Mobile> findMobilesInRange(Point2D location);
+
+	Stream<NpcMobile> getAllNpcs();
+
+	/**
+	 * Global counter for cursors
+	 * @return auto incremented id
+	 */
+	int getNextCursorId();
+
+	void addMobileListener(MobileListener listener);
+
+	void removeMobileCreationListener(MobileListener listener);
 }

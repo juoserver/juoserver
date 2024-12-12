@@ -1,15 +1,26 @@
 package net.sf.juoserver.protocol;
 
+import net.sf.juoserver.api.Mobile;
+
 import java.nio.ByteBuffer;
 
-public class DeleteItem extends AbstractMessage {
+public class DeleteObject extends AbstractMessage {
 	private static final long serialVersionUID = 1L;
 	private static final int CODE = 0x1D;
 	private int itemSerialId;
 
-	public DeleteItem(int itemSerialId) {
-		super(CODE, 5);
+	public DeleteObject(int itemSerialId) {
+		this();
 		this.itemSerialId = itemSerialId;
+	}
+
+	public DeleteObject(Mobile mobile) {
+		this();
+		this.itemSerialId = mobile.getSerialId();
+	}
+
+	public DeleteObject() {
+		super(CODE, 5);
 	}
 
 	@Override
@@ -35,7 +46,7 @@ public class DeleteItem extends AbstractMessage {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DeleteItem other = (DeleteItem) obj;
+		DeleteObject other = (DeleteObject) obj;
 		if (itemSerialId != other.itemSerialId)
 			return false;
 		return true;

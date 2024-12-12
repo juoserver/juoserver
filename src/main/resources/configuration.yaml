@@ -1,4 +1,6 @@
 
+client:
+  los: 24
 packet:
   logging: false
 stats:

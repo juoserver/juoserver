@@ -11,9 +11,15 @@ public interface InterClientNetwork {
 	void notifyItemDropped(Mobile droppingMobile, Item item, int targetSerialId);
 	void notifyChangedWarMode(Mobile mobile);
 	void notifyDroppedCloth(Mobile mobile, Item droppedCloth);
-	void notifyAttacked(Mobile attacker, Mobile attacked);
+
+	/**
+	 * Notify a attack that occurs
+	 * @param attacker Mobile who is attacking
+	 * @param attacked Mobile who was attacked
+	 */
+	void notifyAttackWithDamage(Mobile attacker, int attackerDamage, Mobile attacked);
 	void notifyAttackFinished(Mobile attacker, Mobile attacked);
-	void notifyOtherDamaged(Mobile mobile, int damage, Mobile opponent);
+	void notifyOtherDamaged(Mobile mobile, int damage);
 	void notifyGroundItemsCreated(Collection<Item> items);
 	void notifyOtherKilled(Mobile mobile);
 	void removeIntercomListener(IntercomListener listener);

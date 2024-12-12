@@ -4,9 +4,12 @@ import java.util.Map;
 import java.util.Set;
 
 public interface Mobile extends JUoEntity, Point3D {
+
 	void setZ(int z);
 
 	Mobile location(int x, int y, int z);
+
+	void setLocation(Point3D location);
 
 	Direction getDirection();
 
@@ -93,4 +96,5 @@ public interface Mobile extends JUoEntity, Point3D {
 
 	boolean isDeath();
 
+	boolean isNpc();
 }

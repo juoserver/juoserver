@@ -1,31 +1,43 @@
 package net.sf.juoserver.model;
 
 import net.sf.juoserver.api.*;
+import net.sf.juoserver.protocol.Cursor;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class UOPlayerSession implements PlayerSession {
+	public static final int LINE_OF_SIGHT = 24;
 	private final Core core;
 	private final Account account;
 	private final Set<Mobile> mobilesInRange = new HashSet<>();
 	private final Set<Item> itemsInRange = new HashSet<>();
-	private final ModelOutputPort serverResponseListener;
+	/**
+	 * Used to notify session client about his updates
+	 */
+	private final ModelOutputPort listener;
+	/**
+	 * Used to notify others clients about session update
+	 */
 	private final InterClientNetwork network;
 	
 	private Mobile mobile;
 	
 	protected Mobile attacking;
 	protected final Set<Mobile> attackingMe = new HashSet<>();
+
+	private final Map<Integer, CompletableFuture<Cursor>> sessionCursors = new HashMap<>();
 	
-	public UOPlayerSession(Core core, Account account, ModelOutputPort serverResponseListener,
+	public UOPlayerSession(Core core, Account account, ModelOutputPort listener,
 			InterClientNetwork network) {
 		super();
 		this.core = core;
 		this.account = account;
-		this.serverResponseListener = serverResponseListener;
+		this.listener = listener;
 		this.network = network;
 	}
 
+	@Override
 	public Set<Mobile> getMobilesInRange() {
 		return mobilesInRange;
 	}
@@ -71,8 +83,15 @@ public class UOPlayerSession implements PlayerSession {
 			network.notifyGroundItemsCreated(items);
 		}
 
+		var npcs = core.findNpcInRange(mobile);
+		if (!npcs.isEmpty()) {
+			listener.npcOnRange(npcs);
+		}
+
 		MapTile tile = core.getTile(mobile.getX(), mobile.getY());
 		mobile.setZ( tile.getZ() );
+
+		// Notify others client I'm moving
 		network.notifyOtherMobileMovement(mobile);
 	}
 
@@ -82,7 +101,7 @@ public class UOPlayerSession implements PlayerSession {
 
 	@Override
 	public void onOtherMobileMovement(Mobile moving) {
-		int los = 24;
+		int los = LINE_OF_SIGHT;
 
 		int distance = (int) Math.hypot(mobile.getX() - moving.getX(), mobile.getY() - moving.getY());
 
@@ -105,7 +124,7 @@ public class UOPlayerSession implements PlayerSession {
 		}
 		
 		// Always send an update
-		serverResponseListener.mobileChanged(moving);
+		listener.mobileChanged(moving);
 	}
 
 	@Override
@@ -115,7 +134,7 @@ public class UOPlayerSession implements PlayerSession {
 		}
 		
 		mobilesInRange.add( entered );
-		serverResponseListener.mobileApproached(entered);
+		listener.mobileApproached(entered);
 	}
 
 	@Override
@@ -124,7 +143,7 @@ public class UOPlayerSession implements PlayerSession {
 			return;
 		}
 		mobilesInRange.remove(exited);
-		serverResponseListener.mobileGotAway(exited);
+		listener.mobileGotAway(exited);
 	}
 
 	@Override
@@ -144,7 +163,7 @@ public class UOPlayerSession implements PlayerSession {
 	@Override
 	public void onOtherMobileSpeech(Mobile speaker, MessageType type, int hue,
 			int font, String language, String text) {
-		serverResponseListener.mobileSpoke(speaker, type, hue, font, language, text);
+		listener.mobileSpoke(speaker, type, hue, font, language, text);
 	}
 
 	@Override
@@ -173,7 +192,7 @@ public class UOPlayerSession implements PlayerSession {
 		if (sourceContainer != null) {
 			sourceContainer.removeItem(droppedItem);
 			core.removeItemFromContainer(droppedItem);
-			serverResponseListener.containerChangedContents(sourceContainer);
+			listener.containerChangedContents(sourceContainer);
 		}
 	}
 
@@ -181,15 +200,15 @@ public class UOPlayerSession implements PlayerSession {
 		Container targetContainer = (Container) core.findItemByID(targetContainerSerial);
 		targetContainer.addItem(droppedItem, new Position(targetPosition.getX(), targetPosition.getY()));
 		core.addItemToContainer(droppedItem, targetContainer);
-		serverResponseListener.containerChangedContents(targetContainer);
+		listener.containerChangedContents(targetContainer);
 	}
 
 	@Override
 	public void onItemDropped(Mobile droppingMobile, Item item, int targetSerialId) {
 		if (!mobile.equals(droppingMobile)) {
-			serverResponseListener.itemDragged(item, droppingMobile, targetSerialId);
+			listener.itemDragged(item, droppingMobile, targetSerialId);
 		}
-		serverResponseListener.itemChanged(item);
+		listener.itemChanged(item);
 	}
 
 	@Override
@@ -204,12 +223,12 @@ public class UOPlayerSession implements PlayerSession {
 	
 	@Override
 	public void onChangedClothes(Mobile wearingMobile) {
-		serverResponseListener.mobileChangedClothes(wearingMobile);
+		listener.mobileChangedClothes(wearingMobile);
 	}
 
 	@Override
 	public void onDroppedCloth(Mobile mobile, Item droppedCloth) {
-		serverResponseListener.mobileDroppedCloth(mobile, droppedCloth);
+		listener.mobileDroppedCloth(mobile, droppedCloth);
 	}
 	
 	@Override
@@ -231,24 +250,25 @@ public class UOPlayerSession implements PlayerSession {
 	
 	@Override
 	public void onChangedWarMode(Mobile mobile) {
-		serverResponseListener.mobileChangedWarMode(mobile);
+		listener.mobileChangedWarMode(mobile);
 	}
 
 	@Override
 	public void attack(Mobile opponent) {
-		network.notifyAttacked(mobile, opponent);
+		network.notifyAttackWithDamage(mobile, 0,opponent );
 	}
 	
 	@Override
-	public void onAttacked(Mobile attacker, Mobile attacked) {			
-		if (mobile.equals(attacked)) {
+	public void onAttack(Mobile attacker, int attackerDamage, Mobile attacked) {
+		listener.mobileAttack(attacker, attackerDamage, attacked);
+		/*if (mobile.equals(attacked)) {
 			attackingMe.add(attacker);			
-			serverResponseListener.mobileAttacked(attacker);
+			listener.mobileAttacked(attacker);
 		} else {
 			if (mobile.equals(attacker)) {
 				attacking = attacked;
 			}
-		}		
+		}*/
 	}	
 	
 	@Override
@@ -256,16 +276,22 @@ public class UOPlayerSession implements PlayerSession {
 		if (mobile.equals(attacker)) {
 			attacking = null;
 			if (!attackingMe.contains(attacked)) {
-				serverResponseListener.mobileAttackFinished(attacked);
+				listener.mobileAttackFinished(attacked);
 			}			
 		} else {
 			if (mobile.equals(attacked)) {
 				attackingMe.remove(attacker);
 				if (attacking == null) {
-					serverResponseListener.mobileAttackFinished(attacker);
+					listener.mobileAttackFinished(attacker);
 				}				
 			}
 		}
+	}
+
+	@Override
+	public void attackWithDamage(Mobile opponent, int damage) {
+		mobile.setCurrentHitPoints( Math.max(mobile.getCurrentHitPoints() - damage, 0) );
+		network.notifyAttackWithDamage(mobile, damage, opponent);
 	}
 
 	@Override
@@ -278,22 +304,47 @@ public class UOPlayerSession implements PlayerSession {
 			attacking = null;
 			attackingMe.clear();
 
-			serverResponseListener.mobiledKilled(mobile);
+			listener.mobiledKilled(mobile);
 			network.notifyOtherKilled(mobile);
 		} else {
-			serverResponseListener.mobileDamaged(mobile, damage, opponent);
-			network.notifyOtherDamaged(mobile, damage, opponent);
+			listener.mobileDamaged(mobile, damage);
+			network.notifyOtherDamaged(mobile, damage);
 		}
 	}
 
 	@Override
-	public void onOtherDamaged(Mobile mobile, int damage, Mobile opponent) {
-		serverResponseListener.mobileDamaged(mobile, damage, opponent);
+	public void receiveDamage(int damage) {
+		mobile.setCurrentHitPoints( Math.max(mobile.getCurrentHitPoints() - damage, 0) );
+		if (mobile.getCurrentHitPoints() == 0) {
+			mobile.kill();
+			listener.mobiledKilled(mobile);
+			network.notifyOtherKilled(mobile);
+		} else {
+			listener.mobileDamaged(mobile, damage);
+			network.notifyOtherDamaged(mobile, damage);
+		}
+	}
+
+	@Override
+	public void applyDamageTo(Mobile opponent, int damage) {
+		opponent.setCurrentHitPoints( Math.max(opponent.getCurrentHitPoints() - damage, 0) );
+		if (opponent.getCurrentHitPoints() == 0) {
+			opponent.kill();
+			core.removeMobile(opponent);
+			network.notifyOtherKilled(opponent);
+		} else {
+			network.notifyOtherDamaged(opponent, damage);
+		}
+	}
+
+	@Override
+	public void onOtherDamaged(Mobile mobile, int damage) {
+		listener.mobileDamaged(mobile, damage);
 	}
 
 	@Override
 	public void onOtherKilled(Mobile mobile) {
-		serverResponseListener.mobiledKilled(mobile);
+		listener.mobiledKilled(mobile);
 	}
 
 	@Override
@@ -303,6 +354,30 @@ public class UOPlayerSession implements PlayerSession {
 
 	@Override
 	public void onGroundItemCreated(Collection<Item> items) {
-		serverResponseListener.groundItemsCreated(items);
+		listener.groundItemsCreated(items);
+	}
+
+	@Override
+	public CompletableFuture<Cursor> sendCursor(CursorType type, CursorTarget target) {
+		final int cursorId = core.getNextCursorId();
+		var future = new CompletableFuture<Cursor>();
+		sessionCursors.put(cursorId, future);
+		listener.sendCursor(cursorId, type, target);
+		return future;
+	}
+
+	@Override
+	public void selectCursor(Cursor cursor) {
+		final int cursorId = cursor.getCursorId();
+		var future = sessionCursors.get(cursorId);
+		sessionCursors.remove(cursorId);
+		future.complete(cursor);
+	}
+
+	@Override
+	public String toString() {
+		return "UOPlayerSession{" +
+				"mobile=" + mobile +
+				'}';
 	}
 }

@@ -26,7 +26,7 @@ public class CharacterDraw extends AbstractMessage {
 				mobile.getItems());
 	}
 	
-	private CharacterDraw(int objectSerial, int graphicId,
+	public CharacterDraw(int objectSerial, int graphicId,
 			int x, int y, int z, byte direction, int hue,
 			CharacterStatus characterStatus, Notoriety notoriety,
 			Map<Layer, Item> items) {

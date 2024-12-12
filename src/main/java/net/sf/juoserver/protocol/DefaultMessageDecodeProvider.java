@@ -1,5 +1,6 @@
 package net.sf.juoserver.protocol;
 
+import net.sf.juoserver.api.CursorTarget;
 import net.sf.juoserver.api.Message;
 import net.sf.juoserver.api.MessageDecoder;
 import net.sf.juoserver.api.MessageDecoderProvider;
@@ -41,6 +42,7 @@ public class DefaultMessageDecodeProvider implements MessageDecoderProvider {
         registerDecoder(WarMode.CODE, WarMode.class);
         registerDecoder(DropItem.CODE, DropItem.class);
         registerDecoder(AttackRequest.CODE, AttackRequest.class);
+        registerDecoder(Cursor.CODE, Cursor.class);
     }
 
     @Override

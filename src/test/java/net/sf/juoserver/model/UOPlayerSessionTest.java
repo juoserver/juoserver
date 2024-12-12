@@ -70,7 +70,7 @@ public class UOPlayerSessionTest {
 	public void mobileAttacks() {
 		final Mobile loller = TestingFactory.createTestMobile(442, "loller");
 		context.checking(new Expectations(){{
-			oneOf(network).notifyAttacked(asder, loller);
+			oneOf(network).notifyAttackWithDamage(asder, loller);
 		}});
 		session.attack(loller);
 	}

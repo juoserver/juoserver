@@ -35,6 +35,7 @@ public class ConfigurationFactory {
         simpleModule.addAbstractTypeMapping(Configuration.FilesConfiguration.class, FilesConfigurationImpl.class);
         simpleModule.addAbstractTypeMapping(Configuration.CommandConfiguration.class, CommandConfigurationImpl.class);
         simpleModule.addAbstractTypeMapping(Configuration.PacketConfiguration.class, PacketConfigurationImpl.class);
+        simpleModule.addAbstractTypeMapping(Configuration.ClientConfiguration.class, ClientConfigurationImpl.class);
 
         this.propsMapper = new JavaPropsMapper();
         this.propsMapper.registerModule(simpleModule);

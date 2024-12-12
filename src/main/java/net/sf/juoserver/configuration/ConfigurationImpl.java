@@ -5,8 +5,10 @@ import net.sf.juoserver.api.Configuration;
 public class ConfigurationImpl implements Configuration {
     private String skillsIdxPath;
     private String mulPath;
+    private int clientLOS;
     private boolean packetLoggingEnabled;
     private String commandActivationCharacter;
+    private ClientConfiguration client;
     private StatsConfiguration stats;
     private CombatConfiguration combat;
     private ServerConfiguration server;
@@ -22,6 +24,11 @@ public class ConfigurationImpl implements Configuration {
     @Override
     public String getMulPath() {
         return mulPath;
+    }
+
+    @Override
+    public ClientConfiguration getClient() {
+        return client;
     }
 
     @Override
@@ -62,12 +69,20 @@ public class ConfigurationImpl implements Configuration {
         this.mulPath = mulPath;
     }
 
+    public void setClientLOS(int clientLOS) {
+        this.clientLOS = clientLOS;
+    }
+
     public void setPacketLoggingEnabled(boolean packetLoggingEnabled) {
         this.packetLoggingEnabled = packetLoggingEnabled;
     }
 
     public void setCommandActivationCharacter(String commandActivationCharacter) {
         this.commandActivationCharacter = commandActivationCharacter;
+    }
+
+    public void setClient(ClientConfiguration client) {
+        this.client = client;
     }
 
     public void setStats(StatsConfiguration stats) {

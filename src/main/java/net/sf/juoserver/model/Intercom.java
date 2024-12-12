@@ -5,7 +5,6 @@ import net.sf.juoserver.api.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.Consumer;
 
 /**
  * This class acts as a <b>mediator</b> between clients, providing the
@@ -148,9 +147,9 @@ public final class Intercom implements InterClientNetwork {
 	 * Notifies that attack started
 	 */
 	@Override
-	public void notifyAttacked(Mobile attacker, Mobile attacked) {		
+	public void notifyAttackWithDamage(Mobile attacker, int damage, Mobile attacked) {
 		for (IntercomListener l : listeners) {
-			l.onAttacked(attacker, attacked);
+			l.onAttack(attacker, damage, attacked);
 		}
 	}
 	
@@ -165,9 +164,9 @@ public final class Intercom implements InterClientNetwork {
 	}
 
 	@Override
-	public void notifyOtherDamaged(Mobile mobile, int damage, Mobile opponent) {
+	public void notifyOtherDamaged(Mobile mobile, int damage) {
 		for (IntercomListener intercomListener : listeners) {
-			intercomListener.onOtherDamaged(mobile, damage, opponent);
+			intercomListener.onOtherDamaged(mobile, damage);
 		}
 	}
 
@@ -180,12 +179,9 @@ public final class Intercom implements InterClientNetwork {
 
 	@Override
 	public void notifyOtherKilled(Mobile mobile) {
-		iterateListeners(listener->listener.onOtherKilled(mobile));
-	}
-
-	private void iterateListeners(Consumer<IntercomListener> consumer) {
 		for (IntercomListener intercomListener : listeners) {
-			consumer.accept(intercomListener);
+			intercomListener.onOtherKilled(mobile);
 		}
 	}
+
 }

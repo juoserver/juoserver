@@ -1,5 +1,6 @@
 package net.sf.juoserver.model;
 
+import net.sf.juoserver.api.ConfigFileReader;
 import net.sf.juoserver.api.Configuration;
 import net.sf.juoserver.api.DataManager;
 import net.sf.juoserver.api.FileReadersFactory;
@@ -23,13 +24,15 @@ class UOCoreTest {
     private DataManager dataManager;
     @Mock
     private Configuration configuration;
+    @Mock
+    private ConfigFileReader configFileReader;
 
     @BeforeEach
     public void setUp() {
         when(dataManager.getItemSerial()).thenReturn(1);
         when(configuration.getFiles()).thenReturn(filesConfiguration);
         when(filesConfiguration.getMulPath()).thenReturn(System.getProperty("user.dir"));
-        core = new UOCore(fileReadersFactory, dataManager, configuration);
+        core = new UOCore(fileReadersFactory, dataManager, configuration, configFileReader);
         core.init();
     }
 
