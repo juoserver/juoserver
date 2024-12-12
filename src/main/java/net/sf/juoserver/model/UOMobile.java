@@ -1,17 +1,21 @@
 package net.sf.juoserver.model;
 
+import lombok.ToString;
 import net.sf.juoserver.api.*;
 
 import java.util.*;
 
+@ToString(onlyExplicitlyIncluded = true)
 public class UOMobile implements Mobile {
     public static final int DEATH_MODEL_ID = 403;
     public static final int ALIVE_MODEL_ID = 0x190;
+    @ToString.Include
     private int serialId;
     /**
      * The body type.
      */
     private int modelId = ALIVE_MODEL_ID; // 0x190 human - 0x3CA ghost
+    @ToString.Include
     private String name;
     private int currentHitPoints;
     private int maxHitPoints;
@@ -499,8 +503,4 @@ public class UOMobile implements Mobile {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return name;
-    }
 }

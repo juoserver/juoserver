@@ -262,6 +262,7 @@ public final class UOCore implements Core {
 		mobile.setStatusFlag(StatusFlag.UOML);
 		mobile.setRaceFlag(RaceFlag.Human);
 		mobile.setSexRace(SexRace.MaleHuman);
+		mobile.setCurrentHitPoints(mobile.getMaxHitPoints());
 		addMobile(mobile);
 		return mobile;
 	}

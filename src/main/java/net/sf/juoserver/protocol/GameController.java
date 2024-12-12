@@ -119,7 +119,10 @@ public class GameController extends AbstractProtocolController implements ModelO
 	private List<Message> sendGameStatus(Mobile mobile, GameStatus status) {
 		LightLevels lightLevel = status.getLightLevel();
 		Season season = status.getSeason();
-		
+
+		// Register selected mobile to combat system
+		combatSystem.registerMobile(mobile, session);
+
 		List<Message> response = new ArrayList<>(asList(
 				new LoginConfirm(mobile.getSerialId(), (short) mobile.getModelId(),
 						(short) mobile.getX(), (short) mobile.getY(), (byte) mobile.getZ(),
@@ -385,7 +388,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 	// ====================== COMBAT =========================
 	public List<Message> handle(WarMode warMode) {
 		session.toggleWarMode(warMode.isWar());
-		return asList(warMode, new CharacterDraw(session.getMobile()));
+		return asList(warMode, new CharacterDraw(session.getMobile()), new AttackSucceed(0));
 	}
 	
 	@Override
@@ -399,34 +402,39 @@ public class GameController extends AbstractProtocolController implements ModelO
 	
 	public List<Message> handle(AttackRequest attackRequest) {
 		var attacked = core.findMobileByID(attackRequest.getMobileID());
-		var attacker = session.getMobile();
+
+		var mobile = session.getMobile();
 
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("{} is attacking {} ", attacker, attacked);
+			LOGGER.debug("{} is attacking {} ", mobile, attacked);
 		}
 
-		combatSystem.attackStarted(session, attacked);
-		session.attack(attacked);
+		combatSystem.beginCombat(mobile, attacked);
+		//combatSystem.attackStarted(session, attacked);
+		//session.attack(attacked);
 
-		return asList(new AttackOK(attacked), 
-				new FightOccurring(attacker, attacked),
+		return asList(new AttackOK(attacked),
+				new FightOccurring(mobile, attacked),
 				new AttackSucceed(attacked));
 	}
 	
 	@Override
-	public void mobileAttacked(Mobile attacker) {
-		var attacked = session.getMobile();
-
+	public void mobileAttack(Mobile attacker, int attackerDamage, Mobile attacked) {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("{} attacked by {}", attacked, attacker);
 		}
 
-		combatSystem.defenseStarted(session, attacker);
-
 		try {
-			clientHandler.sendToClient(new AttackOK(attacker.getSerialId()), 
-					new AttackSucceed(attacker),
-					new FightOccurring(attacked, attacker));
+			if (attacked.equals(session.getMobile())) {
+				clientHandler.sendToClient(new CharacterAnimation(attacker, AnimationRepeat.ONCE, AnimationType.ATTACK_WITH_SWORD_OVER_AND_SIDE, 10, AnimationDirection.FORWARD),
+						new AttackOK(attacker.getSerialId()),
+						new AttackSucceed(attacker),
+						new FightOccurring(attacked, attacker),
+						new Damage(attacker, attackerDamage));
+			} else {
+				clientHandler.sendToClient(new Damage(attacker, attackerDamage), new StatusBarInfo(attacker),
+						new CharacterAnimation(attacker, AnimationRepeat.ONCE, AnimationType.ATTACK_WITH_SWORD_OVER_AND_SIDE, 10, AnimationDirection.FORWARD));
+			}
 		} catch (IOException e) {
 			throw new IntercomException(e);
 		}		
@@ -436,7 +444,7 @@ public class GameController extends AbstractProtocolController implements ModelO
 	public void mobileAttackFinished(Mobile attacker) {
 		try {
 			LOGGER.debug("{} Attack finished {}", session.getMobile(), attacker);
-			combatSystem.combatFinished(attacker, session.getMobile());
+			//combatSystem.combatFinished(attacker, session.getMobile());
 			clientHandler.sendToClient(new AttackSucceed(0));
 		} catch (IOException e) {
 			throw new IntercomException(e);
@@ -446,8 +454,9 @@ public class GameController extends AbstractProtocolController implements ModelO
 	@Override
 	public void mobileDamaged(Mobile mobile, int damage) {
 		try {
+
 			//new CharacterAnimation(opponent, AnimationRepeat.ONCE, AnimationType.ATTACK_WITH_SWORD_OVER_AND_SIDE, 100, AnimationDirection.FORWARD)
-			clientHandler.sendToClient(new StatusBarInfo(mobile), new CharacterAnimation(mobile, AnimationRepeat.ONCE, AnimationType.GET_HIT, 10, AnimationDirection.BACKWARD));
+			clientHandler.sendToClient(new StatusBarInfo(mobile), new CharacterAnimation(mobile, AnimationRepeat.ONCE, AnimationType.GET_HIT, 10, AnimationDirection.BACKWARD), new Damage(mobile, damage));
 		} catch (IOException e) {
 			throw new IntercomException(e);
 		}
@@ -471,10 +480,6 @@ public class GameController extends AbstractProtocolController implements ModelO
 	@Override
 	public void mobiledKilled(Mobile mobile) {
 		try {
-			if (session.getMobile().equals(mobile)) {
-				combatSystem.mobileKilled(mobile);
-			}
-
 			if (mobile.isNpc()) {
 				clientHandler.sendToClient(new DeathAnimation(mobile, 0x1FFD),new DeleteObject(mobile));
 			} else {

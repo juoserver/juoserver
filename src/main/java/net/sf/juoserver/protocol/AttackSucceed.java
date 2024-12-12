@@ -5,13 +5,16 @@ import net.sf.juoserver.api.Mobile;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
+/**
+ * Select the npc informed via id. 0 (zero) to remove the selection
+ */
 public class AttackSucceed extends AbstractMessage {
 	private static final long serialVersionUID = 1L;
 
 	public static final int CODE = 0xAA;
 	private static final int LENGTH = 5;
 
-	private int mobileID;
+	private final int mobileID;
 	
 	public AttackSucceed(int mobileID) {	
 		super(CODE, LENGTH);

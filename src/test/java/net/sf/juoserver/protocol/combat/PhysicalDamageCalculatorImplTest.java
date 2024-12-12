@@ -2,6 +2,7 @@ package net.sf.juoserver.protocol.combat;
 
 import net.sf.juoserver.api.Configuration;
 import net.sf.juoserver.api.Mobile;
+import net.sf.juoserver.model.combat.PhysicalDamageCalculatorImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

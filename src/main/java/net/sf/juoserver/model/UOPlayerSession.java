@@ -255,19 +255,20 @@ public class UOPlayerSession implements PlayerSession {
 
 	@Override
 	public void attack(Mobile opponent) {
-		network.notifyAttacked(mobile, opponent);
+		network.notifyAttackWithDamage(mobile, 0,opponent );
 	}
 	
 	@Override
-	public void onAttacked(Mobile attacker, Mobile attacked) {			
-		if (mobile.equals(attacked)) {
+	public void onAttack(Mobile attacker, int attackerDamage, Mobile attacked) {
+		listener.mobileAttack(attacker, attackerDamage, attacked);
+		/*if (mobile.equals(attacked)) {
 			attackingMe.add(attacker);			
 			listener.mobileAttacked(attacker);
 		} else {
 			if (mobile.equals(attacker)) {
 				attacking = attacked;
 			}
-		}		
+		}*/
 	}	
 	
 	@Override
@@ -288,6 +289,12 @@ public class UOPlayerSession implements PlayerSession {
 	}
 
 	@Override
+	public void attackWithDamage(Mobile opponent, int damage) {
+		mobile.setCurrentHitPoints( Math.max(mobile.getCurrentHitPoints() - damage, 0) );
+		network.notifyAttackWithDamage(mobile, damage, opponent);
+	}
+
+	@Override
 	public void applyDamage(int damage, Mobile opponent) {
 		mobile.setCurrentHitPoints( Math.max(mobile.getCurrentHitPoints() - damage, 0) );
 		if (mobile.getCurrentHitPoints() == 0) {
@@ -297,6 +304,19 @@ public class UOPlayerSession implements PlayerSession {
 			attacking = null;
 			attackingMe.clear();
 
+			listener.mobiledKilled(mobile);
+			network.notifyOtherKilled(mobile);
+		} else {
+			listener.mobileDamaged(mobile, damage);
+			network.notifyOtherDamaged(mobile, damage);
+		}
+	}
+
+	@Override
+	public void receiveDamage(int damage) {
+		mobile.setCurrentHitPoints( Math.max(mobile.getCurrentHitPoints() - damage, 0) );
+		if (mobile.getCurrentHitPoints() == 0) {
+			mobile.kill();
 			listener.mobiledKilled(mobile);
 			network.notifyOtherKilled(mobile);
 		} else {
@@ -352,5 +372,12 @@ public class UOPlayerSession implements PlayerSession {
 		var future = sessionCursors.get(cursorId);
 		sessionCursors.remove(cursorId);
 		future.complete(cursor);
+	}
+
+	@Override
+	public String toString() {
+		return "UOPlayerSession{" +
+				"mobile=" + mobile +
+				'}';
 	}
 }

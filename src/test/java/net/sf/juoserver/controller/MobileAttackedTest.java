@@ -23,7 +23,7 @@ public class MobileAttackedTest extends AbstractNewGameControllerTest {
     @DisplayName("Mobile attacked without damage")
     @Test
     public void mobileAttackedWithoutDamage() throws IOException {
-        gameController.mobileAttacked(attacker);
+        gameController.mobileAttack(attacker);
         var captor = ArgumentCaptor.forClass(Object.class);
 
         verify(clientHandler).sendToClient((Message[]) captor.capture());
@@ -36,7 +36,7 @@ public class MobileAttackedTest extends AbstractNewGameControllerTest {
     @DisplayName("Mobile attacked with damage")
     @Test
     public void mobileAttackedWithDamage() {
-        gameController.mobileAttacked(attacker);
+        gameController.mobileAttack(attacker);
 
         verify(combatSystem).defenseStarted(session, attacker);
     }

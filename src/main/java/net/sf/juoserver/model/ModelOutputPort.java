@@ -19,7 +19,7 @@ public interface ModelOutputPort {
 	void groundItemsCreated(Collection<Item> items);
 	void mobileChangedClothes(Mobile mobile);
 	void mobileChangedWarMode(Mobile mobile);
-	void mobileAttacked(Mobile attacker);
+	void mobileAttack(Mobile attacker, int attackerDamage, Mobile attacked);
 	void mobileAttackFinished(Mobile enemy);
 	void mobileDroppedCloth(Mobile mobile, Item droppedCloth);
 	void mobileDamaged(Mobile mobile, int damage);

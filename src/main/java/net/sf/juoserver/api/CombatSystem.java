@@ -2,6 +2,8 @@ package net.sf.juoserver.api;
 
 public interface CombatSystem {
 
+    void beginCombat(Mobile attacker, Mobile attacked);
+
     void attackStarted(PlayerSession attackerSession, Mobile attacked);
 
     void defenseStarted(PlayerSession attackedSession, Mobile attacker);
@@ -13,4 +15,8 @@ public interface CombatSystem {
      * @param mobile mobile Killed
      */
     void mobileKilled(Mobile mobile);
+
+    void registerMobile(Mobile mobile, CombatSession combatSession);
+
+    void removeMobile(Mobile mobile);
 }

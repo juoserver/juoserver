@@ -2,7 +2,7 @@ package net.sf.juoserver.api;
 
 import java.util.stream.Stream;
 
-public interface NpcSession {
+public interface NpcSession extends CombatSession {
 
     Mobile getMobile();
 

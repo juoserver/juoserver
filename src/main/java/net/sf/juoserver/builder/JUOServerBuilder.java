@@ -13,8 +13,8 @@ import net.sf.juoserver.model.npc.UONpcSystem;
 import net.sf.juoserver.networking.mina.MinaMultiplexingServerAdapter;
 import net.sf.juoserver.networking.threaded.ThreadedServerAdapter;
 import net.sf.juoserver.protocol.ControllerFactory;
-import net.sf.juoserver.protocol.combat.CombatSystemImpl;
-import net.sf.juoserver.protocol.combat.PhysicalDamageCalculatorImpl;
+import net.sf.juoserver.model.combat.UOCombatSystem;
+import net.sf.juoserver.model.combat.PhysicalDamageCalculatorImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,9 +66,20 @@ public final class JUOServerBuilder {
                 .collect(Collectors.toList());
 
         var core = new UOCore(new MondainsLegacyFileReadersFactory(), dataManager, configuration, configFileReader);
-        var combatSystem = new CombatSystemImpl(new PhysicalDamageCalculatorImpl(configuration));
+        var combatSystem = new UOCombatSystem(new PhysicalDamageCalculatorImpl(configuration));
         var network = new Intercom();
         var npcSystem = new UONpcSystem(core, network, configuration, new UONpcSessionCycle(), Executors.newVirtualThreadPerTaskExecutor());
+        npcSystem.addNpcSessionListener(new NpcSessionListener() {
+            @Override
+            public void onSessionCreated(NpcMobile mobile, NpcSession session) {
+                combatSystem.registerMobile(mobile, session);
+            }
+
+            @Override
+            public void onSessionClosed(NpcMobile mobile, NpcSession session) {
+                combatSystem.removeMobile(mobile);
+            }
+        });
 
         var server = getServer(new ControllerFactory(core, configuration, commands, combatSystem, network, npcSystem));
         var executorService = new UOConcurrentManagerExecutor(from(combatSystem, 500), from(npcSystem, 1));

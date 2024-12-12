@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public interface PlayerSession extends IntercomListener {
+public interface PlayerSession extends IntercomListener, CombatSession {
 	List<String> getCharacterNames();
 	void selectCharacterById(int charId);
 	GameStatus startGame();

@@ -3,7 +3,9 @@ package net.sf.juoserver.model.npc;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.juoserver.api.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -20,6 +22,7 @@ public class UONpcSystem implements NpcSystem, SubSystem, MobileListener {
     private final NpcSessionCycle sessionCycle;
     private final ExecutorService executorService;
     private final Map<NpcMobile, ContextBasedNpcSession> npcSessionMap = new HashMap<>();
+    private final List<NpcSessionListener> sessionListeners = new ArrayList<>();
 
     public UONpcSystem(Core core, InterClientNetwork network, Configuration configuration, NpcSessionCycle sessionCycle, ExecutorService executorService) {
         this.core = requireNonNull(core, "Core must not be null");
@@ -64,11 +67,31 @@ public class UONpcSystem implements NpcSystem, SubSystem, MobileListener {
             var npc = (NpcMobile) mobile;
             var session = new UONpcSession(npc, network, core);
             npcSessionMap.put(npc, session);
+            for (NpcSessionListener listener: sessionListeners) {
+                listener.onSessionCreated(npc, session);
+            }
         }
     }
 
     @Override
     public void onMobileRemoved(Mobile mobile) {
-        npcSessionMap.remove((NpcMobile) mobile);
+        if (mobile.isNpc()) {
+            final var npc = (NpcMobile) mobile;
+            final var session = npcSessionMap.get(npc);
+            npcSessionMap.remove(npc);
+            for (NpcSessionListener listener: sessionListeners) {
+                listener.onSessionClosed(npc, session);
+            }
+        }
+    }
+
+    @Override
+    public void addNpcSessionListener(NpcSessionListener listener) {
+        this.sessionListeners.add(listener);
+    }
+
+    @Override
+    public void removeNpcSessionListener(NpcSessionListener listener) {
+        this.sessionListeners.remove(listener);
     }
 }

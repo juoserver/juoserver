@@ -31,7 +31,7 @@ public class CreateNPC extends AbstractCommand {
             //context.protocolIoPort().sendToClient(new Cursor(CursorTarget.SELECT_LOCATION, 1, CursorType.NEUTRAL));
 
             if (!args.isEmpty()) {
-                var id = Integer.parseInt(args.get(0));
+                var id = Integer.parseInt(args.get(0).substring(2));
                 var mobile = context.session().getMobile();
                 var npc = context.core().createNpcAtLocation(id, context.session().getMobile());
             }

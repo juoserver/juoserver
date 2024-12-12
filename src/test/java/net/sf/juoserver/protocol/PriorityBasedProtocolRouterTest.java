@@ -2,8 +2,8 @@ package net.sf.juoserver.protocol;
 
 import net.sf.juoserver.TestingFactory;
 import net.sf.juoserver.api.*;
-import net.sf.juoserver.protocol.combat.CombatSystemImpl;
-import net.sf.juoserver.protocol.combat.PhysicalDamageCalculatorImpl;
+import net.sf.juoserver.model.combat.UOCombatSystem;
+import net.sf.juoserver.model.combat.PhysicalDamageCalculatorImpl;
 import net.sf.juoserver.protocol.item.ItemManager;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
@@ -25,7 +25,7 @@ public class PriorityBasedProtocolRouterTest {
 	private final AuthenticationController auth = new AuthenticationController(clientHandler,
 			TestingFactory.createTestConfiguration(), loginManager);
 	private final GameController game = new GameController("client", clientHandler, context.mock(Core.class), context.mock(Configuration.class),
-			context.mock(ClientMovementTracker.class), loginManager, network, context.mock(NpcSystem.class), new ItemManager(),new CommandManagerImpl(null, null), new CombatSystemImpl(new PhysicalDamageCalculatorImpl(null)), null);
+			context.mock(ClientMovementTracker.class), loginManager, network, context.mock(NpcSystem.class), new ItemManager(),new CommandManagerImpl(null, null), new UOCombatSystem(new PhysicalDamageCalculatorImpl(null)), null);
 	
 	@Test
 	public void authenticationIsTheOnlyControllerInterestedInFirstConnectionMessages() throws UnknownHostException {

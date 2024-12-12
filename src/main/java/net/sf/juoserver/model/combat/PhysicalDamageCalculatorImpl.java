@@ -1,4 +1,4 @@
-package net.sf.juoserver.protocol.combat;
+package net.sf.juoserver.model.combat;
 
 import net.sf.juoserver.api.Configuration;
 import net.sf.juoserver.api.Mobile;

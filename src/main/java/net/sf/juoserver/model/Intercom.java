@@ -147,9 +147,9 @@ public final class Intercom implements InterClientNetwork {
 	 * Notifies that attack started
 	 */
 	@Override
-	public void notifyAttacked(Mobile attacker, Mobile attacked) {		
+	public void notifyAttackWithDamage(Mobile attacker, int damage, Mobile attacked) {
 		for (IntercomListener l : listeners) {
-			l.onAttacked(attacker, attacked);
+			l.onAttack(attacker, damage, attacked);
 		}
 	}
 	
